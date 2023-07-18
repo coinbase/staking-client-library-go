@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package coinbase.staking.v1alpha1;
+
+option go_package = "github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/v1alpha1";
+
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+// The amount of a token you wish to perform an action
+// with.
+message Amount {
+  // The total value of the token.
+  string value = 1;
+
+  // (-- api-linter: core::0143::standardized-codes=disabled
+  //     aip.dev/not-precedent: We need to do this because it is in active.
+  //     discussion --)
+  // The name of the token.
+  string currency = 2 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {description: "The currency of the token"}];
+}
