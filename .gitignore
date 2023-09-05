@@ -28,4 +28,4 @@ vendor/
 .coinbase_cloud_api_key_*.json
 
 # Example binary
-staking-client-library-go
+staking-client-*

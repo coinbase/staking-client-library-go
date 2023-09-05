@@ -378,6 +378,98 @@
           "type": "FULL"
         }
       ]
+    },
+    {
+      "regionTag": "staking_v1alpha1_generated_StakingService_RefreshWorkflowStep_sync",
+      "title": "staking RefreshWorkflowStep Sample",
+      "description": "RefreshWorkflowStep (-- api-linter: core: : 0136: : http-name-variable=disabled\naip.dev/not-precedent: We need to do this because\nthe phrasing reads easier. --)\n\nRefresh the current step in a workflow",
+      "file": "StakingClient/RefreshWorkflowStep/main.go",
+      "language": "GO",
+      "clientMethod": {
+        "shortName": "RefreshWorkflowStep",
+        "fullName": "coinbase.staking.v1alpha1.StakingClient.RefreshWorkflowStep",
+        "parameters": [
+          {
+            "type": "context.Context",
+            "name": "ctx"
+          },
+          {
+            "type": "stakingpb.RefreshWorkflowStepRequest",
+            "name": "req"
+          },
+          {
+            "type": "...gax.CallOption",
+            "name": "opts"
+          }
+        ],
+        "resultType": "*stakingpb.Workflow",
+        "client": {
+          "shortName": "StakingClient",
+          "fullName": "coinbase.staking.v1alpha1.StakingClient"
+        },
+        "method": {
+          "shortName": "RefreshWorkflowStep",
+          "fullName": "coinbase.staking.v1alpha1.StakingService.RefreshWorkflowStep",
+          "service": {
+            "shortName": "StakingService",
+            "fullName": "coinbase.staking.v1alpha1.StakingService"
+          }
+        }
+      },
+      "origin": "API_DEFINITION",
+      "segments": [
+        {
+          "start": 18,
+          "end": 53,
+          "type": "FULL"
+        }
+      ]
+    },
+    {
+      "regionTag": "staking_v1alpha1_generated_StakingService_ViewStakingContext_sync",
+      "title": "staking ViewStakingContext Sample",
+      "description": "ViewStakingContext (-- api-linter: core: : 0136: : http-name-variable=disabled\naip.dev/not-precedent: We need to do this because\nthe phrasing reads easier. --)\n\nView Staking context information given a specific network address",
+      "file": "StakingClient/ViewStakingContext/main.go",
+      "language": "GO",
+      "clientMethod": {
+        "shortName": "ViewStakingContext",
+        "fullName": "coinbase.staking.v1alpha1.StakingClient.ViewStakingContext",
+        "parameters": [
+          {
+            "type": "context.Context",
+            "name": "ctx"
+          },
+          {
+            "type": "stakingpb.ViewStakingContextRequest",
+            "name": "req"
+          },
+          {
+            "type": "...gax.CallOption",
+            "name": "opts"
+          }
+        ],
+        "resultType": "*stakingpb.ViewStakingContextResponse",
+        "client": {
+          "shortName": "StakingClient",
+          "fullName": "coinbase.staking.v1alpha1.StakingClient"
+        },
+        "method": {
+          "shortName": "ViewStakingContext",
+          "fullName": "coinbase.staking.v1alpha1.StakingService.ViewStakingContext",
+          "service": {
+            "shortName": "StakingService",
+            "fullName": "coinbase.staking.v1alpha1.StakingService"
+          }
+        }
+      },
+      "origin": "API_DEFINITION",
+      "segments": [
+        {
+          "start": 18,
+          "end": 53,
+          "type": "FULL"
+        }
+      ]
     }
   ]
 }

@@ -27,6 +27,8 @@ const (
 	StakingService_GetWorkflow_FullMethodName         = "/coinbase.staking.v1alpha1.StakingService/GetWorkflow"
 	StakingService_ListWorkflows_FullMethodName       = "/coinbase.staking.v1alpha1.StakingService/ListWorkflows"
 	StakingService_PerformWorkflowStep_FullMethodName = "/coinbase.staking.v1alpha1.StakingService/PerformWorkflowStep"
+	StakingService_RefreshWorkflowStep_FullMethodName = "/coinbase.staking.v1alpha1.StakingService/RefreshWorkflowStep"
+	StakingService_ViewStakingContext_FullMethodName  = "/coinbase.staking.v1alpha1.StakingService/ViewStakingContext"
 )
 
 // StakingServiceClient is the client API for StakingService service.
@@ -54,6 +56,20 @@ type StakingServiceClient interface {
 	//
 	// Perform the next step in a workflow
 	PerformWorkflowStep(ctx context.Context, in *PerformWorkflowStepRequest, opts ...grpc.CallOption) (*Workflow, error)
+	// (-- api-linter: core::0136::http-name-variable=disabled
+	//
+	//	aip.dev/not-precedent: We need to do this because
+	//	the phrasing reads easier. --)
+	//
+	// Refresh the current step in a workflow
+	RefreshWorkflowStep(ctx context.Context, in *RefreshWorkflowStepRequest, opts ...grpc.CallOption) (*Workflow, error)
+	// (-- api-linter: core::0136::http-name-variable=disabled
+	//
+	//	aip.dev/not-precedent: We need to do this because
+	//	the phrasing reads easier. --)
+	//
+	// View Staking context information given a specific network address
+	ViewStakingContext(ctx context.Context, in *ViewStakingContextRequest, opts ...grpc.CallOption) (*ViewStakingContextResponse, error)
 }
 
 type stakingServiceClient struct {
@@ -136,6 +152,24 @@ func (c *stakingServiceClient) PerformWorkflowStep(ctx context.Context, in *Perf
 	return out, nil
 }
 
+func (c *stakingServiceClient) RefreshWorkflowStep(ctx context.Context, in *RefreshWorkflowStepRequest, opts ...grpc.CallOption) (*Workflow, error) {
+	out := new(Workflow)
+	err := c.cc.Invoke(ctx, StakingService_RefreshWorkflowStep_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *stakingServiceClient) ViewStakingContext(ctx context.Context, in *ViewStakingContextRequest, opts ...grpc.CallOption) (*ViewStakingContextResponse, error) {
+	out := new(ViewStakingContextResponse)
+	err := c.cc.Invoke(ctx, StakingService_ViewStakingContext_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // StakingServiceServer is the server API for StakingService service.
 // All implementations must embed UnimplementedStakingServiceServer
 // for forward compatibility
@@ -161,6 +195,20 @@ type StakingServiceServer interface {
 	//
 	// Perform the next step in a workflow
 	PerformWorkflowStep(context.Context, *PerformWorkflowStepRequest) (*Workflow, error)
+	// (-- api-linter: core::0136::http-name-variable=disabled
+	//
+	//	aip.dev/not-precedent: We need to do this because
+	//	the phrasing reads easier. --)
+	//
+	// Refresh the current step in a workflow
+	RefreshWorkflowStep(context.Context, *RefreshWorkflowStepRequest) (*Workflow, error)
+	// (-- api-linter: core::0136::http-name-variable=disabled
+	//
+	//	aip.dev/not-precedent: We need to do this because
+	//	the phrasing reads easier. --)
+	//
+	// View Staking context information given a specific network address
+	ViewStakingContext(context.Context, *ViewStakingContextRequest) (*ViewStakingContextResponse, error)
 	mustEmbedUnimplementedStakingServiceServer()
 }
 
@@ -191,6 +239,12 @@ func (UnimplementedStakingServiceServer) ListWorkflows(context.Context, *ListWor
 }
 func (UnimplementedStakingServiceServer) PerformWorkflowStep(context.Context, *PerformWorkflowStepRequest) (*Workflow, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method PerformWorkflowStep not implemented")
+}
+func (UnimplementedStakingServiceServer) RefreshWorkflowStep(context.Context, *RefreshWorkflowStepRequest) (*Workflow, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RefreshWorkflowStep not implemented")
+}
+func (UnimplementedStakingServiceServer) ViewStakingContext(context.Context, *ViewStakingContextRequest) (*ViewStakingContextResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ViewStakingContext not implemented")
 }
 func (UnimplementedStakingServiceServer) mustEmbedUnimplementedStakingServiceServer() {}
 
@@ -349,6 +403,42 @@ func _StakingService_PerformWorkflowStep_Handler(srv interface{}, ctx context.Co
 	return interceptor(ctx, in, info, handler)
 }
 
+func _StakingService_RefreshWorkflowStep_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RefreshWorkflowStepRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(StakingServiceServer).RefreshWorkflowStep(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: StakingService_RefreshWorkflowStep_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(StakingServiceServer).RefreshWorkflowStep(ctx, req.(*RefreshWorkflowStepRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _StakingService_ViewStakingContext_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ViewStakingContextRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(StakingServiceServer).ViewStakingContext(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: StakingService_ViewStakingContext_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(StakingServiceServer).ViewStakingContext(ctx, req.(*ViewStakingContextRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // StakingService_ServiceDesc is the grpc.ServiceDesc for StakingService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -387,6 +477,14 @@ var StakingService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "PerformWorkflowStep",
 			Handler:    _StakingService_PerformWorkflowStep_Handler,
+		},
+		{
+			MethodName: "RefreshWorkflowStep",
+			Handler:    _StakingService_RefreshWorkflowStep_Handler,
+		},
+		{
+			MethodName: "ViewStakingContext",
+			Handler:    _StakingService_ViewStakingContext_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

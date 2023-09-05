@@ -288,3 +288,53 @@ func ExampleStakingClient_PerformWorkflowStep() {
 	// TODO: Use resp.
 	_ = resp
 }
+
+func ExampleStakingClient_RefreshWorkflowStep() {
+	ctx := context.Background()
+	// This snippet has been automatically generated and should be regarded as a code template only.
+	// It will require modifications to work:
+	// - It may require correct/in-range values for request initialization.
+	// - It may require specifying regional endpoints when creating the service client as shown in:
+	//   https://pkg.go.dev/cloud.google.com/go#hdr-Client_Options
+	c, err := v1alpha1.NewStakingClient(ctx)
+	if err != nil {
+		// TODO: Handle error.
+	}
+	defer c.Close()
+
+	req := &stakingpb.RefreshWorkflowStepRequest{
+		// TODO: Fill request struct fields.
+		// See https://pkg.go.dev/github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/v1alpha1#RefreshWorkflowStepRequest.
+	}
+	resp, err := c.RefreshWorkflowStep(ctx, req)
+	if err != nil {
+		// TODO: Handle error.
+	}
+	// TODO: Use resp.
+	_ = resp
+}
+
+func ExampleStakingClient_ViewStakingContext() {
+	ctx := context.Background()
+	// This snippet has been automatically generated and should be regarded as a code template only.
+	// It will require modifications to work:
+	// - It may require correct/in-range values for request initialization.
+	// - It may require specifying regional endpoints when creating the service client as shown in:
+	//   https://pkg.go.dev/cloud.google.com/go#hdr-Client_Options
+	c, err := v1alpha1.NewStakingClient(ctx)
+	if err != nil {
+		// TODO: Handle error.
+	}
+	defer c.Close()
+
+	req := &stakingpb.ViewStakingContextRequest{
+		// TODO: Fill request struct fields.
+		// See https://pkg.go.dev/github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/v1alpha1#ViewStakingContextRequest.
+	}
+	resp, err := c.ViewStakingContext(ctx, req)
+	if err != nil {
+		// TODO: Handle error.
+	}
+	// TODO: Use resp.
+	_ = resp
+}

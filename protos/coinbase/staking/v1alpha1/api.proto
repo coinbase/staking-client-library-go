@@ -13,6 +13,7 @@ import "coinbase/staking/v1alpha1/network.proto";
 import "coinbase/staking/v1alpha1/action.proto";
 import "coinbase/staking/v1alpha1/validator.proto";
 import "coinbase/staking/v1alpha1/workflow.proto";
+import "coinbase/staking/v1alpha1/staking_context.proto";
 
 option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
   host: "api.developer.coinbase.com";
@@ -238,6 +239,57 @@ service StakingService {
       }
     };
 
+  };
+
+
+  // (-- api-linter: core::0136::http-name-variable=disabled
+  //     aip.dev/not-precedent: We need to do this because
+  //     the phrasing reads easier. --)
+  //
+  // Refresh the current step in a workflow
+  rpc RefreshWorkflowStep(RefreshWorkflowStepRequest) returns (Workflow) {
+    option (google.api.http) = {
+      post: "/api/v1alpha1/{name=projects/*/workflows/*}/refresh"
+      body: "*"
+    };
+
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Refresh the current step in a workflow";
+      description: "Refresh the current step in a workflow";
+      operation_id: "refreshWorkflow";
+      tags: "Workflow";
+      responses: {
+        key: "200"
+        value: {
+          description: "OK";
+        }
+      }
+    };
+
+  };
+
+  // (-- api-linter: core::0136::http-name-variable=disabled
+  //     aip.dev/not-precedent: We need to do this because
+  //     the phrasing reads easier. --)
+  //
+  // View Staking context information given a specific network address
+  rpc ViewStakingContext(ViewStakingContextRequest) returns (ViewStakingContextResponse) {
+    option (google.api.http) = {
+      get: "/api/v1alpha1/viewStakingContext:view"
+    };
+
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Returns point-in-time context of staking data for an address";
+      description: "Returns point-in-time context of staking data for an address";
+      operation_id: "ViewStakingContext";
+      tags: "StakingContext";
+      responses: {
+        key: "200"
+        value: {
+          description: "OK";
+        }
+      }
+    };
   };
 }
 

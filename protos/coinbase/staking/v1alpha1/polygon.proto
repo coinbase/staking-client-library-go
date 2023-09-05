@@ -4,6 +4,7 @@ package coinbase.staking.v1alpha1;
 
 option go_package = "github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/v1alpha1";
 
+import "google/api/field_behavior.proto";
 import "protoc-gen-openapiv2/options/annotations.proto";
 
 import "coinbase/staking/v1alpha1/common.proto";
@@ -19,15 +20,15 @@ message PolygonStakeParameters {
 
   // The public address of the delegator you wish to
   // interact with.
-  string delegator_address = 1;
+  string delegator_address = 1 [(google.api.field_behavior) = REQUIRED];
 
   // The public address of the validator you wish to
   // perform the action to.
-  string validator_address = 2;
+  string validator_address = 2 [(google.api.field_behavior) = REQUIRED];
 
   // The amount of the asset. For native assets or ERC-20 contracts, this is presented in terms of
   // atomic units (e.g., Wei for Ether) as a base-10 number.
-  Amount amount = 3;
+  Amount amount = 3 [(google.api.field_behavior) = REQUIRED];
 }
 
 // (-- api-linter: core::0140::prepositions=disabled
@@ -42,15 +43,15 @@ message PolygonUnstakeParameters {
 
   // The public address of the delegator you wish to
   // interact with.
-  string delegator_address = 1;
+  string delegator_address = 1 [(google.api.field_behavior) = REQUIRED];
 
   // The public address of the validator you wish to
   // perform the action to.
-  string validator_address = 2;
+  string validator_address = 2 [(google.api.field_behavior) = REQUIRED];
 
   // The amount of the asset. For native assets or ERC-20 contracts, this is presented in terms of
   // atomic units (e.g., Wei for Ether) as a base-10 number.
-  Amount amount = 3;
+  Amount amount = 3 [(google.api.field_behavior) = REQUIRED];
 }
 
 // (-- api-linter: core::0140::prepositions=disabled
@@ -65,11 +66,11 @@ message PolygonRestakeParameters {
 
   // The public address of the delegator you wish to
   // interact with.
-  string delegator_address = 1;
+  string delegator_address = 1 [(google.api.field_behavior) = REQUIRED];
 
   // The public address of the validator you wish to
   // perform the action to.
-  string validator_address = 2;
+  string validator_address = 2 [(google.api.field_behavior) = REQUIRED];
 }
 
 // (-- api-linter: core::0140::prepositions=disabled
@@ -84,11 +85,11 @@ message PolygonClaimRewardsParameters {
 
   // The public address of the delegator you wish to
   // interact with.
-  string delegator_address = 1;
+  string delegator_address = 1 [(google.api.field_behavior) = REQUIRED];
 
   // The public address of the validator you wish to
   // perform the action to.
-  string validator_address = 2;
+  string validator_address = 2 [(google.api.field_behavior) = REQUIRED];
 }
 
 // The parameters needed for staking on Polygon

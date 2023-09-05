@@ -52,6 +52,8 @@ type StakingCallOptions struct {
 	GetWorkflow []gax.CallOption
 	ListWorkflows []gax.CallOption
 	PerformWorkflowStep []gax.CallOption
+	RefreshWorkflowStep []gax.CallOption
+	ViewStakingContext []gax.CallOption
 }
 
 func defaultStakingGRPCClientOptions() []option.ClientOption {
@@ -84,6 +86,10 @@ func defaultStakingCallOptions() *StakingCallOptions {
 		},
 		PerformWorkflowStep: []gax.CallOption{
 		},
+		RefreshWorkflowStep: []gax.CallOption{
+		},
+		ViewStakingContext: []gax.CallOption{
+		},
 	}
 }
 
@@ -105,6 +111,10 @@ func defaultStakingRESTCallOptions() *StakingCallOptions {
 		},
 		PerformWorkflowStep: []gax.CallOption{
 		},
+		RefreshWorkflowStep: []gax.CallOption{
+		},
+		ViewStakingContext: []gax.CallOption{
+		},
 	}
 }
 
@@ -121,6 +131,8 @@ type internalStakingClient interface {
 	GetWorkflow(context.Context, *stakingpb.GetWorkflowRequest, ...gax.CallOption) (*stakingpb.Workflow, error)
 	ListWorkflows(context.Context, *stakingpb.ListWorkflowsRequest, ...gax.CallOption) *WorkflowIterator
 	PerformWorkflowStep(context.Context, *stakingpb.PerformWorkflowStepRequest, ...gax.CallOption) (*stakingpb.Workflow, error)
+	RefreshWorkflowStep(context.Context, *stakingpb.RefreshWorkflowStepRequest, ...gax.CallOption) (*stakingpb.Workflow, error)
+	ViewStakingContext(context.Context, *stakingpb.ViewStakingContextRequest, ...gax.CallOption) (*stakingpb.ViewStakingContextResponse, error)
 }
 
 // StakingClient is a client for interacting with .
@@ -203,6 +215,24 @@ func (c *StakingClient) ListWorkflows(ctx context.Context, req *stakingpb.ListWo
 // Perform the next step in a workflow
 func (c *StakingClient) PerformWorkflowStep(ctx context.Context, req *stakingpb.PerformWorkflowStepRequest, opts ...gax.CallOption) (*stakingpb.Workflow, error) {
 	return c.internalClient.PerformWorkflowStep(ctx, req, opts...)
+}
+
+// RefreshWorkflowStep (– api-linter: core::0136::http-name-variable=disabled
+// aip.dev/not-precedent (at http://aip.dev/not-precedent): We need to do this because
+// the phrasing reads easier. –)
+//
+// Refresh the current step in a workflow
+func (c *StakingClient) RefreshWorkflowStep(ctx context.Context, req *stakingpb.RefreshWorkflowStepRequest, opts ...gax.CallOption) (*stakingpb.Workflow, error) {
+	return c.internalClient.RefreshWorkflowStep(ctx, req, opts...)
+}
+
+// ViewStakingContext (– api-linter: core::0136::http-name-variable=disabled
+// aip.dev/not-precedent (at http://aip.dev/not-precedent): We need to do this because
+// the phrasing reads easier. –)
+//
+// View Staking context information given a specific network address
+func (c *StakingClient) ViewStakingContext(ctx context.Context, req *stakingpb.ViewStakingContextRequest, opts ...gax.CallOption) (*stakingpb.ViewStakingContextResponse, error) {
+	return c.internalClient.ViewStakingContext(ctx, req, opts...)
 }
 
 // stakingGRPCClient is a client for interacting with  over gRPC transport.
@@ -615,6 +645,38 @@ func (c *stakingGRPCClient) PerformWorkflowStep(ctx context.Context, req *stakin
 	err := gax.Invoke(ctx, func(ctx context.Context, settings gax.CallSettings) error {
 		var err error
 		resp, err = c.stakingClient.PerformWorkflowStep(ctx, req, settings.GRPC...)
+		return err
+	}, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
+}
+
+func (c *stakingGRPCClient) RefreshWorkflowStep(ctx context.Context, req *stakingpb.RefreshWorkflowStepRequest, opts ...gax.CallOption) (*stakingpb.Workflow, error) {
+	md := metadata.Pairs("x-goog-request-params", fmt.Sprintf("%s=%v", "name", url.QueryEscape(req.GetName())))
+
+	ctx = insertMetadata(ctx, c.xGoogMetadata, md)
+	opts = append((*c.CallOptions).RefreshWorkflowStep[0:len((*c.CallOptions).RefreshWorkflowStep):len((*c.CallOptions).RefreshWorkflowStep)], opts...)
+	var resp *stakingpb.Workflow
+	err := gax.Invoke(ctx, func(ctx context.Context, settings gax.CallSettings) error {
+		var err error
+		resp, err = c.stakingClient.RefreshWorkflowStep(ctx, req, settings.GRPC...)
+		return err
+	}, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
+}
+
+func (c *stakingGRPCClient) ViewStakingContext(ctx context.Context, req *stakingpb.ViewStakingContextRequest, opts ...gax.CallOption) (*stakingpb.ViewStakingContextResponse, error) {
+	ctx = insertMetadata(ctx, c.xGoogMetadata)
+	opts = append((*c.CallOptions).ViewStakingContext[0:len((*c.CallOptions).ViewStakingContext):len((*c.CallOptions).ViewStakingContext)], opts...)
+	var resp *stakingpb.ViewStakingContextResponse
+	err := gax.Invoke(ctx, func(ctx context.Context, settings gax.CallSettings) error {
+		var err error
+		resp, err = c.stakingClient.ViewStakingContext(ctx, req, settings.GRPC...)
 		return err
 	}, opts...)
 	if err != nil {
@@ -1197,6 +1259,131 @@ func (c *stakingRESTClient) PerformWorkflowStep(ctx context.Context, req *stakin
 			baseUrl.Path = settings.Path
 		}
 		httpReq, err := http.NewRequest("POST", baseUrl.String(), bytes.NewReader(jsonReq))
+		if err != nil {
+			return err
+		}
+		httpReq = httpReq.WithContext(ctx)
+		httpReq.Header = headers
+
+		httpRsp, err := c.httpClient.Do(httpReq)
+		if err != nil{
+			return err
+		}
+		defer httpRsp.Body.Close()
+
+		if err = googleapi.CheckResponse(httpRsp); err != nil {
+			return err
+		}
+
+		buf, err := ioutil.ReadAll(httpRsp.Body)
+		if err != nil {
+			return err
+		}
+
+		if err := unm.Unmarshal(buf, resp); err != nil {
+			return maybeUnknownEnum(err)
+		}
+
+		return nil
+	}, opts...)
+	if e != nil {
+		return nil, e
+	}
+	return resp, nil
+}
+// RefreshWorkflowStep (– api-linter: core::0136::http-name-variable=disabled
+// aip.dev/not-precedent (at http://aip.dev/not-precedent): We need to do this because
+// the phrasing reads easier. –)
+//
+// Refresh the current step in a workflow
+func (c *stakingRESTClient) RefreshWorkflowStep(ctx context.Context, req *stakingpb.RefreshWorkflowStepRequest, opts ...gax.CallOption) (*stakingpb.Workflow, error) {
+	m := protojson.MarshalOptions{AllowPartial: true, UseEnumNumbers: true}
+	jsonReq, err := m.Marshal(req)
+	if err != nil {
+		return nil, err
+	}
+
+	baseUrl, err := url.Parse(c.endpoint)
+	if err != nil {
+		return nil, err
+	}
+	baseUrl.Path += fmt.Sprintf("/api/v1alpha1/%v/refresh", req.GetName())
+
+	// Build HTTP headers from client and context metadata.
+	md := metadata.Pairs("x-goog-request-params", fmt.Sprintf("%s=%v", "name", url.QueryEscape(req.GetName())))
+
+	headers := buildHeaders(ctx, c.xGoogMetadata, md, metadata.Pairs("Content-Type", "application/json"))
+	opts = append((*c.CallOptions).RefreshWorkflowStep[0:len((*c.CallOptions).RefreshWorkflowStep):len((*c.CallOptions).RefreshWorkflowStep)], opts...)
+	unm := protojson.UnmarshalOptions{AllowPartial: true, DiscardUnknown: true}
+	resp := &stakingpb.Workflow{}
+	e := gax.Invoke(ctx, func(ctx context.Context, settings gax.CallSettings) error {
+		if settings.Path != "" {
+			baseUrl.Path = settings.Path
+		}
+		httpReq, err := http.NewRequest("POST", baseUrl.String(), bytes.NewReader(jsonReq))
+		if err != nil {
+			return err
+		}
+		httpReq = httpReq.WithContext(ctx)
+		httpReq.Header = headers
+
+		httpRsp, err := c.httpClient.Do(httpReq)
+		if err != nil{
+			return err
+		}
+		defer httpRsp.Body.Close()
+
+		if err = googleapi.CheckResponse(httpRsp); err != nil {
+			return err
+		}
+
+		buf, err := ioutil.ReadAll(httpRsp.Body)
+		if err != nil {
+			return err
+		}
+
+		if err := unm.Unmarshal(buf, resp); err != nil {
+			return maybeUnknownEnum(err)
+		}
+
+		return nil
+	}, opts...)
+	if e != nil {
+		return nil, e
+	}
+	return resp, nil
+}
+// ViewStakingContext (– api-linter: core::0136::http-name-variable=disabled
+// aip.dev/not-precedent (at http://aip.dev/not-precedent): We need to do this because
+// the phrasing reads easier. –)
+//
+// View Staking context information given a specific network address
+func (c *stakingRESTClient) ViewStakingContext(ctx context.Context, req *stakingpb.ViewStakingContextRequest, opts ...gax.CallOption) (*stakingpb.ViewStakingContextResponse, error) {
+	baseUrl, err := url.Parse(c.endpoint)
+	if err != nil {
+		return nil, err
+	}
+	baseUrl.Path += fmt.Sprintf("/api/v1alpha1/viewStakingContext:view")
+
+	params := url.Values{}
+	params.Add("address", fmt.Sprintf("%v", req.GetAddress()))
+	if req.GetEthereumKilnStakingContextParameters().GetIntegratorContractAddress() != "" {
+		params.Add("ethereumKilnStakingContextParameters.integratorContractAddress", fmt.Sprintf("%v", req.GetEthereumKilnStakingContextParameters().GetIntegratorContractAddress()))
+	}
+	params.Add("network", fmt.Sprintf("%v", req.GetNetwork()))
+
+	baseUrl.RawQuery = params.Encode()
+
+	// Build HTTP headers from client and context metadata.
+	headers := buildHeaders(ctx, c.xGoogMetadata, metadata.Pairs("Content-Type", "application/json"))
+	opts = append((*c.CallOptions).ViewStakingContext[0:len((*c.CallOptions).ViewStakingContext):len((*c.CallOptions).ViewStakingContext)], opts...)
+	unm := protojson.UnmarshalOptions{AllowPartial: true, DiscardUnknown: true}
+	resp := &stakingpb.ViewStakingContextResponse{}
+	e := gax.Invoke(ctx, func(ctx context.Context, settings gax.CallSettings) error {
+		if settings.Path != "" {
+			baseUrl.Path = settings.Path
+		}
+		httpReq, err := http.NewRequest("GET", baseUrl.String(), nil)
 		if err != nil {
 			return err
 		}

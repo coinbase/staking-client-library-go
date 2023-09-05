@@ -26,6 +26,14 @@
 - [coinbase/staking/v1alpha1/common.proto](#coinbase_staking_v1alpha1_common-proto)
     - [Amount](#coinbase-staking-v1alpha1-Amount)
   
+- [coinbase/staking/v1alpha1/ethereum_kiln.proto](#coinbase_staking_v1alpha1_ethereum_kiln-proto)
+    - [EthereumKilnClaimRewardsParameters](#coinbase-staking-v1alpha1-EthereumKilnClaimRewardsParameters)
+    - [EthereumKilnStakeParameters](#coinbase-staking-v1alpha1-EthereumKilnStakeParameters)
+    - [EthereumKilnStakingContextDetails](#coinbase-staking-v1alpha1-EthereumKilnStakingContextDetails)
+    - [EthereumKilnStakingContextParameters](#coinbase-staking-v1alpha1-EthereumKilnStakingContextParameters)
+    - [EthereumKilnStakingParameters](#coinbase-staking-v1alpha1-EthereumKilnStakingParameters)
+    - [EthereumKilnUnstakeParameters](#coinbase-staking-v1alpha1-EthereumKilnUnstakeParameters)
+  
 - [coinbase/staking/v1alpha1/polygon.proto](#coinbase_staking_v1alpha1_polygon-proto)
     - [PolygonClaimRewardsParameters](#coinbase-staking-v1alpha1-PolygonClaimRewardsParameters)
     - [PolygonRestakeParameters](#coinbase-staking-v1alpha1-PolygonRestakeParameters)
@@ -33,19 +41,36 @@
     - [PolygonStakingParameters](#coinbase-staking-v1alpha1-PolygonStakingParameters)
     - [PolygonUnstakeParameters](#coinbase-staking-v1alpha1-PolygonUnstakeParameters)
   
+- [coinbase/staking/v1alpha1/solana.proto](#coinbase_staking_v1alpha1_solana-proto)
+    - [NonceOptions](#coinbase-staking-v1alpha1-NonceOptions)
+    - [SolanaCreateStakeAccountParameters](#coinbase-staking-v1alpha1-SolanaCreateStakeAccountParameters)
+    - [SolanaDeactivateStakeParameters](#coinbase-staking-v1alpha1-SolanaDeactivateStakeParameters)
+    - [SolanaDelegateStakeParameters](#coinbase-staking-v1alpha1-SolanaDelegateStakeParameters)
+    - [SolanaMergeStakeParameters](#coinbase-staking-v1alpha1-SolanaMergeStakeParameters)
+    - [SolanaSplitStakeParameters](#coinbase-staking-v1alpha1-SolanaSplitStakeParameters)
+    - [SolanaStakingParameters](#coinbase-staking-v1alpha1-SolanaStakingParameters)
+    - [SolanaWithdrawStakeParameters](#coinbase-staking-v1alpha1-SolanaWithdrawStakeParameters)
+  
 - [coinbase/staking/v1alpha1/workflow.proto](#coinbase_staking_v1alpha1_workflow-proto)
     - [CreateWorkflowRequest](#coinbase-staking-v1alpha1-CreateWorkflowRequest)
     - [GetWorkflowRequest](#coinbase-staking-v1alpha1-GetWorkflowRequest)
     - [ListWorkflowsRequest](#coinbase-staking-v1alpha1-ListWorkflowsRequest)
     - [ListWorkflowsResponse](#coinbase-staking-v1alpha1-ListWorkflowsResponse)
     - [PerformWorkflowStepRequest](#coinbase-staking-v1alpha1-PerformWorkflowStepRequest)
+    - [RefreshWorkflowStepRequest](#coinbase-staking-v1alpha1-RefreshWorkflowStepRequest)
     - [TxStepOutput](#coinbase-staking-v1alpha1-TxStepOutput)
     - [WaitStepOutput](#coinbase-staking-v1alpha1-WaitStepOutput)
     - [Workflow](#coinbase-staking-v1alpha1-Workflow)
     - [WorkflowStep](#coinbase-staking-v1alpha1-WorkflowStep)
   
-    - [State](#coinbase-staking-v1alpha1-State)
-    - [WaitUnit](#coinbase-staking-v1alpha1-WaitUnit)
+    - [TxStepOutput.State](#coinbase-staking-v1alpha1-TxStepOutput-State)
+    - [WaitStepOutput.State](#coinbase-staking-v1alpha1-WaitStepOutput-State)
+    - [WaitStepOutput.WaitUnit](#coinbase-staking-v1alpha1-WaitStepOutput-WaitUnit)
+    - [Workflow.State](#coinbase-staking-v1alpha1-Workflow-State)
+  
+- [coinbase/staking/v1alpha1/staking_context.proto](#coinbase_staking_v1alpha1_staking_context-proto)
+    - [ViewStakingContextRequest](#coinbase-staking-v1alpha1-ViewStakingContextRequest)
+    - [ViewStakingContextResponse](#coinbase-staking-v1alpha1-ViewStakingContextResponse)
   
 - [coinbase/staking/v1alpha1/api.proto](#coinbase_staking_v1alpha1_api-proto)
     - [StakingService](#coinbase-staking-v1alpha1-StakingService)
@@ -365,6 +390,124 @@ with.
 
 
 
+<a name="coinbase_staking_v1alpha1_ethereum_kiln-proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## coinbase/staking/v1alpha1/ethereum_kiln.proto
+
+
+
+<a name="coinbase-staking-v1alpha1-EthereumKilnClaimRewardsParameters"></a>
+
+### EthereumKilnClaimRewardsParameters
+The parameters required for the claim rewards action on Ethereum Kiln.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| staker_address | [string](#string) |  | The address you wish to claim rewards for. |
+| integrator_contract_address | [string](#string) |  | The address of the integrator contract |
+
+
+
+
+
+
+<a name="coinbase-staking-v1alpha1-EthereumKilnStakeParameters"></a>
+
+### EthereumKilnStakeParameters
+The parameters required for the stake action on Ethereum Kiln.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| staker_address | [string](#string) |  | The address you wish to stake from. |
+| integrator_contract_address | [string](#string) |  | The address of the integrator contract |
+| amount | [Amount](#coinbase-staking-v1alpha1-Amount) |  | The amount of Ethereum to stake in wei. |
+
+
+
+
+
+
+<a name="coinbase-staking-v1alpha1-EthereumKilnStakingContextDetails"></a>
+
+### EthereumKilnStakingContextDetails
+The protocol specific details for an Ethereum Kiln staking context.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| ethereum_balance | [Amount](#coinbase-staking-v1alpha1-Amount) |  | The Ethereum balance of the address |
+| integrator_share_balance | [Amount](#coinbase-staking-v1alpha1-Amount) |  | The number of integrator shares owned by the address. |
+| integrator_share_underlying_balance | [Amount](#coinbase-staking-v1alpha1-Amount) |  | The total Ethereum you can exchange for your integrator shares. |
+| total_exitable_eth | [Amount](#coinbase-staking-v1alpha1-Amount) |  | The total amount of Ethereum you can redeem for all non-claimed vPool shares. |
+| total_shares_pending_exit | [Amount](#coinbase-staking-v1alpha1-Amount) |  | The number of vPool shares are eligible to receive now or at a later point in time. |
+| fulfillable_share_count | [Amount](#coinbase-staking-v1alpha1-Amount) |  | The number of vPool shares you are able to claim now. |
+
+
+
+
+
+
+<a name="coinbase-staking-v1alpha1-EthereumKilnStakingContextParameters"></a>
+
+### EthereumKilnStakingContextParameters
+The protocol specific parameters required for fetching a staking context.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| integrator_contract_address | [string](#string) |  | Integrator contract address |
+
+
+
+
+
+
+<a name="coinbase-staking-v1alpha1-EthereumKilnStakingParameters"></a>
+
+### EthereumKilnStakingParameters
+The parameters needed for staking on Ethereum via Kiln.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| stake_parameters | [EthereumKilnStakeParameters](#coinbase-staking-v1alpha1-EthereumKilnStakeParameters) |  | The parameters for stake action on Ethereum Kiln. |
+| unstake_parameters | [EthereumKilnUnstakeParameters](#coinbase-staking-v1alpha1-EthereumKilnUnstakeParameters) |  | The parameters for unstake action on Ethereum Kiln. |
+| claim_rewards_parameters | [EthereumKilnClaimRewardsParameters](#coinbase-staking-v1alpha1-EthereumKilnClaimRewardsParameters) |  | The parameters for claim rewards action on Ethereum Kiln. |
+
+
+
+
+
+
+<a name="coinbase-staking-v1alpha1-EthereumKilnUnstakeParameters"></a>
+
+### EthereumKilnUnstakeParameters
+The parameters required for the unstake action on Ethereum Kiln.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| staker_address | [string](#string) |  | The address you wish to unstake from. |
+| integrator_contract_address | [string](#string) |  | The address of the integrator contract |
+| amount | [Amount](#coinbase-staking-v1alpha1-Amount) |  | The amount of Ethereum to unstake in wei. |
+
+
+
+
+
+ 
+
+ 
+
+ 
+
+ 
+
+
+
 <a name="coinbase_staking_v1alpha1_polygon-proto"></a>
 <p align="right"><a href="#top">Top</a></p>
 
@@ -471,6 +614,170 @@ The parameters required for unstake action on Polygon
 
 
 
+<a name="coinbase_staking_v1alpha1_solana-proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## coinbase/staking/v1alpha1/solana.proto
+
+
+
+<a name="coinbase-staking-v1alpha1-NonceOptions"></a>
+
+### NonceOptions
+The parameters required to use a durable transaction nonce for Solana transactions.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| nonce | [string](#string) |  | The blockhash stored in the nonce account. |
+| nonce_account | [string](#string) |  | The address of the nonce account. |
+| nonce_authority | [string](#string) |  | The address of the nonce authority. If not provided, defaults to the nonce_account_address. Signs the transaction. |
+
+
+
+
+
+
+<a name="coinbase-staking-v1alpha1-SolanaCreateStakeAccountParameters"></a>
+
+### SolanaCreateStakeAccountParameters
+The parameters required for the create stake account action on Solana.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| stake_account_address | [string](#string) |  | The address of the new stake account which will be created. This address must not already exist. Signs the transaction. |
+| from_address | [string](#string) |  | The address of the account which will fund the stake account. Pays the transaction fee. Signs the transaction. (-- api-linter: core::0140::prepositions=disabled aip.dev/not-precedent: We need to do this because it&#39;s not relevant to our use case. --) |
+| stake_authority | [string](#string) |  | The address of the account which will be granted signing authority over staking operations on the new stake account. If not provided, defaults to the from_address. |
+| withdraw_authority | [string](#string) |  | The address of the account which will be granted signing authority over withdrawing inactive stake from the new stake account. If not provided, defaults to the from_address. |
+| amount | [Amount](#coinbase-staking-v1alpha1-Amount) |  | The amount to fund the stake account with, in Lamports. |
+| nonce_options | [NonceOptions](#coinbase-staking-v1alpha1-NonceOptions) |  | The parameters required to use a durable transaction nonce for Solana transactions. |
+
+
+
+
+
+
+<a name="coinbase-staking-v1alpha1-SolanaDeactivateStakeParameters"></a>
+
+### SolanaDeactivateStakeParameters
+The parameters required for the deactivate stake action on Solana.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| stake_account_address | [string](#string) |  | The address of the stake account which will have its stake deactivated. Stake must be currently active. |
+| stake_authority | [string](#string) |  | The address of the account which has signing authority over staking operations on the stake account. Signs the transaction. |
+| nonce_options | [NonceOptions](#coinbase-staking-v1alpha1-NonceOptions) |  | The parameters required to use a durable transaction nonce for Solana transactions. |
+
+
+
+
+
+
+<a name="coinbase-staking-v1alpha1-SolanaDelegateStakeParameters"></a>
+
+### SolanaDelegateStakeParameters
+The parameters required for the delegate stake action on Solana.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| stake_account_address | [string](#string) |  | The address of the stake account which will be delegating its stake. |
+| vote_account_address | [string](#string) |  | The address of the validator&#39;s vote account to which the stake will be delegated. |
+| stake_authority | [string](#string) |  | The address of the account which has signing authority over staking operations on the stake account. Signs the transaction. |
+| nonce_options | [NonceOptions](#coinbase-staking-v1alpha1-NonceOptions) |  | The parameters required to use a durable transaction nonce for Solana transactions. |
+
+
+
+
+
+
+<a name="coinbase-staking-v1alpha1-SolanaMergeStakeParameters"></a>
+
+### SolanaMergeStakeParameters
+The parameters required for merge stake action on Solana.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| stake_account_address | [string](#string) |  | The address of the stake account will be merged into and have stake added to it. |
+| source_stake_account_address | [string](#string) |  | The address of the source stake account which will have no longer exist after the merge. |
+| stake_authority | [string](#string) |  | The address of the account which has signing authority over staking operations on the stake account. Signs the transaction. |
+| nonce_options | [NonceOptions](#coinbase-staking-v1alpha1-NonceOptions) |  | The parameters required to use a durable transaction nonce for Solana transactions. |
+
+
+
+
+
+
+<a name="coinbase-staking-v1alpha1-SolanaSplitStakeParameters"></a>
+
+### SolanaSplitStakeParameters
+The parameters required for split stake action on Solana.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| stake_account_address | [string](#string) |  | The address of the stake account will be split and have its stake removed. |
+| new_stake_account_address | [string](#string) |  | The address of the new stake account which will be created and have the stake added to it. |
+| stake_authority | [string](#string) |  | The address of the account which has signing authority over staking operations on the stake account. Signs the transaction. |
+| amount | [Amount](#coinbase-staking-v1alpha1-Amount) |  | The amount of stake to split, in Lamports. |
+| nonce_options | [NonceOptions](#coinbase-staking-v1alpha1-NonceOptions) |  | The parameters required to use a durable transaction nonce for Solana transactions. |
+
+
+
+
+
+
+<a name="coinbase-staking-v1alpha1-SolanaStakingParameters"></a>
+
+### SolanaStakingParameters
+The parameters needed for staking on Solana
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| create_stake_parameters | [SolanaCreateStakeAccountParameters](#coinbase-staking-v1alpha1-SolanaCreateStakeAccountParameters) |  | The parameters for create stake account action on Solana. |
+| delegate_stake_parameters | [SolanaDelegateStakeParameters](#coinbase-staking-v1alpha1-SolanaDelegateStakeParameters) |  | The parameters for delegate stake action on Solana. |
+| deactivate_stake_parameters | [SolanaDeactivateStakeParameters](#coinbase-staking-v1alpha1-SolanaDeactivateStakeParameters) |  | The parameters for deactivate stake action on Solana. |
+| withdraw_stake_parameters | [SolanaWithdrawStakeParameters](#coinbase-staking-v1alpha1-SolanaWithdrawStakeParameters) |  | The parameters for withdraw stake action on Solana. |
+| split_stake_parameters | [SolanaSplitStakeParameters](#coinbase-staking-v1alpha1-SolanaSplitStakeParameters) |  | The parameters for split stake action on Solana. |
+| merge_stake_parameters | [SolanaMergeStakeParameters](#coinbase-staking-v1alpha1-SolanaMergeStakeParameters) |  | The parameters for merge stake action on Solana. |
+
+
+
+
+
+
+<a name="coinbase-staking-v1alpha1-SolanaWithdrawStakeParameters"></a>
+
+### SolanaWithdrawStakeParameters
+The parameters required for the withdraw stake action on Solana.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| stake_account_address | [string](#string) |  | The address of the stake account from which stake will be withdrawn. Stake must be currently inactive. |
+| recipient_address | [string](#string) |  | The address of the recipient account which will receive the withdrawn stake. |
+| withdraw_authority | [string](#string) |  | The address of the account which has signing authority over withdrawing inactive stake from the stake account. Signs the transaction. |
+| amount | [Amount](#coinbase-staking-v1alpha1-Amount) |  | The amount to withdraw from the stake account, in Lamports. |
+| nonce_options | [NonceOptions](#coinbase-staking-v1alpha1-NonceOptions) |  | The parameters required to use a durable transaction nonce for Solana transactions. |
+
+
+
+
+
+ 
+
+ 
+
+ 
+
+ 
+
+
+
 <a name="coinbase_staking_v1alpha1_workflow-proto"></a>
 <p align="right"><a href="#top">Top</a></p>
 
@@ -481,7 +788,6 @@ The parameters required for unstake action on Polygon
 <a name="coinbase-staking-v1alpha1-CreateWorkflowRequest"></a>
 
 ### CreateWorkflowRequest
-The request message for CreateWorkflow.
 The request message for CreateWorkflow.
 (-- api-linter: core::0133::request-id-field=disabled
     aip.dev/not-precedent: We currently do not support this. --)
@@ -567,6 +873,22 @@ The request message for PerformWorkflowStep.
 
 
 
+<a name="coinbase-staking-v1alpha1-RefreshWorkflowStepRequest"></a>
+
+### RefreshWorkflowStepRequest
+The request message for RefreshWorkflowStepRequest.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| name | [string](#string) |  | The resource name of the workflow. Format: projects/{project}/workflows/{workflow} |
+| step | [int32](#int32) |  | The index of the step to be refreshed. |
+
+
+
+
+
+
 <a name="coinbase-staking-v1alpha1-TxStepOutput"></a>
 
 ### TxStepOutput
@@ -578,6 +900,7 @@ The details of a transaction being constructed and broadcasted to the network.
 | unsigned_tx | [string](#string) |  | The unsigned transaction which was signed in order to be broadcasted |
 | signed_tx | [string](#string) |  | The signed transaction which was asked to be broadcasted |
 | tx_hash | [string](#string) |  | The hash of the broadcasted transaction. |
+| state | [TxStepOutput.State](#coinbase-staking-v1alpha1-TxStepOutput-State) |  | The state of the transaction step. |
 
 
 
@@ -595,7 +918,8 @@ The output details of a step where we wait for some kind of on-chain activity to
 | start | [int64](#int64) |  | The beginning of wait period. |
 | current | [int64](#int64) |  | The current wait progress. |
 | target | [int64](#int64) |  | The target wait end point. |
-| unit | [WaitUnit](#coinbase-staking-v1alpha1-WaitUnit) |  | The wait unit (like checkpoint, block, epoch etc) |
+| unit | [WaitStepOutput.WaitUnit](#coinbase-staking-v1alpha1-WaitStepOutput-WaitUnit) |  | The wait unit (like checkpoint, block, epoch etc) |
+| state | [WaitStepOutput.State](#coinbase-staking-v1alpha1-WaitStepOutput-State) |  | The state of the wait step. |
 
 
 
@@ -613,7 +937,9 @@ A Workflow resource
 | name | [string](#string) |  | The resource name of the workflow. Format: projects/{projectUUID}/workflows/{workflowUUID} Ex: projects/ 123e4567-e89b-12d3-a456-426614174000/workflows/123e4567-e89b-12d3-a456-426614174000 |
 | action | [string](#string) |  | The resource name of the action being performed. Format: protocols/{protocol}/networks/{network}/actions/{action} |
 | polygon_staking_parameters | [PolygonStakingParameters](#coinbase-staking-v1alpha1-PolygonStakingParameters) |  | Polygon staking parameters |
-| state | [State](#coinbase-staking-v1alpha1-State) |  | The current state of the workflow |
+| solana_staking_parameters | [SolanaStakingParameters](#coinbase-staking-v1alpha1-SolanaStakingParameters) |  | Solana staking parameters |
+| ethereum_kiln_staking_parameters | [EthereumKilnStakingParameters](#coinbase-staking-v1alpha1-EthereumKilnStakingParameters) |  | EthereumKiln staking parameters |
+| state | [Workflow.State](#coinbase-staking-v1alpha1-Workflow-State) |  | The current state of the workflow |
 | current_step_id | [int32](#int32) |  | The index of the current step. |
 | steps | [WorkflowStep](#coinbase-staking-v1alpha1-WorkflowStep) | repeated | The list of steps for this workflow. |
 | create_time | [google.protobuf.Timestamp](#google-protobuf-Timestamp) |  | The timestamp the workflow was created |
@@ -636,7 +962,6 @@ The information for a step in the workflow
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | name | [string](#string) |  | The human readable name of the step. |
-| state | [State](#coinbase-staking-v1alpha1-State) |  | State represents the state of the specific step. |
 | tx_step_output | [TxStepOutput](#coinbase-staking-v1alpha1-TxStepOutput) |  | The tx step output (i.e. transaction metadata such as unsigned tx, signed tx etc). |
 | wait_step_output | [WaitStepOutput](#coinbase-staking-v1alpha1-WaitStepOutput) |  | The waiting details for any kind like how many checkpoints away for unbonding etc |
 
@@ -647,37 +972,132 @@ The information for a step in the workflow
  
 
 
-<a name="coinbase-staking-v1alpha1-State"></a>
+<a name="coinbase-staking-v1alpha1-TxStepOutput-State"></a>
 
-### State
-The state of a step in the workflow
+### TxStepOutput.State
+State defines an enumeration of states for a staking transaction
 
 | Name | Number | Description |
 | ---- | ------ | ----------- |
-| STATE_UNSPECIFIED | 0 | Unspecified state, this is for backwards compatibility. |
-| NOT_STARTED | 1 | Not Started represents the step is not yet started or available. |
-| INITIALIZED | 2 | Initialized represents the step being ready to take action on. |
-| IN_PROGRESS | 3 | In Progress represents the step is currently in progress and waiting on the network. |
-| WAITING_FOR_SIGNING | 4 | Waiting for signing represents the step is currently in progress and waiting on the consumer to sign. |
-| WAITING_FOR_CHECKPOINTS | 5 | Waiting for checkpoints represents the step is currently waiting for a certain checkpoint to be reached |
-| COMPLETED | 6 | Completed represents the step is completed. |
-| FAILED | 7 | Failed represents the step has failed. |
+| STATE_UNSPECIFIED | 0 | Unspecified transaction state, this is for backwards compatibility. |
+| STATE_NOT_CONSTRUCTED | 1 | Tx has not yet been constructed in the backend |
+| STATE_CONSTRUCTED | 2 | Tx construction is over in the backend |
+| STATE_PENDING_SIGNING | 3 | Tx is waiting to be signed |
+| STATE_SIGNED | 4 | Tx has been signed and returned to the backend |
+| STATE_BROADCASTING | 5 | Tx is being broadcasted to the network |
+| STATE_CONFIRMING | 6 | Tx is waiting for confirmation |
+| STATE_CONFIRMED | 7 | Tx has been confirmed to be included in a block |
+| STATE_FINALIZED | 8 | Tx has been finalized |
+| STATE_FAILED | 9 | Tx construction or broadcasting failed |
+| STATE_SUCCESS | 10 | Tx has been successfully executed |
+| STATE_CANCELING | 11 | Tx is being canceled |
+| STATE_CANCELED | 12 | Tx has been canceled |
+| STATE_CANCEL_FAILED | 13 | Tx cancellation failed |
+| STATE_FAILED_REFRESHABLE | 14 | Tx failed but can be refreshed |
+| STATE_REFRESHING | 15 | Tx is being refreshed |
 
 
 
-<a name="coinbase-staking-v1alpha1-WaitUnit"></a>
+<a name="coinbase-staking-v1alpha1-WaitStepOutput-State"></a>
 
-### WaitUnit
+### WaitStepOutput.State
+WaitStepState defines an enumeration of states for a wait step
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| STATE_UNSPECIFIED | 0 | Unspecified wait step state |
+| STATE_NOT_STARTED | 1 | Wait step has not started |
+| STATE_IN_PROGRESS | 2 | Wait step is in-progress |
+| STATE_COMPLETED | 3 | Wait step completed |
+
+
+
+<a name="coinbase-staking-v1alpha1-WaitStepOutput-WaitUnit"></a>
+
+### WaitStepOutput.WaitUnit
 The unit of wait time
 
 | Name | Number | Description |
 | ---- | ------ | ----------- |
 | WAIT_UNIT_UNSPECIFIED | 0 | Unspecified wait time |
-| SECONDS | 1 | Wait time measured in seconds |
-| BLOCKS | 2 | Wait time measured in blocks |
-| EPOCHS | 3 | Wait time measured in epochs |
-| CHECKPOINTS | 4 | Wait time measured in checkpoints |
+| WAIT_UNIT_SECONDS | 1 | Wait time measured in seconds |
+| WAIT_UNIT_BLOCKS | 2 | Wait time measured in blocks |
+| WAIT_UNIT_EPOCHS | 3 | Wait time measured in epochs |
+| WAIT_UNIT_CHECKPOINTS | 4 | Wait time measured in checkpoints |
 
+
+
+<a name="coinbase-staking-v1alpha1-Workflow-State"></a>
+
+### Workflow.State
+The state of a workflow
+Example workflow states:
+IN_PROGRESS -&gt; WAITING_FOR_SIGNING -&gt; IN_PROGRESS -&gt; COMPLETED
+.................................................|-&gt; FAILED
+IN_PROGRESS -&gt; WAITING_FOR_SIGNING -&gt; CANCELING -&gt; CANCELED
+...............................................|-&gt; CANCEL_FAILED
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| STATE_UNSPECIFIED | 0 | Unspecified workflow state, this is for backwards compatibility. |
+| STATE_IN_PROGRESS | 1 | In Progress represents a workflow that is currently in progress. |
+| STATE_WAITING_FOR_SIGNING | 2 | Waiting for signing represents the workflow is waiting on the consumer to sign. |
+| STATE_COMPLETED | 3 | Completed represents the workflow has completed. |
+| STATE_FAILED | 4 | Failed represents the workflow has failed. |
+| STATE_CANCELING | 5 | Canceling represents the workflow is being canceled. |
+| STATE_CANCELED | 6 | Canceled represents the workflow has been canceled. |
+| STATE_CANCEL_FAILED | 7 | Cancel failed represents the workflow failed to cancel. |
+| STATE_FAILED_REFRESHABLE | 8 | Failed refreshable represents the workflow failed but can be refreshed. |
+
+
+ 
+
+ 
+
+ 
+
+
+
+<a name="coinbase_staking_v1alpha1_staking_context-proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## coinbase/staking/v1alpha1/staking_context.proto
+
+
+
+<a name="coinbase-staking-v1alpha1-ViewStakingContextRequest"></a>
+
+### ViewStakingContextRequest
+The request message for the ViewStakingContext request.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| address | [string](#string) |  | The address to fetch staking context for. |
+| network | [string](#string) |  | The network to fetch staking context for. |
+| ethereum_kiln_staking_context_parameters | [EthereumKilnStakingContextParameters](#coinbase-staking-v1alpha1-EthereumKilnStakingContextParameters) |  | EthereumKiln staking context parameters. |
+
+
+
+
+
+
+<a name="coinbase-staking-v1alpha1-ViewStakingContextResponse"></a>
+
+### ViewStakingContextResponse
+The response message for the ViewStakingContext request.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| address | [string](#string) |  | The address you are getting a staking context for |
+| ethereum_kiln_staking_context_details | [EthereumKilnStakingContextDetails](#coinbase-staking-v1alpha1-EthereumKilnStakingContextDetails) |  | EthereumKiln staking context details |
+
+
+
+
+
+ 
 
  
 
@@ -719,6 +1139,12 @@ StakingService manages staking related resources such as protocols, networks, va
 | PerformWorkflowStep | [PerformWorkflowStepRequest](#coinbase-staking-v1alpha1-PerformWorkflowStepRequest) | [Workflow](#coinbase-staking-v1alpha1-Workflow) | (-- api-linter: core::0136::http-name-variable=disabled aip.dev/not-precedent: We need to do this because the phrasing reads easier. --)
 
 Perform the next step in a workflow |
+| RefreshWorkflowStep | [RefreshWorkflowStepRequest](#coinbase-staking-v1alpha1-RefreshWorkflowStepRequest) | [Workflow](#coinbase-staking-v1alpha1-Workflow) | (-- api-linter: core::0136::http-name-variable=disabled aip.dev/not-precedent: We need to do this because the phrasing reads easier. --)
+
+Refresh the current step in a workflow |
+| ViewStakingContext | [ViewStakingContextRequest](#coinbase-staking-v1alpha1-ViewStakingContextRequest) | [ViewStakingContextResponse](#coinbase-staking-v1alpha1-ViewStakingContextResponse) | (-- api-linter: core::0136::http-name-variable=disabled aip.dev/not-precedent: We need to do this because the phrasing reads easier. --)
+
+View Staking context information given a specific network address |
 
  
 

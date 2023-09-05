@@ -19,6 +19,7 @@ type StakingClientConfig struct {
 	APIKey        *auth.APIKey
 	HTTPClient    *http.Client
 	ClientOptions []option.ClientOption
+	Insecure      bool
 }
 
 // StakingClientOption is a function that applies changes to a clientConfig.
@@ -35,6 +36,14 @@ func WithEndpoint(endpoint string) StakingClientOption {
 func WithAPIKey(apiKey *auth.APIKey) StakingClientOption {
 	return func(c *StakingClientConfig) {
 		c.APIKey = apiKey
+	}
+}
+
+// WithInsecure returns an option to set the insecure flag.
+// If insecure is set to true, the client will not use transport authentication.
+func WithInsecure(insecure bool) StakingClientOption {
+	return func(c *StakingClientConfig) {
+		c.Insecure = insecure
 	}
 }
 
@@ -117,7 +126,7 @@ func GetHTTPClient(serviceName string, config *StakingClientConfig) (*http.Clien
 		httpClient = &http.Client{}
 	}
 
-	if config.APIKey != nil {
+	if !config.Insecure {
 		if httpClient.Transport == nil {
 			httpClient.Transport = http.DefaultTransport
 		}

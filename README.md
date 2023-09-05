@@ -33,21 +33,36 @@ go get github.com/coinbase/staking-client-library-go
 To test that your API Key gives you access as expected to the Staking APIs:
 
 1. Clone this GitHub repo
-2. Run `go build`
+2. Run `go build -o staking-client-example examples/example.go`
 3. Download your API key from the Coinbase Cloud UI and save it as `.coinbase_cloud_api_key.json` at the root of this repo
-4. Run `./staking-client-library-go`
+4. Run `./staking-client-example`
 5. You should see output like the following:
     ```
-    2023/07/14 08:07:14 got protocol: protocols/polygon
-    2023/07/14 08:07:14 got network: protocols/polygon/networks/mainnet
-    2023/07/14 08:07:14 got action: protocols/polygon/networks/mainnet/actions/stake
-    2023/07/14 08:07:14 got action: protocols/polygon/networks/mainnet/actions/unstake
-    2023/07/14 08:07:14 got action: protocols/polygon/networks/mainnet/actions/restake
-    2023/07/14 08:07:14 got action: protocols/polygon/networks/mainnet/actions/claim_rewards
-    2023/07/14 08:07:14 got validator: protocols/polygon/networks/mainnet/validators/0x857679d69fe50e7b722f94acd2629d80c355163d
-    2023/07/14 08:07:14 projectID, privateKey and delegatorAddress must be set
+   2023/09/01 17:52:04 got protocol: protocols/polygon
+   2023/09/01 17:52:04 got protocol: protocols/solana
+   2023/09/01 17:52:04 got network: protocols/polygon/networks/mainnet
+   2023/09/01 17:52:04 got action: protocols/polygon/networks/mainnet/actions/stake
+   2023/09/01 17:52:04 got action: protocols/polygon/networks/mainnet/actions/unstake
+   2023/09/01 17:52:04 got action: protocols/polygon/networks/mainnet/actions/restake
+   2023/09/01 17:52:04 got action: protocols/polygon/networks/mainnet/actions/claim_rewards
+   2023/09/01 17:52:04 got validator: protocols/polygon/networks/mainnet/validators/0x857679d69fE50E7B722f94aCd2629d80C355163d
     ```
-6. To proceed with the entire example.go, you will need to set the following variables in the example.go file and run the code again: 
+### Create an Ethereum Kiln workflow
+To test creating an Ethereum Kiln workflow perform the following:
+
+1. Run `go build -o staking-client-kiln-example examples/ethereum_kiln/example.go`
+2. Run `./staking-client-kiln-example`
+3. To proceed with the entire example.go, you will need to set the following variables in the example.go file and run the code again:
+   * `projectID` - this is the project ID of your Coinbase Cloud project
+   * `privateKey` - this is the private key of the address with this you want to perform staking actions
+   * `stakerAddress` - this is the address with which you want to perform staking actions
+
+### Create a Polygon workflow
+To test creating a Polygon workflow perform the following:
+
+1. Run `go build -o staking-client-polygon-example examples/polygon/example.go`
+2. Run `./staking-client-polygon-example`
+3. To proceed with the entire example.go, you will need to set the following variables in the example.go file and run the code again:
    * `projectID` - this is the project ID of your Coinbase Cloud project
    * `privateKey` - this is the private key of the address with this you want to perform staking actions
    * `delegatorAddress` - this is the address with which you want to perform staking actions
