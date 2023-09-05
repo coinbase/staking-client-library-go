@@ -1,0 +1,13 @@
+version: v1
+breaking:
+  use:
+    - PACKAGE
+lint:
+  use:
+    - DEFAULT
+  except:
+    - PACKAGE_VERSION_SUFFIX
+deps:
+  # adding well known types by google
+  - buf.build/googleapis/googleapis
+  - buf.build/grpc-ecosystem/grpc-gateway

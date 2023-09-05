@@ -1,0 +1,49 @@
+syntax = "proto3";
+
+package coinbase.staking.v1alpha1;
+
+option go_package = "github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/v1alpha1";
+
+import "google/api/resource.proto";
+
+// A Protocol resource (i.e. polygon, ethereum, etc.)
+message Protocol {
+  option (google.api.resource) = {
+    type: "staking.coinbase.com/Protocol"
+    pattern: "protocols/{protocol}"
+    singular: "protocol"
+    plural: "protocols"
+  };
+
+  // The resource name of the Protocol.
+  // Format: protocols/{protocolName}
+  // Ex: protocols/polygon
+  string name = 1;
+}
+
+// The request message for ListProtocols.
+message ListProtocolsRequest {
+  // *UNUSED* The maximum number of protocols to return. The service may
+  // return fewer than this value.
+  //
+  // If unspecified, 50 protocols will be returned.
+  // The maximum value is 1000; values over 1000 will be floored to 1000.
+  int32 page_size = 1;
+
+  // *UNUSED* A page token as part of the response of a previous call.
+  // Provide this to retrieve the next page.
+  //
+  // When paginating, all other parameters must match the previous
+  // request to list resources.
+  string page_token = 2;
+}
+
+// The response message for ListProtocols.
+message ListProtocolsResponse {
+  // The list of protocols.
+  repeated Protocol protocols = 1;
+
+  // *UNUSED* A token which can be provided as `page_token` to retrieve the next page.
+  // If this field is omitted, there are no additional pages.
+  string next_page_token = 2;
+}

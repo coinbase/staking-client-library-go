@@ -1,0 +1,193 @@
+/*
+ * This example code, demonstrates staking client library usage for performing e2e staking on Polygon.
+ */
+
+package main
+
+import (
+	"context"
+	"fmt"
+	"log"
+	"time"
+
+	"github.com/coinbase/staking-client-library-go/auth"
+	"github.com/coinbase/staking-client-library-go/client"
+	stakingerrors "github.com/coinbase/staking-client-library-go/client/errors"
+	v1alpha1client "github.com/coinbase/staking-client-library-go/client/v1alpha1"
+	stakingpb "github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/v1alpha1"
+	"github.com/coinbase/staking-client-library-go/internal/signer"
+)
+
+const (
+	// TODO: Replace with your project ID and private key.
+	projectID  = ""
+	privateKey = ""
+
+	// TODO: Replace with your delegator addresses and amount.
+	delegatorAddress = ""
+	validatorAddress = "0x857679d69fE50E7B722f94aCd2629d80C355163d"
+	amount           = "1"
+	currency         = "MATIC"
+)
+
+// An example function to demonstrate how to use the staking client libraries.
+func main() {
+	ctx := context.Background()
+
+	apiKey, err := auth.NewAPIKey(auth.WithLoadAPIKeyFromFile(true))
+	if err != nil {
+		log.Fatalf("error loading API key: %v", err)
+	}
+
+	authOpt := client.WithAPIKey(apiKey)
+
+	// Create a staking client.
+	stakingClient, err := v1alpha1client.NewStakingServiceClient(ctx, authOpt)
+	if err != nil {
+		log.Fatalf("error instantiating staking client: %v", err)
+	}
+
+	if projectID == "" || privateKey == "" || delegatorAddress == "" {
+		log.Fatalf("projectID, privateKey and delegatorAddress must be set")
+	}
+
+	req := &stakingpb.CreateWorkflowRequest{
+		Parent: fmt.Sprintf("projects/%s", projectID),
+		Workflow: &stakingpb.Workflow{
+			Action: "protocols/polygon/networks/mainnet/actions/stake",
+			StakingParameters: &stakingpb.Workflow_PolygonStakingParameters{
+				PolygonStakingParameters: &stakingpb.PolygonStakingParameters{
+					Parameters: &stakingpb.PolygonStakingParameters_StakeParameters{
+						StakeParameters: &stakingpb.PolygonStakeParameters{
+							DelegatorAddress: delegatorAddress,
+							ValidatorAddress: validatorAddress,
+							Amount: &stakingpb.Amount{
+								Value:    amount,
+								Currency: currency,
+							},
+						},
+					},
+				},
+			},
+		},
+	}
+
+	workflow, err := stakingClient.CreateWorkflow(ctx, req)
+	if err != nil {
+		sae := stakingerrors.FromError(err)
+		_ = sae.Print()
+	}
+
+	log.Printf("Workflow created %s ...\n", workflow.Name)
+
+	// Run loop until workflow reaches a terminal state
+	for {
+		// Get the latest workflow state
+		workflow, err = stakingClient.GetWorkflow(ctx, &stakingpb.GetWorkflowRequest{Name: workflow.Name})
+		if err != nil {
+			log.Fatalf(fmt.Errorf("error getting workflow: %w", err).Error())
+		}
+
+		printWorkflowProgressDetails(workflow)
+
+		// If workflow is in WAITING_FOR_SIGNING state, sign the transaction and update the workflow
+		if workflowWaitingForSigning(workflow) {
+			unsignedTx := workflow.Steps[workflow.GetCurrentStepId()].GetTxStepOutput().GetUnsignedTx()
+
+			// Logic to sign the transaction. This can be substituted with any other signing mechanism.
+			log.Printf("Signing unsigned tx %s ...\n", unsignedTx)
+
+			signedTx, err := signer.New("polygon").SignTransaction(privateKey, &signer.UnsignedTx{Data: []byte(unsignedTx)})
+			if err != nil {
+				log.Fatalf(fmt.Errorf("error signing transaction: %w", err).Error())
+			}
+
+			log.Printf("Returning back signed tx %s ...\n", string(signedTx.Data))
+
+			workflow, err = stakingClient.PerformWorkflowStep(ctx, &stakingpb.PerformWorkflowStepRequest{
+				Name:     workflow.Name,
+				Step:     workflow.GetCurrentStepId(),
+				SignedTx: string(signedTx.Data),
+			})
+			if err != nil {
+				log.Fatalf(fmt.Errorf("error updating workflow with signed tx: %w", err).Error())
+			}
+		} else if workflowFailedRefreshable(workflow) {
+			// If workflow is in FAILED_REFRESHABLE state, refresh the transaction and update the workflow
+			fmt.Printf("Step %d failed but is refreshable, refreshing ...\n", workflow.GetCurrentStepId())
+
+			workflow, err = stakingClient.RefreshWorkflowStep(ctx, &stakingpb.RefreshWorkflowStepRequest{
+				Name: workflow.Name,
+				Step: workflow.GetCurrentStepId(),
+			})
+			if err != nil {
+				log.Fatalf(fmt.Errorf("error refreshing transaction: %w", err).Error())
+			}
+		} else if workflowFinished(workflow) {
+			break
+		}
+
+		// Sleep for 5 seconds before polling for workflow status again
+		time.Sleep(5 * time.Second)
+	}
+}
+
+func printWorkflowProgressDetails(workflow *stakingpb.Workflow) {
+	if len(workflow.GetSteps()) <= 0 {
+		fmt.Println("Waiting for steps to be created ...")
+		time.Sleep(2 * time.Second)
+	}
+
+	step := workflow.Steps[workflow.GetCurrentStepId()]
+
+	createTime := workflow.GetCreateTime().AsTime()
+	updateTime := workflow.GetUpdateTime().AsTime()
+	runtime := updateTime.Sub(createTime)
+
+	var stepDetails string
+
+	switch step.GetOutput().(type) {
+	case *stakingpb.WorkflowStep_TxStepOutput:
+		stepDetails = fmt.Sprintf("state: %s tx hash: %s",
+			step.GetTxStepOutput().GetState().String(),
+			step.GetTxStepOutput().GetTxHash(),
+		)
+	case *stakingpb.WorkflowStep_WaitStepOutput:
+		stepDetails = fmt.Sprintf("state: %s current: %d target: %d",
+			step.GetWaitStepOutput().GetState().String(),
+			step.GetWaitStepOutput().GetCurrent(),
+			step.GetWaitStepOutput().GetTarget(),
+		)
+	}
+
+	if workflowFinished(workflow) {
+		log.Printf("Workflow reached end state - step name: %s %s workflow state: %s runtime: %v\n",
+			step.GetName(),
+			stepDetails,
+			workflow.GetState().String(),
+			runtime,
+		)
+	} else {
+		log.Printf("Waiting for workflow to finish - step name: %s %s workflow state: %s runtime: %v\n",
+			step.GetName(),
+			stepDetails,
+			workflow.GetState().String(),
+			runtime,
+		)
+	}
+}
+
+func workflowFinished(workflow *stakingpb.Workflow) bool {
+	return workflow.State == stakingpb.Workflow_STATE_COMPLETED ||
+		workflow.State == stakingpb.Workflow_STATE_FAILED ||
+		workflow.State == stakingpb.Workflow_STATE_CANCELED ||
+		workflow.State == stakingpb.Workflow_STATE_CANCEL_FAILED
+}
+
+func workflowWaitingForSigning(workflow *stakingpb.Workflow) bool {
+	return workflow.State == stakingpb.Workflow_STATE_WAITING_FOR_SIGNING
+}
+
+func workflowFailedRefreshable(workflow *stakingpb.Workflow) bool {
+	return workflow.State == stakingpb.Workflow_STATE_FAILED_REFRESHABLE
+}

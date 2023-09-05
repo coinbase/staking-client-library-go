@@ -1,0 +1,65 @@
+syntax = "proto3";
+
+package coinbase.staking.v1alpha1;
+
+option go_package = "github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/v1alpha1";
+
+import "google/api/field_behavior.proto";
+import "google/api/resource.proto";
+
+// A Network resource, which represents a blockchain network.
+// (i.e. mainnet, testnet, etc.)
+message Network {
+  option (google.api.resource) = {
+    type: "staking.coinbase.com/Network"
+    pattern: "protocols/{protocol}/networks/{network}"
+    singular: "network"
+    plural: "networks"
+  };
+
+  // The resource name of the Network.
+  // Format: protocols/{protocolName}/networks/{networkName}
+  // Ex: protocols/polygon/networks/testnet
+  string name = 1;
+
+
+  // Represents if the network is the mainnet network
+  // for the given protocol.
+  bool is_mainnet = 2;
+}
+
+// The request message for ListNetworks.
+message ListNetworksRequest {
+  // The resource name of the parent that owns
+  // the collection of networks.
+  // Format: protocols/{protocol}
+  string parent = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference) = {
+      child_type: "staking.coinbase.com/Network"
+    }];
+
+  // *UNUSED* The maximum number of networks to return. The service may
+  // return fewer than this value.
+  //
+  // If unspecified, 50 networks will be returned.
+  // The maximum value is 1000; values over 1000 will be floored to 1000.
+  int32 page_size = 2;
+
+  // *UNUSED* A page token as part of the response of a previous call.
+  // Provide this to retrieve the next page.
+  //
+  // When paginating, all other parameters must match the previous
+  // request to list resources.
+  string page_token = 3;
+}
+
+// The response message for ListNetworks.
+message ListNetworksResponse {
+  // The list of networks.
+  repeated Network networks = 1;
+
+  // *UNUSED* A token which can be provided as `page_token` to retrieve the next page.
+  // If this field is omitted, there are no additional pages.
+  string next_page_token = 2;
+}
