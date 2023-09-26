@@ -95,7 +95,7 @@ posted to a validator. (i.e. stake, unstake)
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| name | [string](#string) |  | The resource name of the Action. Format: protocols/{protocolName}/networks/{networkName}/actions/{actionName} Ex: protocols/polygon/networks/testnet/validators/stake |
+| name | [string](#string) |  | The resource name of the Action. Format: protocols/{protocolName}/networks/{networkName}/actions/{actionName} Ex: protocols/polygon/networks/goerli/validators/stake |
 
 
 
@@ -111,12 +111,6 @@ The request message for ListActions.
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | parent | [string](#string) |  | The resource name of the parent that owns the collection of actions. Format: protocols/{protocol}/networks/{network} |
-| page_size | [int32](#int32) |  | UNUSED* The maximum number of actions to return. The service may return fewer than this value.
-
-If unspecified, 50 actions will be returned. The maximum value is 1000; values over 1000 will be floored to 1000. |
-| page_token | [string](#string) |  | UNUSED* A page token as part of the response of a previous call. Provide this to retrieve the next page.
-
-When paginating, all other parameters must match the previous request to list resources. |
 
 
 
@@ -132,7 +126,6 @@ The response message for ListActions.
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | actions | [Action](#coinbase-staking-v1alpha1-Action) | repeated | The list of actions. |
-| next_page_token | [string](#string) |  | UNUSED* A token which can be provided as `page_token` to retrieve the next page. If this field is omitted, there are no additional pages. |
 
 
 
@@ -161,16 +154,6 @@ The response message for ListActions.
 The request message for ListProtocols.
 
 
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| page_size | [int32](#int32) |  | UNUSED* The maximum number of protocols to return. The service may return fewer than this value.
-
-If unspecified, 50 protocols will be returned. The maximum value is 1000; values over 1000 will be floored to 1000. |
-| page_token | [string](#string) |  | UNUSED* A page token as part of the response of a previous call. Provide this to retrieve the next page.
-
-When paginating, all other parameters must match the previous request to list resources. |
-
-
 
 
 
@@ -184,7 +167,6 @@ The response message for ListProtocols.
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | protocols | [Protocol](#coinbase-staking-v1alpha1-Protocol) | repeated | The list of protocols. |
-| next_page_token | [string](#string) |  | UNUSED* A token which can be provided as `page_token` to retrieve the next page. If this field is omitted, there are no additional pages. |
 
 
 
@@ -231,12 +213,6 @@ The request message for ListNetworks.
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | parent | [string](#string) |  | The resource name of the parent that owns the collection of networks. Format: protocols/{protocol} |
-| page_size | [int32](#int32) |  | UNUSED* The maximum number of networks to return. The service may return fewer than this value.
-
-If unspecified, 50 networks will be returned. The maximum value is 1000; values over 1000 will be floored to 1000. |
-| page_token | [string](#string) |  | UNUSED* A page token as part of the response of a previous call. Provide this to retrieve the next page.
-
-When paginating, all other parameters must match the previous request to list resources. |
 
 
 
@@ -252,7 +228,6 @@ The response message for ListNetworks.
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | networks | [Network](#coinbase-staking-v1alpha1-Network) | repeated | The list of networks. |
-| next_page_token | [string](#string) |  | UNUSED* A token which can be provided as `page_token` to retrieve the next page. If this field is omitted, there are no additional pages. |
 
 
 
@@ -268,7 +243,7 @@ A Network resource, which represents a blockchain network.
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| name | [string](#string) |  | The resource name of the Network. Format: protocols/{protocolName}/networks/{networkName} Ex: protocols/polygon/networks/testnet |
+| name | [string](#string) |  | The resource name of the Network. Format: protocols/{protocolName}/networks/{networkName} Ex: protocols/polygon/networks/goerli |
 | is_mainnet | [bool](#bool) |  | Represents if the network is the mainnet network for the given protocol. |
 
 
@@ -301,10 +276,10 @@ The request message for ListValidators.
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | parent | [string](#string) |  | The resource name of the parent that owns the collection of validators. Format: protocols/{protocol}/networks/{network} |
-| page_size | [int32](#int32) |  | UNUSED* The maximum number of validators to return. The service may return fewer than this value.
+| page_size | [int32](#int32) |  | The maximum number of validators to return. The service may return fewer than this value.
 
 If unspecified, 50 validators will be returned. The maximum value is 1000; values over 1000 will be floored to 1000. |
-| page_token | [string](#string) |  | UNUSED* A page token as part of the response of a previous call. Provide this to retrieve the next page.
+| page_token | [string](#string) |  | A page token as part of the response of a previous call. Provide this to retrieve the next page.
 
 When paginating, all other parameters must match the previous request to list resources. |
 
@@ -322,7 +297,7 @@ The response message for ListValidators.
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | validators | [Validator](#coinbase-staking-v1alpha1-Validator) | repeated | The list of validators. |
-| next_page_token | [string](#string) |  | UNUSED* A token which can be provided as `page_token` to retrieve the next page. If this field is omitted, there are no additional pages. |
+| next_page_token | [string](#string) |  | A token which can be provided as `page_token` to retrieve the next page. If this field is omitted, there are no additional pages. |
 
 
 
@@ -339,7 +314,7 @@ to.
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| name | [string](#string) |  | The resource name of the Validator. Format: protocols/{protocolName}/networks/{networkName}/validators/{validatorName} Ex: protocols/polygon/networks/testnet/validators/0x857679d69fE50E7B722f94aCd2629d80C355163d |
+| name | [string](#string) |  | The resource name of the Validator. Format: protocols/{protocolName}/networks/{networkName}/validators/{validatorName} Ex: protocols/polygon/networks/goerli/validators/0x857679d69fE50E7B722f94aCd2629d80C355163d |
 | validator_address | [string](#string) |  | The public address of the validator that you may perform workflow actions on. |
 | commission_rate | [float](#float) |  | The rate of commission for the validator |
 
@@ -374,7 +349,7 @@ with.
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | value | [string](#string) |  | The total value of the token. |
-| currency | [string](#string) |  | (-- api-linter: core::0143::standardized-codes=disabled aip.dev/not-precedent: We need to do this because it is in active. discussion --) The name of the token. |
+| currency | [string](#string) |  | The name of the token. |
 
 
 
@@ -518,8 +493,6 @@ The parameters required for the unstake action on Ethereum Kiln.
 <a name="coinbase-staking-v1alpha1-PolygonClaimRewardsParameters"></a>
 
 ### PolygonClaimRewardsParameters
-(-- api-linter: core::0140::prepositions=disabled
-    aip.dev/not-precedent: We need to do this because it simplifies the api. --)
 The parameters required for claim rewards action on Polygon
 
 
@@ -536,8 +509,6 @@ The parameters required for claim rewards action on Polygon
 <a name="coinbase-staking-v1alpha1-PolygonRestakeParameters"></a>
 
 ### PolygonRestakeParameters
-(-- api-linter: core::0140::prepositions=disabled
-    aip.dev/not-precedent: We need to do this because it simplifies the api. --)
 The parameters required for unstake action on Polygon
 
 
@@ -589,8 +560,6 @@ The parameters needed for staking on Polygon
 <a name="coinbase-staking-v1alpha1-PolygonUnstakeParameters"></a>
 
 ### PolygonUnstakeParameters
-(-- api-linter: core::0140::prepositions=disabled
-    aip.dev/not-precedent: We need to do this because it simplifies the api. --)
 The parameters required for unstake action on Polygon
 
 
@@ -647,7 +616,7 @@ The parameters required for the create stake account action on Solana.
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | stake_account_address | [string](#string) |  | The address of the new stake account which will be created. This address must not already exist. Signs the transaction. |
-| from_address | [string](#string) |  | The address of the account which will fund the stake account. Pays the transaction fee. Signs the transaction. (-- api-linter: core::0140::prepositions=disabled aip.dev/not-precedent: We need to do this because it&#39;s not relevant to our use case. --) |
+| from_address | [string](#string) |  | The address of the account which will fund the stake account. Pays the transaction fee. Signs the transaction. |
 | stake_authority | [string](#string) |  | The address of the account which will be granted signing authority over staking operations on the new stake account. If not provided, defaults to the from_address. |
 | withdraw_authority | [string](#string) |  | The address of the account which will be granted signing authority over withdrawing inactive stake from the new stake account. If not provided, defaults to the from_address. |
 | amount | [Amount](#coinbase-staking-v1alpha1-Amount) |  | The amount to fund the stake account with, in Lamports. |
@@ -789,8 +758,6 @@ The parameters required for the withdraw stake action on Solana.
 
 ### CreateWorkflowRequest
 The request message for CreateWorkflow.
-(-- api-linter: core::0133::request-id-field=disabled
-    aip.dev/not-precedent: We currently do not support this. --)
 
 
 | Field | Type | Label | Description |
@@ -866,7 +833,7 @@ The request message for PerformWorkflowStep.
 | ----- | ---- | ----- | ----------- |
 | name | [string](#string) |  | The resource name of the workflow. Format: projects/{project}/workflows/{workflow} |
 | step | [int32](#int32) |  | The index of the step to be performed. |
-| signed_tx | [string](#string) |  | The signed transaction to post to the network. |
+| data | [string](#string) |  | Transaction metadata. This is either the signed transaction or transaction hash depending on the workflow&#39;s broadcast method. |
 
 
 
@@ -944,6 +911,8 @@ A Workflow resource
 | steps | [WorkflowStep](#coinbase-staking-v1alpha1-WorkflowStep) | repeated | The list of steps for this workflow. |
 | create_time | [google.protobuf.Timestamp](#google-protobuf-Timestamp) |  | The timestamp the workflow was created |
 | update_time | [google.protobuf.Timestamp](#google-protobuf-Timestamp) |  | The timestamp the workflow was last updated |
+| skip_broadcast | [bool](#bool) |  | Flag to skip tx broadcast to network on behalf of the user. Use this flag if you instead prefer to broadcast signed txs on your own. |
+| complete_time | [google.protobuf.Timestamp](#google-protobuf-Timestamp) |  | The timestamp the workflow completed |
 
 
 
@@ -953,9 +922,6 @@ A Workflow resource
 <a name="coinbase-staking-v1alpha1-WorkflowStep"></a>
 
 ### WorkflowStep
-(-- api-linter: core::0123::resource-annotation=disabled
-    aip.dev/not-precedent: We need to do this because
-    it is only a sub resource --)
 The information for a step in the workflow
 
 
@@ -995,6 +961,7 @@ State defines an enumeration of states for a staking transaction
 | STATE_CANCEL_FAILED | 13 | Tx cancellation failed |
 | STATE_FAILED_REFRESHABLE | 14 | Tx failed but can be refreshed |
 | STATE_REFRESHING | 15 | Tx is being refreshed |
+| STATE_PENDING_EXT_BROADCAST | 16 | Tx is waiting to be externally broadcasted by the customer |
 
 
 
@@ -1041,13 +1008,14 @@ IN_PROGRESS -&gt; WAITING_FOR_SIGNING -&gt; CANCELING -&gt; CANCELED
 | ---- | ------ | ----------- |
 | STATE_UNSPECIFIED | 0 | Unspecified workflow state, this is for backwards compatibility. |
 | STATE_IN_PROGRESS | 1 | In Progress represents a workflow that is currently in progress. |
-| STATE_WAITING_FOR_SIGNING | 2 | Waiting for signing represents the workflow is waiting on the consumer to sign. |
+| STATE_WAITING_FOR_SIGNING | 2 | Waiting for signing represents the workflow is waiting on the consumer to sign and return the corresponding signed tx. |
 | STATE_COMPLETED | 3 | Completed represents the workflow has completed. |
 | STATE_FAILED | 4 | Failed represents the workflow has failed. |
 | STATE_CANCELING | 5 | Canceling represents the workflow is being canceled. |
 | STATE_CANCELED | 6 | Canceled represents the workflow has been canceled. |
 | STATE_CANCEL_FAILED | 7 | Cancel failed represents the workflow failed to cancel. |
 | STATE_FAILED_REFRESHABLE | 8 | Failed refreshable represents the workflow failed but can be refreshed. |
+| STATE_WAITING_FOR_EXT_BROADCAST | 9 | Waiting for external broadcast represents the workflow is waiting for the customer to broadcast a tx and return its corresponding tx hash. |
 
 
  
@@ -1124,8 +1092,6 @@ The response message for the ViewStakingContext request.
 
 ### StakingService
 StakingService manages staking related resources such as protocols, networks, validators and workflows
-(-- api-linter: core::0121::resource-must-support-get=disabled
-    aip.dev/not-precedent: No plans to support GET on protocol, network, validator and action resources. --)
 
 | Method Name | Request Type | Response Type | Description |
 | ----------- | ------------ | ------------- | ------------|
@@ -1136,15 +1102,9 @@ StakingService manages staking related resources such as protocols, networks, va
 | CreateWorkflow | [CreateWorkflowRequest](#coinbase-staking-v1alpha1-CreateWorkflowRequest) | [Workflow](#coinbase-staking-v1alpha1-Workflow) | Create a workflow to perform an action |
 | GetWorkflow | [GetWorkflowRequest](#coinbase-staking-v1alpha1-GetWorkflowRequest) | [Workflow](#coinbase-staking-v1alpha1-Workflow) | Get the current state of an active workflow |
 | ListWorkflows | [ListWorkflowsRequest](#coinbase-staking-v1alpha1-ListWorkflowsRequest) | [ListWorkflowsResponse](#coinbase-staking-v1alpha1-ListWorkflowsResponse) | List all workflows in a project |
-| PerformWorkflowStep | [PerformWorkflowStepRequest](#coinbase-staking-v1alpha1-PerformWorkflowStepRequest) | [Workflow](#coinbase-staking-v1alpha1-Workflow) | (-- api-linter: core::0136::http-name-variable=disabled aip.dev/not-precedent: We need to do this because the phrasing reads easier. --)
-
-Perform the next step in a workflow |
-| RefreshWorkflowStep | [RefreshWorkflowStepRequest](#coinbase-staking-v1alpha1-RefreshWorkflowStepRequest) | [Workflow](#coinbase-staking-v1alpha1-Workflow) | (-- api-linter: core::0136::http-name-variable=disabled aip.dev/not-precedent: We need to do this because the phrasing reads easier. --)
-
-Refresh the current step in a workflow |
-| ViewStakingContext | [ViewStakingContextRequest](#coinbase-staking-v1alpha1-ViewStakingContextRequest) | [ViewStakingContextResponse](#coinbase-staking-v1alpha1-ViewStakingContextResponse) | (-- api-linter: core::0136::http-name-variable=disabled aip.dev/not-precedent: We need to do this because the phrasing reads easier. --)
-
-View Staking context information given a specific network address |
+| PerformWorkflowStep | [PerformWorkflowStepRequest](#coinbase-staking-v1alpha1-PerformWorkflowStepRequest) | [Workflow](#coinbase-staking-v1alpha1-Workflow) | Perform the next step in a workflow |
+| RefreshWorkflowStep | [RefreshWorkflowStepRequest](#coinbase-staking-v1alpha1-RefreshWorkflowStepRequest) | [Workflow](#coinbase-staking-v1alpha1-Workflow) | Refresh the current step in a workflow |
+| ViewStakingContext | [ViewStakingContextRequest](#coinbase-staking-v1alpha1-ViewStakingContextRequest) | [ViewStakingContextResponse](#coinbase-staking-v1alpha1-ViewStakingContextResponse) | View Staking context information given a specific network address |
 
  
 

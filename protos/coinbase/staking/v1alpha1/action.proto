@@ -19,7 +19,7 @@ message Action {
 
   // The resource name of the Action.
   // Format: protocols/{protocolName}/networks/{networkName}/actions/{actionName}
-  // Ex: protocols/polygon/networks/testnet/validators/stake
+  // Ex: protocols/polygon/networks/goerli/validators/stake
   string name = 1;
 }
 
@@ -33,28 +33,10 @@ message ListActionsRequest {
     (google.api.resource_reference) = {
       child_type: "staking.coinbase.com/Action"
     }];
-
-  // *UNUSED* The maximum number of actions to return. The service may
-  // return fewer than this value.
-  //
-  // If unspecified, 50 actions will be returned.
-  // The maximum value is 1000; values over 1000 will be floored to 1000.
-  int32 page_size = 2;
-
-  // *UNUSED* A page token as part of the response of a previous call.
-  // Provide this to retrieve the next page.
-  //
-  // When paginating, all other parameters must match the previous
-  // request to list resources.
-  string page_token = 3;
 }
 
 // The response message for ListActions.
 message ListActionsResponse {
   // The list of actions.
   repeated Action actions = 1;
-
-  // *UNUSED* A token which can be provided as `page_token` to retrieve the next page.
-  // If this field is omitted, there are no additional pages.
-  string next_page_token = 2;
 }

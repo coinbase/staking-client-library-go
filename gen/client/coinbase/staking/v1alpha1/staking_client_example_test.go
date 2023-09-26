@@ -76,18 +76,12 @@ func ExampleStakingClient_ListProtocols() {
 		// TODO: Fill request struct fields.
 		// See https://pkg.go.dev/github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/v1alpha1#ListProtocolsRequest.
 	}
-	it := c.ListProtocols(ctx, req)
-	for {
-		resp, err := it.Next()
-		if err == iterator.Done {
-			break
-		}
-		if err != nil {
-			// TODO: Handle error.
-		}
-		// TODO: Use resp.
-		_ = resp
+	resp, err := c.ListProtocols(ctx, req)
+	if err != nil {
+		// TODO: Handle error.
 	}
+	// TODO: Use resp.
+	_ = resp
 }
 
 func ExampleStakingClient_ListNetworks() {
@@ -107,18 +101,12 @@ func ExampleStakingClient_ListNetworks() {
 		// TODO: Fill request struct fields.
 		// See https://pkg.go.dev/github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/v1alpha1#ListNetworksRequest.
 	}
-	it := c.ListNetworks(ctx, req)
-	for {
-		resp, err := it.Next()
-		if err == iterator.Done {
-			break
-		}
-		if err != nil {
-			// TODO: Handle error.
-		}
-		// TODO: Use resp.
-		_ = resp
+	resp, err := c.ListNetworks(ctx, req)
+	if err != nil {
+		// TODO: Handle error.
 	}
+	// TODO: Use resp.
+	_ = resp
 }
 
 func ExampleStakingClient_ListValidators() {
@@ -169,18 +157,12 @@ func ExampleStakingClient_ListActions() {
 		// TODO: Fill request struct fields.
 		// See https://pkg.go.dev/github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/v1alpha1#ListActionsRequest.
 	}
-	it := c.ListActions(ctx, req)
-	for {
-		resp, err := it.Next()
-		if err == iterator.Done {
-			break
-		}
-		if err != nil {
-			// TODO: Handle error.
-		}
-		// TODO: Use resp.
-		_ = resp
+	resp, err := c.ListActions(ctx, req)
+	if err != nil {
+		// TODO: Handle error.
 	}
+	// TODO: Use resp.
+	_ = resp
 }
 
 func ExampleStakingClient_CreateWorkflow() {

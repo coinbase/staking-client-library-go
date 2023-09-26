@@ -19,12 +19,12 @@ func NewTransport(
 	roundTripper http.RoundTripper,
 	serviceName string,
 	apiKey *auth.APIKey,
-) (*Transport, error) {
+) *Transport {
 	return &Transport{
 		roundTripper:  roundTripper,
 		authenticator: auth.NewAuthenticator(apiKey),
 		serviceName:   serviceName,
-	}, nil
+	}
 }
 
 // RoundTrip implements the http.RoundTripper interface and wraps
@@ -36,7 +36,7 @@ func (t *Transport) RoundTrip(req *http.Request) (*http.Response, error) {
 		fmt.Sprintf("%s %s%s", req.Method, req.URL.Host, req.URL.Path),
 	)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("error building data for auth header: %w", err)
 	}
 
 	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", jwt))

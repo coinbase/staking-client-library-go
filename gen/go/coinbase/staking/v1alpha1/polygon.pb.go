@@ -92,10 +92,6 @@ func (x *PolygonStakeParameters) GetAmount() *Amount {
 	return nil
 }
 
-// (-- api-linter: core::0140::prepositions=disabled
-//
-//	aip.dev/not-precedent: We need to do this because it simplifies the api. --)
-//
 // The parameters required for unstake action on Polygon
 type PolygonUnstakeParameters struct {
 	state         protoimpl.MessageState
@@ -166,10 +162,6 @@ func (x *PolygonUnstakeParameters) GetAmount() *Amount {
 	return nil
 }
 
-// (-- api-linter: core::0140::prepositions=disabled
-//
-//	aip.dev/not-precedent: We need to do this because it simplifies the api. --)
-//
 // The parameters required for unstake action on Polygon
 type PolygonRestakeParameters struct {
 	state         protoimpl.MessageState
@@ -230,10 +222,6 @@ func (x *PolygonRestakeParameters) GetValidatorAddress() string {
 	return ""
 }
 
-// (-- api-linter: core::0140::prepositions=disabled
-//
-//	aip.dev/not-precedent: We need to do this because it simplifies the api. --)
-//
 // The parameters required for claim rewards action on Polygon
 type PolygonClaimRewardsParameters struct {
 	state         protoimpl.MessageState

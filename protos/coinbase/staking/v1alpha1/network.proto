@@ -19,7 +19,7 @@ message Network {
 
   // The resource name of the Network.
   // Format: protocols/{protocolName}/networks/{networkName}
-  // Ex: protocols/polygon/networks/testnet
+  // Ex: protocols/polygon/networks/goerli
   string name = 1;
 
 
@@ -38,28 +38,10 @@ message ListNetworksRequest {
     (google.api.resource_reference) = {
       child_type: "staking.coinbase.com/Network"
     }];
-
-  // *UNUSED* The maximum number of networks to return. The service may
-  // return fewer than this value.
-  //
-  // If unspecified, 50 networks will be returned.
-  // The maximum value is 1000; values over 1000 will be floored to 1000.
-  int32 page_size = 2;
-
-  // *UNUSED* A page token as part of the response of a previous call.
-  // Provide this to retrieve the next page.
-  //
-  // When paginating, all other parameters must match the previous
-  // request to list resources.
-  string page_token = 3;
 }
 
 // The response message for ListNetworks.
 message ListNetworksResponse {
   // The list of networks.
   repeated Network networks = 1;
-
-  // *UNUSED* A token which can be provided as `page_token` to retrieve the next page.
-  // If this field is omitted, there are no additional pages.
-  string next_page_token = 2;
 }

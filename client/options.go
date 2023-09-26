@@ -131,16 +131,11 @@ func GetHTTPClient(serviceName string, config *StakingClientConfig) (*http.Clien
 			httpClient.Transport = http.DefaultTransport
 		}
 
-		transport, err := NewTransport(
+		httpClient.Transport = NewTransport(
 			httpClient.Transport,
 			serviceName,
 			config.APIKey,
 		)
-		if err != nil {
-			return nil, err
-		}
-
-		httpClient.Transport = transport
 	}
 
 	return httpClient, nil

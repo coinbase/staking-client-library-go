@@ -123,10 +123,10 @@ type internalStakingClient interface {
 	Close() error
 	setGoogleClientInfo(...string)
 	Connection() *grpc.ClientConn
-	ListProtocols(context.Context, *stakingpb.ListProtocolsRequest, ...gax.CallOption) *ProtocolIterator
-	ListNetworks(context.Context, *stakingpb.ListNetworksRequest, ...gax.CallOption) *NetworkIterator
+	ListProtocols(context.Context, *stakingpb.ListProtocolsRequest, ...gax.CallOption) (*stakingpb.ListProtocolsResponse, error)
+	ListNetworks(context.Context, *stakingpb.ListNetworksRequest, ...gax.CallOption) (*stakingpb.ListNetworksResponse, error)
 	ListValidators(context.Context, *stakingpb.ListValidatorsRequest, ...gax.CallOption) *ValidatorIterator
-	ListActions(context.Context, *stakingpb.ListActionsRequest, ...gax.CallOption) *ActionIterator
+	ListActions(context.Context, *stakingpb.ListActionsRequest, ...gax.CallOption) (*stakingpb.ListActionsResponse, error)
 	CreateWorkflow(context.Context, *stakingpb.CreateWorkflowRequest, ...gax.CallOption) (*stakingpb.Workflow, error)
 	GetWorkflow(context.Context, *stakingpb.GetWorkflowRequest, ...gax.CallOption) (*stakingpb.Workflow, error)
 	ListWorkflows(context.Context, *stakingpb.ListWorkflowsRequest, ...gax.CallOption) *WorkflowIterator
@@ -139,8 +139,6 @@ type internalStakingClient interface {
 // Methods, except Close, may be called concurrently. However, fields must not be modified concurrently with method calls.
 //
 // StakingService manages staking related resources such as protocols, networks, validators and workflows
-// (– api-linter: core::0121::resource-must-support-get=disabled
-// aip.dev/not-precedent (at http://aip.dev/not-precedent): No plans to support GET on protocol, network, validator and action resources. –)
 type StakingClient struct {
 	// The internal transport-dependent client.
 	internalClient internalStakingClient
@@ -174,12 +172,12 @@ func (c *StakingClient) Connection() *grpc.ClientConn {
 }
 
 // ListProtocols list supported protocols
-func (c *StakingClient) ListProtocols(ctx context.Context, req *stakingpb.ListProtocolsRequest, opts ...gax.CallOption) *ProtocolIterator {
+func (c *StakingClient) ListProtocols(ctx context.Context, req *stakingpb.ListProtocolsRequest, opts ...gax.CallOption) (*stakingpb.ListProtocolsResponse, error) {
 	return c.internalClient.ListProtocols(ctx, req, opts...)
 }
 
 // ListNetworks list supported staking networks for a given protocol
-func (c *StakingClient) ListNetworks(ctx context.Context, req *stakingpb.ListNetworksRequest, opts ...gax.CallOption) *NetworkIterator {
+func (c *StakingClient) ListNetworks(ctx context.Context, req *stakingpb.ListNetworksRequest, opts ...gax.CallOption) (*stakingpb.ListNetworksResponse, error) {
 	return c.internalClient.ListNetworks(ctx, req, opts...)
 }
 
@@ -189,7 +187,7 @@ func (c *StakingClient) ListValidators(ctx context.Context, req *stakingpb.ListV
 }
 
 // ListActions list supported actions for a given protocol and network
-func (c *StakingClient) ListActions(ctx context.Context, req *stakingpb.ListActionsRequest, opts ...gax.CallOption) *ActionIterator {
+func (c *StakingClient) ListActions(ctx context.Context, req *stakingpb.ListActionsRequest, opts ...gax.CallOption) (*stakingpb.ListActionsResponse, error) {
 	return c.internalClient.ListActions(ctx, req, opts...)
 }
 
@@ -208,29 +206,17 @@ func (c *StakingClient) ListWorkflows(ctx context.Context, req *stakingpb.ListWo
 	return c.internalClient.ListWorkflows(ctx, req, opts...)
 }
 
-// PerformWorkflowStep (– api-linter: core::0136::http-name-variable=disabled
-// aip.dev/not-precedent (at http://aip.dev/not-precedent): We need to do this because
-// the phrasing reads easier. –)
-//
-// Perform the next step in a workflow
+// PerformWorkflowStep perform the next step in a workflow
 func (c *StakingClient) PerformWorkflowStep(ctx context.Context, req *stakingpb.PerformWorkflowStepRequest, opts ...gax.CallOption) (*stakingpb.Workflow, error) {
 	return c.internalClient.PerformWorkflowStep(ctx, req, opts...)
 }
 
-// RefreshWorkflowStep (– api-linter: core::0136::http-name-variable=disabled
-// aip.dev/not-precedent (at http://aip.dev/not-precedent): We need to do this because
-// the phrasing reads easier. –)
-//
-// Refresh the current step in a workflow
+// RefreshWorkflowStep refresh the current step in a workflow
 func (c *StakingClient) RefreshWorkflowStep(ctx context.Context, req *stakingpb.RefreshWorkflowStepRequest, opts ...gax.CallOption) (*stakingpb.Workflow, error) {
 	return c.internalClient.RefreshWorkflowStep(ctx, req, opts...)
 }
 
-// ViewStakingContext (– api-linter: core::0136::http-name-variable=disabled
-// aip.dev/not-precedent (at http://aip.dev/not-precedent): We need to do this because
-// the phrasing reads easier. –)
-//
-// View Staking context information given a specific network address
+// ViewStakingContext view Staking context information given a specific network address
 func (c *StakingClient) ViewStakingContext(ctx context.Context, req *stakingpb.ViewStakingContextRequest, opts ...gax.CallOption) (*stakingpb.ViewStakingContextResponse, error) {
 	return c.internalClient.ViewStakingContext(ctx, req, opts...)
 }
@@ -256,8 +242,6 @@ type stakingGRPCClient struct {
 // The returned client must be Closed when it is done being used to clean up its underlying connections.
 //
 // StakingService manages staking related resources such as protocols, networks, validators and workflows
-// (– api-linter: core::0121::resource-must-support-get=disabled
-// aip.dev/not-precedent (at http://aip.dev/not-precedent): No plans to support GET on protocol, network, validator and action resources. –)
 func NewStakingClient(ctx context.Context, opts ...option.ClientOption) (*StakingClient, error) {
 	clientOpts := defaultStakingGRPCClientOptions()
 	if newStakingClientHook != nil {
@@ -328,8 +312,6 @@ type stakingRESTClient struct {
 // NewStakingRESTClient creates a new staking service rest client.
 //
 // StakingService manages staking related resources such as protocols, networks, validators and workflows
-// (– api-linter: core::0121::resource-must-support-get=disabled
-// aip.dev/not-precedent (at http://aip.dev/not-precedent): No plans to support GET on protocol, network, validator and action resources. –)
 func NewStakingRESTClient(ctx context.Context, opts ...option.ClientOption) (*StakingClient, error) {
 	clientOpts := append(defaultStakingRESTClientOptions(), opts...)
 	httpClient, endpoint, err := httptransport.NewClient(ctx, clientOpts...)
@@ -379,92 +361,36 @@ func (c *stakingRESTClient) Close() error {
 func (c *stakingRESTClient) Connection() *grpc.ClientConn {
 	return nil
 }
-func (c *stakingGRPCClient) ListProtocols(ctx context.Context, req *stakingpb.ListProtocolsRequest, opts ...gax.CallOption) *ProtocolIterator {
+func (c *stakingGRPCClient) ListProtocols(ctx context.Context, req *stakingpb.ListProtocolsRequest, opts ...gax.CallOption) (*stakingpb.ListProtocolsResponse, error) {
 	ctx = insertMetadata(ctx, c.xGoogMetadata)
 	opts = append((*c.CallOptions).ListProtocols[0:len((*c.CallOptions).ListProtocols):len((*c.CallOptions).ListProtocols)], opts...)
-	it := &ProtocolIterator{}
-	req = proto.Clone(req).(*stakingpb.ListProtocolsRequest)
-	it.InternalFetch = func(pageSize int, pageToken string) ([]*stakingpb.Protocol, string, error) {
-		resp := &stakingpb.ListProtocolsResponse{}
-		if pageToken != "" {
-			req.PageToken = pageToken
-		}
-		if pageSize > math.MaxInt32 {
-			req.PageSize = math.MaxInt32
-		} else if pageSize != 0 {
-			req.PageSize = int32(pageSize)
-		}
-		err := gax.Invoke(ctx, func(ctx context.Context, settings gax.CallSettings) error {
-			var err error
-			resp, err = c.stakingClient.ListProtocols(ctx, req, settings.GRPC...)
-			return err
-		}, opts...)
-		if err != nil {
-			return nil, "", err
-		}
-
-		it.Response = resp
-		return resp.GetProtocols(), resp.GetNextPageToken(), nil
+	var resp *stakingpb.ListProtocolsResponse
+	err := gax.Invoke(ctx, func(ctx context.Context, settings gax.CallSettings) error {
+		var err error
+		resp, err = c.stakingClient.ListProtocols(ctx, req, settings.GRPC...)
+		return err
+	}, opts...)
+	if err != nil {
+		return nil, err
 	}
-	fetch := func(pageSize int, pageToken string) (string, error) {
-		items, nextPageToken, err := it.InternalFetch(pageSize, pageToken)
-		if err != nil {
-			return "", err
-		}
-		it.items = append(it.items, items...)
-		return nextPageToken, nil
-	}
-
-	it.pageInfo, it.nextFunc = iterator.NewPageInfo(fetch, it.bufLen, it.takeBuf)
-	it.pageInfo.MaxSize = int(req.GetPageSize())
-	it.pageInfo.Token = req.GetPageToken()
-
-	return it
+	return resp, nil
 }
 
-func (c *stakingGRPCClient) ListNetworks(ctx context.Context, req *stakingpb.ListNetworksRequest, opts ...gax.CallOption) *NetworkIterator {
+func (c *stakingGRPCClient) ListNetworks(ctx context.Context, req *stakingpb.ListNetworksRequest, opts ...gax.CallOption) (*stakingpb.ListNetworksResponse, error) {
 	md := metadata.Pairs("x-goog-request-params", fmt.Sprintf("%s=%v", "parent", url.QueryEscape(req.GetParent())))
 
 	ctx = insertMetadata(ctx, c.xGoogMetadata, md)
 	opts = append((*c.CallOptions).ListNetworks[0:len((*c.CallOptions).ListNetworks):len((*c.CallOptions).ListNetworks)], opts...)
-	it := &NetworkIterator{}
-	req = proto.Clone(req).(*stakingpb.ListNetworksRequest)
-	it.InternalFetch = func(pageSize int, pageToken string) ([]*stakingpb.Network, string, error) {
-		resp := &stakingpb.ListNetworksResponse{}
-		if pageToken != "" {
-			req.PageToken = pageToken
-		}
-		if pageSize > math.MaxInt32 {
-			req.PageSize = math.MaxInt32
-		} else if pageSize != 0 {
-			req.PageSize = int32(pageSize)
-		}
-		err := gax.Invoke(ctx, func(ctx context.Context, settings gax.CallSettings) error {
-			var err error
-			resp, err = c.stakingClient.ListNetworks(ctx, req, settings.GRPC...)
-			return err
-		}, opts...)
-		if err != nil {
-			return nil, "", err
-		}
-
-		it.Response = resp
-		return resp.GetNetworks(), resp.GetNextPageToken(), nil
+	var resp *stakingpb.ListNetworksResponse
+	err := gax.Invoke(ctx, func(ctx context.Context, settings gax.CallSettings) error {
+		var err error
+		resp, err = c.stakingClient.ListNetworks(ctx, req, settings.GRPC...)
+		return err
+	}, opts...)
+	if err != nil {
+		return nil, err
 	}
-	fetch := func(pageSize int, pageToken string) (string, error) {
-		items, nextPageToken, err := it.InternalFetch(pageSize, pageToken)
-		if err != nil {
-			return "", err
-		}
-		it.items = append(it.items, items...)
-		return nextPageToken, nil
-	}
-
-	it.pageInfo, it.nextFunc = iterator.NewPageInfo(fetch, it.bufLen, it.takeBuf)
-	it.pageInfo.MaxSize = int(req.GetPageSize())
-	it.pageInfo.Token = req.GetPageToken()
-
-	return it
+	return resp, nil
 }
 
 func (c *stakingGRPCClient) ListValidators(ctx context.Context, req *stakingpb.ListValidatorsRequest, opts ...gax.CallOption) *ValidatorIterator {
@@ -512,49 +438,21 @@ func (c *stakingGRPCClient) ListValidators(ctx context.Context, req *stakingpb.L
 	return it
 }
 
-func (c *stakingGRPCClient) ListActions(ctx context.Context, req *stakingpb.ListActionsRequest, opts ...gax.CallOption) *ActionIterator {
+func (c *stakingGRPCClient) ListActions(ctx context.Context, req *stakingpb.ListActionsRequest, opts ...gax.CallOption) (*stakingpb.ListActionsResponse, error) {
 	md := metadata.Pairs("x-goog-request-params", fmt.Sprintf("%s=%v", "parent", url.QueryEscape(req.GetParent())))
 
 	ctx = insertMetadata(ctx, c.xGoogMetadata, md)
 	opts = append((*c.CallOptions).ListActions[0:len((*c.CallOptions).ListActions):len((*c.CallOptions).ListActions)], opts...)
-	it := &ActionIterator{}
-	req = proto.Clone(req).(*stakingpb.ListActionsRequest)
-	it.InternalFetch = func(pageSize int, pageToken string) ([]*stakingpb.Action, string, error) {
-		resp := &stakingpb.ListActionsResponse{}
-		if pageToken != "" {
-			req.PageToken = pageToken
-		}
-		if pageSize > math.MaxInt32 {
-			req.PageSize = math.MaxInt32
-		} else if pageSize != 0 {
-			req.PageSize = int32(pageSize)
-		}
-		err := gax.Invoke(ctx, func(ctx context.Context, settings gax.CallSettings) error {
-			var err error
-			resp, err = c.stakingClient.ListActions(ctx, req, settings.GRPC...)
-			return err
-		}, opts...)
-		if err != nil {
-			return nil, "", err
-		}
-
-		it.Response = resp
-		return resp.GetActions(), resp.GetNextPageToken(), nil
+	var resp *stakingpb.ListActionsResponse
+	err := gax.Invoke(ctx, func(ctx context.Context, settings gax.CallSettings) error {
+		var err error
+		resp, err = c.stakingClient.ListActions(ctx, req, settings.GRPC...)
+		return err
+	}, opts...)
+	if err != nil {
+		return nil, err
 	}
-	fetch := func(pageSize int, pageToken string) (string, error) {
-		items, nextPageToken, err := it.InternalFetch(pageSize, pageToken)
-		if err != nil {
-			return "", err
-		}
-		it.items = append(it.items, items...)
-		return nextPageToken, nil
-	}
-
-	it.pageInfo, it.nextFunc = iterator.NewPageInfo(fetch, it.bufLen, it.takeBuf)
-	it.pageInfo.MaxSize = int(req.GetPageSize())
-	it.pageInfo.Token = req.GetPageToken()
-
-	return it
+	return resp, nil
 }
 
 func (c *stakingGRPCClient) CreateWorkflow(ctx context.Context, req *stakingpb.CreateWorkflowRequest, opts ...gax.CallOption) (*stakingpb.Workflow, error) {
@@ -686,176 +584,106 @@ func (c *stakingGRPCClient) ViewStakingContext(ctx context.Context, req *staking
 }
 
 // ListProtocols list supported protocols
-func (c *stakingRESTClient) ListProtocols(ctx context.Context, req *stakingpb.ListProtocolsRequest, opts ...gax.CallOption) *ProtocolIterator {
-	it := &ProtocolIterator{}
-	req = proto.Clone(req).(*stakingpb.ListProtocolsRequest)
+func (c *stakingRESTClient) ListProtocols(ctx context.Context, req *stakingpb.ListProtocolsRequest, opts ...gax.CallOption) (*stakingpb.ListProtocolsResponse, error) {
+	baseUrl, err := url.Parse(c.endpoint)
+	if err != nil {
+		return nil, err
+	}
+	baseUrl.Path += fmt.Sprintf("/api/v1alpha1/protocols")
+
+	// Build HTTP headers from client and context metadata.
+	headers := buildHeaders(ctx, c.xGoogMetadata, metadata.Pairs("Content-Type", "application/json"))
+	opts = append((*c.CallOptions).ListProtocols[0:len((*c.CallOptions).ListProtocols):len((*c.CallOptions).ListProtocols)], opts...)
 	unm := protojson.UnmarshalOptions{AllowPartial: true, DiscardUnknown: true}
-	it.InternalFetch = func(pageSize int, pageToken string) ([]*stakingpb.Protocol, string, error) {
-		resp := &stakingpb.ListProtocolsResponse{}
-		if pageToken != "" {
-			req.PageToken = pageToken
+	resp := &stakingpb.ListProtocolsResponse{}
+	e := gax.Invoke(ctx, func(ctx context.Context, settings gax.CallSettings) error {
+		if settings.Path != "" {
+			baseUrl.Path = settings.Path
 		}
-		if pageSize > math.MaxInt32 {
-			req.PageSize = math.MaxInt32
-		} else if pageSize != 0 {
-			req.PageSize = int32(pageSize)
-		}
-		baseUrl, err := url.Parse(c.endpoint)
+		httpReq, err := http.NewRequest("GET", baseUrl.String(), nil)
 		if err != nil {
-			return nil, "", err
+			return err
 		}
-		baseUrl.Path += fmt.Sprintf("/api/v1alpha1/protocols")
+		httpReq = httpReq.WithContext(ctx)
+		httpReq.Header = headers
 
-		params := url.Values{}
-		if req.GetPageSize() != 0 {
-			params.Add("pageSize", fmt.Sprintf("%v", req.GetPageSize()))
+		httpRsp, err := c.httpClient.Do(httpReq)
+		if err != nil{
+			return err
 		}
-		if req.GetPageToken() != "" {
-			params.Add("pageToken", fmt.Sprintf("%v", req.GetPageToken()))
+		defer httpRsp.Body.Close()
+
+		if err = googleapi.CheckResponse(httpRsp); err != nil {
+			return err
 		}
 
-		baseUrl.RawQuery = params.Encode()
-
-		// Build HTTP headers from client and context metadata.
-		headers := buildHeaders(ctx, c.xGoogMetadata, metadata.Pairs("Content-Type", "application/json"))
-		e := gax.Invoke(ctx, func(ctx context.Context, settings gax.CallSettings) error {
-			if settings.Path != "" {
-				baseUrl.Path = settings.Path
-			}
-			httpReq, err := http.NewRequest("GET", baseUrl.String(), nil)
-			if err != nil {
-				return err
-			}
-			httpReq.Header = headers
-
-			httpRsp, err := c.httpClient.Do(httpReq)
-			if err != nil{
-				return err
-			}
-			defer httpRsp.Body.Close()
-
-			if err = googleapi.CheckResponse(httpRsp); err != nil {
-				return err
-			}
-
-			buf, err := ioutil.ReadAll(httpRsp.Body)
-			if err != nil {
-				return err
-			}
-
-			if err := unm.Unmarshal(buf, resp); err != nil {
-				return maybeUnknownEnum(err)
-			}
-
-			return nil
-		}, opts...)
-		if e != nil {
-			return nil, "", e
-		}
-		it.Response = resp
-		return resp.GetProtocols(), resp.GetNextPageToken(), nil
-	}
-
-	fetch := func(pageSize int, pageToken string) (string, error) {
-		items, nextPageToken, err := it.InternalFetch(pageSize, pageToken)
+		buf, err := ioutil.ReadAll(httpRsp.Body)
 		if err != nil {
-			return "", err
+			return err
 		}
-		it.items = append(it.items, items...)
-		return nextPageToken, nil
+
+		if err := unm.Unmarshal(buf, resp); err != nil {
+			return maybeUnknownEnum(err)
+		}
+
+		return nil
+	}, opts...)
+	if e != nil {
+		return nil, e
 	}
-
-	it.pageInfo, it.nextFunc = iterator.NewPageInfo(fetch, it.bufLen, it.takeBuf)
-	it.pageInfo.MaxSize = int(req.GetPageSize())
-	it.pageInfo.Token = req.GetPageToken()
-
-	return it
+	return resp, nil
 }
 // ListNetworks list supported staking networks for a given protocol
-func (c *stakingRESTClient) ListNetworks(ctx context.Context, req *stakingpb.ListNetworksRequest, opts ...gax.CallOption) *NetworkIterator {
-	it := &NetworkIterator{}
-	req = proto.Clone(req).(*stakingpb.ListNetworksRequest)
+func (c *stakingRESTClient) ListNetworks(ctx context.Context, req *stakingpb.ListNetworksRequest, opts ...gax.CallOption) (*stakingpb.ListNetworksResponse, error) {
+	baseUrl, err := url.Parse(c.endpoint)
+	if err != nil {
+		return nil, err
+	}
+	baseUrl.Path += fmt.Sprintf("/api/v1alpha1/%v/networks", req.GetParent())
+
+	// Build HTTP headers from client and context metadata.
+	md := metadata.Pairs("x-goog-request-params", fmt.Sprintf("%s=%v", "parent", url.QueryEscape(req.GetParent())))
+
+	headers := buildHeaders(ctx, c.xGoogMetadata, md, metadata.Pairs("Content-Type", "application/json"))
+	opts = append((*c.CallOptions).ListNetworks[0:len((*c.CallOptions).ListNetworks):len((*c.CallOptions).ListNetworks)], opts...)
 	unm := protojson.UnmarshalOptions{AllowPartial: true, DiscardUnknown: true}
-	it.InternalFetch = func(pageSize int, pageToken string) ([]*stakingpb.Network, string, error) {
-		resp := &stakingpb.ListNetworksResponse{}
-		if pageToken != "" {
-			req.PageToken = pageToken
+	resp := &stakingpb.ListNetworksResponse{}
+	e := gax.Invoke(ctx, func(ctx context.Context, settings gax.CallSettings) error {
+		if settings.Path != "" {
+			baseUrl.Path = settings.Path
 		}
-		if pageSize > math.MaxInt32 {
-			req.PageSize = math.MaxInt32
-		} else if pageSize != 0 {
-			req.PageSize = int32(pageSize)
-		}
-		baseUrl, err := url.Parse(c.endpoint)
+		httpReq, err := http.NewRequest("GET", baseUrl.String(), nil)
 		if err != nil {
-			return nil, "", err
+			return err
 		}
-		baseUrl.Path += fmt.Sprintf("/api/v1alpha1/%v/networks", req.GetParent())
+		httpReq = httpReq.WithContext(ctx)
+		httpReq.Header = headers
 
-		params := url.Values{}
-		if req.GetPageSize() != 0 {
-			params.Add("pageSize", fmt.Sprintf("%v", req.GetPageSize()))
+		httpRsp, err := c.httpClient.Do(httpReq)
+		if err != nil{
+			return err
 		}
-		if req.GetPageToken() != "" {
-			params.Add("pageToken", fmt.Sprintf("%v", req.GetPageToken()))
+		defer httpRsp.Body.Close()
+
+		if err = googleapi.CheckResponse(httpRsp); err != nil {
+			return err
 		}
 
-		baseUrl.RawQuery = params.Encode()
-
-		// Build HTTP headers from client and context metadata.
-		headers := buildHeaders(ctx, c.xGoogMetadata, metadata.Pairs("Content-Type", "application/json"))
-		e := gax.Invoke(ctx, func(ctx context.Context, settings gax.CallSettings) error {
-			if settings.Path != "" {
-				baseUrl.Path = settings.Path
-			}
-			httpReq, err := http.NewRequest("GET", baseUrl.String(), nil)
-			if err != nil {
-				return err
-			}
-			httpReq.Header = headers
-
-			httpRsp, err := c.httpClient.Do(httpReq)
-			if err != nil{
-				return err
-			}
-			defer httpRsp.Body.Close()
-
-			if err = googleapi.CheckResponse(httpRsp); err != nil {
-				return err
-			}
-
-			buf, err := ioutil.ReadAll(httpRsp.Body)
-			if err != nil {
-				return err
-			}
-
-			if err := unm.Unmarshal(buf, resp); err != nil {
-				return maybeUnknownEnum(err)
-			}
-
-			return nil
-		}, opts...)
-		if e != nil {
-			return nil, "", e
-		}
-		it.Response = resp
-		return resp.GetNetworks(), resp.GetNextPageToken(), nil
-	}
-
-	fetch := func(pageSize int, pageToken string) (string, error) {
-		items, nextPageToken, err := it.InternalFetch(pageSize, pageToken)
+		buf, err := ioutil.ReadAll(httpRsp.Body)
 		if err != nil {
-			return "", err
+			return err
 		}
-		it.items = append(it.items, items...)
-		return nextPageToken, nil
+
+		if err := unm.Unmarshal(buf, resp); err != nil {
+			return maybeUnknownEnum(err)
+		}
+
+		return nil
+	}, opts...)
+	if e != nil {
+		return nil, e
 	}
-
-	it.pageInfo, it.nextFunc = iterator.NewPageInfo(fetch, it.bufLen, it.takeBuf)
-	it.pageInfo.MaxSize = int(req.GetPageSize())
-	it.pageInfo.Token = req.GetPageToken()
-
-	return it
+	return resp, nil
 }
 // ListValidators list supported validators for a given protocol and network
 func (c *stakingRESTClient) ListValidators(ctx context.Context, req *stakingpb.ListValidatorsRequest, opts ...gax.CallOption) *ValidatorIterator {
@@ -944,90 +772,56 @@ func (c *stakingRESTClient) ListValidators(ctx context.Context, req *stakingpb.L
 	return it
 }
 // ListActions list supported actions for a given protocol and network
-func (c *stakingRESTClient) ListActions(ctx context.Context, req *stakingpb.ListActionsRequest, opts ...gax.CallOption) *ActionIterator {
-	it := &ActionIterator{}
-	req = proto.Clone(req).(*stakingpb.ListActionsRequest)
+func (c *stakingRESTClient) ListActions(ctx context.Context, req *stakingpb.ListActionsRequest, opts ...gax.CallOption) (*stakingpb.ListActionsResponse, error) {
+	baseUrl, err := url.Parse(c.endpoint)
+	if err != nil {
+		return nil, err
+	}
+	baseUrl.Path += fmt.Sprintf("/api/v1alpha1/%v/actions", req.GetParent())
+
+	// Build HTTP headers from client and context metadata.
+	md := metadata.Pairs("x-goog-request-params", fmt.Sprintf("%s=%v", "parent", url.QueryEscape(req.GetParent())))
+
+	headers := buildHeaders(ctx, c.xGoogMetadata, md, metadata.Pairs("Content-Type", "application/json"))
+	opts = append((*c.CallOptions).ListActions[0:len((*c.CallOptions).ListActions):len((*c.CallOptions).ListActions)], opts...)
 	unm := protojson.UnmarshalOptions{AllowPartial: true, DiscardUnknown: true}
-	it.InternalFetch = func(pageSize int, pageToken string) ([]*stakingpb.Action, string, error) {
-		resp := &stakingpb.ListActionsResponse{}
-		if pageToken != "" {
-			req.PageToken = pageToken
+	resp := &stakingpb.ListActionsResponse{}
+	e := gax.Invoke(ctx, func(ctx context.Context, settings gax.CallSettings) error {
+		if settings.Path != "" {
+			baseUrl.Path = settings.Path
 		}
-		if pageSize > math.MaxInt32 {
-			req.PageSize = math.MaxInt32
-		} else if pageSize != 0 {
-			req.PageSize = int32(pageSize)
-		}
-		baseUrl, err := url.Parse(c.endpoint)
+		httpReq, err := http.NewRequest("GET", baseUrl.String(), nil)
 		if err != nil {
-			return nil, "", err
+			return err
 		}
-		baseUrl.Path += fmt.Sprintf("/api/v1alpha1/%v/actions", req.GetParent())
+		httpReq = httpReq.WithContext(ctx)
+		httpReq.Header = headers
 
-		params := url.Values{}
-		if req.GetPageSize() != 0 {
-			params.Add("pageSize", fmt.Sprintf("%v", req.GetPageSize()))
+		httpRsp, err := c.httpClient.Do(httpReq)
+		if err != nil{
+			return err
 		}
-		if req.GetPageToken() != "" {
-			params.Add("pageToken", fmt.Sprintf("%v", req.GetPageToken()))
+		defer httpRsp.Body.Close()
+
+		if err = googleapi.CheckResponse(httpRsp); err != nil {
+			return err
 		}
 
-		baseUrl.RawQuery = params.Encode()
-
-		// Build HTTP headers from client and context metadata.
-		headers := buildHeaders(ctx, c.xGoogMetadata, metadata.Pairs("Content-Type", "application/json"))
-		e := gax.Invoke(ctx, func(ctx context.Context, settings gax.CallSettings) error {
-			if settings.Path != "" {
-				baseUrl.Path = settings.Path
-			}
-			httpReq, err := http.NewRequest("GET", baseUrl.String(), nil)
-			if err != nil {
-				return err
-			}
-			httpReq.Header = headers
-
-			httpRsp, err := c.httpClient.Do(httpReq)
-			if err != nil{
-				return err
-			}
-			defer httpRsp.Body.Close()
-
-			if err = googleapi.CheckResponse(httpRsp); err != nil {
-				return err
-			}
-
-			buf, err := ioutil.ReadAll(httpRsp.Body)
-			if err != nil {
-				return err
-			}
-
-			if err := unm.Unmarshal(buf, resp); err != nil {
-				return maybeUnknownEnum(err)
-			}
-
-			return nil
-		}, opts...)
-		if e != nil {
-			return nil, "", e
-		}
-		it.Response = resp
-		return resp.GetActions(), resp.GetNextPageToken(), nil
-	}
-
-	fetch := func(pageSize int, pageToken string) (string, error) {
-		items, nextPageToken, err := it.InternalFetch(pageSize, pageToken)
+		buf, err := ioutil.ReadAll(httpRsp.Body)
 		if err != nil {
-			return "", err
+			return err
 		}
-		it.items = append(it.items, items...)
-		return nextPageToken, nil
+
+		if err := unm.Unmarshal(buf, resp); err != nil {
+			return maybeUnknownEnum(err)
+		}
+
+		return nil
+	}, opts...)
+	if e != nil {
+		return nil, e
 	}
-
-	it.pageInfo, it.nextFunc = iterator.NewPageInfo(fetch, it.bufLen, it.takeBuf)
-	it.pageInfo.MaxSize = int(req.GetPageSize())
-	it.pageInfo.Token = req.GetPageToken()
-
-	return it
+	return resp, nil
 }
 // CreateWorkflow create a workflow to perform an action
 func (c *stakingRESTClient) CreateWorkflow(ctx context.Context, req *stakingpb.CreateWorkflowRequest, opts ...gax.CallOption) (*stakingpb.Workflow, error) {
@@ -1229,11 +1023,7 @@ func (c *stakingRESTClient) ListWorkflows(ctx context.Context, req *stakingpb.Li
 
 	return it
 }
-// PerformWorkflowStep (– api-linter: core::0136::http-name-variable=disabled
-// aip.dev/not-precedent (at http://aip.dev/not-precedent): We need to do this because
-// the phrasing reads easier. –)
-//
-// Perform the next step in a workflow
+// PerformWorkflowStep perform the next step in a workflow
 func (c *stakingRESTClient) PerformWorkflowStep(ctx context.Context, req *stakingpb.PerformWorkflowStepRequest, opts ...gax.CallOption) (*stakingpb.Workflow, error) {
 	m := protojson.MarshalOptions{AllowPartial: true, UseEnumNumbers: true}
 	jsonReq, err := m.Marshal(req)
@@ -1291,11 +1081,7 @@ func (c *stakingRESTClient) PerformWorkflowStep(ctx context.Context, req *stakin
 	}
 	return resp, nil
 }
-// RefreshWorkflowStep (– api-linter: core::0136::http-name-variable=disabled
-// aip.dev/not-precedent (at http://aip.dev/not-precedent): We need to do this because
-// the phrasing reads easier. –)
-//
-// Refresh the current step in a workflow
+// RefreshWorkflowStep refresh the current step in a workflow
 func (c *stakingRESTClient) RefreshWorkflowStep(ctx context.Context, req *stakingpb.RefreshWorkflowStepRequest, opts ...gax.CallOption) (*stakingpb.Workflow, error) {
 	m := protojson.MarshalOptions{AllowPartial: true, UseEnumNumbers: true}
 	jsonReq, err := m.Marshal(req)
@@ -1353,11 +1139,7 @@ func (c *stakingRESTClient) RefreshWorkflowStep(ctx context.Context, req *stakin
 	}
 	return resp, nil
 }
-// ViewStakingContext (– api-linter: core::0136::http-name-variable=disabled
-// aip.dev/not-precedent (at http://aip.dev/not-precedent): We need to do this because
-// the phrasing reads easier. –)
-//
-// View Staking context information given a specific network address
+// ViewStakingContext view Staking context information given a specific network address
 func (c *stakingRESTClient) ViewStakingContext(ctx context.Context, req *stakingpb.ViewStakingContextRequest, opts ...gax.CallOption) (*stakingpb.ViewStakingContextResponse, error) {
 	baseUrl, err := url.Parse(c.endpoint)
 	if err != nil {
@@ -1416,147 +1198,6 @@ func (c *stakingRESTClient) ViewStakingContext(ctx context.Context, req *staking
 	}
 	return resp, nil
 }
-// ActionIterator manages a stream of *stakingpb.Action.
-type ActionIterator struct {
-	items    []*stakingpb.Action
-	pageInfo *iterator.PageInfo
-	nextFunc func() error
-
-	// Response is the raw response for the current page.
-	// It must be cast to the RPC response type.
-	// Calling Next() or InternalFetch() updates this value.
-	Response interface{}
-
-	// InternalFetch is for use by the Google Cloud Libraries only.
-	// It is not part of the stable interface of this package.
-	//
-	// InternalFetch returns results from a single call to the underlying RPC.
-	// The number of results is no greater than pageSize.
-	// If there are no more results, nextPageToken is empty and err is nil.
-	InternalFetch func(pageSize int, pageToken string) (results []*stakingpb.Action, nextPageToken string, err error)
-}
-
-// PageInfo supports pagination. See the google.golang.org/api/iterator package for details.
-func (it *ActionIterator) PageInfo() *iterator.PageInfo {
-	return it.pageInfo
-}
-
-// Next returns the next result. Its second return value is iterator.Done if there are no more
-// results. Once Next returns Done, all subsequent calls will return Done.
-func (it *ActionIterator) Next() (*stakingpb.Action, error) {
-	var item *stakingpb.Action
-	if err := it.nextFunc(); err != nil {
-		return item, err
-	}
-	item = it.items[0]
-	it.items = it.items[1:]
-	return item, nil
-}
-
-func (it *ActionIterator) bufLen() int {
-	return len(it.items)
-}
-
-func (it *ActionIterator) takeBuf() interface{} {
-	b := it.items
-	it.items = nil
-	return b
-}
-
-// NetworkIterator manages a stream of *stakingpb.Network.
-type NetworkIterator struct {
-	items    []*stakingpb.Network
-	pageInfo *iterator.PageInfo
-	nextFunc func() error
-
-	// Response is the raw response for the current page.
-	// It must be cast to the RPC response type.
-	// Calling Next() or InternalFetch() updates this value.
-	Response interface{}
-
-	// InternalFetch is for use by the Google Cloud Libraries only.
-	// It is not part of the stable interface of this package.
-	//
-	// InternalFetch returns results from a single call to the underlying RPC.
-	// The number of results is no greater than pageSize.
-	// If there are no more results, nextPageToken is empty and err is nil.
-	InternalFetch func(pageSize int, pageToken string) (results []*stakingpb.Network, nextPageToken string, err error)
-}
-
-// PageInfo supports pagination. See the google.golang.org/api/iterator package for details.
-func (it *NetworkIterator) PageInfo() *iterator.PageInfo {
-	return it.pageInfo
-}
-
-// Next returns the next result. Its second return value is iterator.Done if there are no more
-// results. Once Next returns Done, all subsequent calls will return Done.
-func (it *NetworkIterator) Next() (*stakingpb.Network, error) {
-	var item *stakingpb.Network
-	if err := it.nextFunc(); err != nil {
-		return item, err
-	}
-	item = it.items[0]
-	it.items = it.items[1:]
-	return item, nil
-}
-
-func (it *NetworkIterator) bufLen() int {
-	return len(it.items)
-}
-
-func (it *NetworkIterator) takeBuf() interface{} {
-	b := it.items
-	it.items = nil
-	return b
-}
-
-// ProtocolIterator manages a stream of *stakingpb.Protocol.
-type ProtocolIterator struct {
-	items    []*stakingpb.Protocol
-	pageInfo *iterator.PageInfo
-	nextFunc func() error
-
-	// Response is the raw response for the current page.
-	// It must be cast to the RPC response type.
-	// Calling Next() or InternalFetch() updates this value.
-	Response interface{}
-
-	// InternalFetch is for use by the Google Cloud Libraries only.
-	// It is not part of the stable interface of this package.
-	//
-	// InternalFetch returns results from a single call to the underlying RPC.
-	// The number of results is no greater than pageSize.
-	// If there are no more results, nextPageToken is empty and err is nil.
-	InternalFetch func(pageSize int, pageToken string) (results []*stakingpb.Protocol, nextPageToken string, err error)
-}
-
-// PageInfo supports pagination. See the google.golang.org/api/iterator package for details.
-func (it *ProtocolIterator) PageInfo() *iterator.PageInfo {
-	return it.pageInfo
-}
-
-// Next returns the next result. Its second return value is iterator.Done if there are no more
-// results. Once Next returns Done, all subsequent calls will return Done.
-func (it *ProtocolIterator) Next() (*stakingpb.Protocol, error) {
-	var item *stakingpb.Protocol
-	if err := it.nextFunc(); err != nil {
-		return item, err
-	}
-	item = it.items[0]
-	it.items = it.items[1:]
-	return item, nil
-}
-
-func (it *ProtocolIterator) bufLen() int {
-	return len(it.items)
-}
-
-func (it *ProtocolIterator) takeBuf() interface{} {
-	b := it.items
-	it.items = nil
-	return b
-}
-
 // ValidatorIterator manages a stream of *stakingpb.Validator.
 type ValidatorIterator struct {
 	items    []*stakingpb.Validator

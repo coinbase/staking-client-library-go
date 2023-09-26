@@ -20,7 +20,7 @@ message Validator {
 
   // The resource name of the Validator.
   // Format: protocols/{protocolName}/networks/{networkName}/validators/{validatorName}
-  // Ex: protocols/polygon/networks/testnet/validators/0x857679d69fE50E7B722f94aCd2629d80C355163d
+  // Ex: protocols/polygon/networks/goerli/validators/0x857679d69fE50E7B722f94aCd2629d80C355163d
   string name = 1;
 
   // The public address of the validator that you may perform workflow actions on.
@@ -42,19 +42,19 @@ message ListValidatorsRequest {
       child_type: "staking.coinbase.com/Validator"
     }];
 
-  // *UNUSED* The maximum number of validators to return. The service may
-  // return fewer than this value.
-  //
-  // If unspecified, 50 validators will be returned.
-  // The maximum value is 1000; values over 1000 will be floored to 1000.
-  int32 page_size = 2;
+    //  The maximum number of validators to return. The service may
+    // return fewer than this value.
+    //
+    // If unspecified, 50 validators will be returned.
+    // The maximum value is 1000; values over 1000 will be floored to 1000.
+    int32 page_size = 2 [(google.api.field_behavior) = OPTIONAL];
 
-  // *UNUSED* A page token as part of the response of a previous call.
-  // Provide this to retrieve the next page.
-  //
-  // When paginating, all other parameters must match the previous
-  // request to list resources.
-  string page_token = 3;
+    // A page token as part of the response of a previous call.
+    // Provide this to retrieve the next page.
+    //
+    // When paginating, all other parameters must match the previous
+    // request to list resources.
+    string page_token = 3 [(google.api.field_behavior) = OPTIONAL];
 }
 
 // The response message for ListValidators.
@@ -62,7 +62,7 @@ message ListValidatorsResponse {
   // The list of validators.
   repeated Validator validators = 1;
 
-  // *UNUSED* A token which can be provided as `page_token` to retrieve the next page.
+  // A token which can be provided as `page_token` to retrieve the next page.
   // If this field is omitted, there are no additional pages.
   string next_page_token = 2;
 }

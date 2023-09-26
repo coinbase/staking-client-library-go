@@ -49,25 +49,10 @@ type StakingServiceClient interface {
 	GetWorkflow(ctx context.Context, in *GetWorkflowRequest, opts ...grpc.CallOption) (*Workflow, error)
 	// List all workflows in a project
 	ListWorkflows(ctx context.Context, in *ListWorkflowsRequest, opts ...grpc.CallOption) (*ListWorkflowsResponse, error)
-	// (-- api-linter: core::0136::http-name-variable=disabled
-	//
-	//	aip.dev/not-precedent: We need to do this because
-	//	the phrasing reads easier. --)
-	//
 	// Perform the next step in a workflow
 	PerformWorkflowStep(ctx context.Context, in *PerformWorkflowStepRequest, opts ...grpc.CallOption) (*Workflow, error)
-	// (-- api-linter: core::0136::http-name-variable=disabled
-	//
-	//	aip.dev/not-precedent: We need to do this because
-	//	the phrasing reads easier. --)
-	//
 	// Refresh the current step in a workflow
 	RefreshWorkflowStep(ctx context.Context, in *RefreshWorkflowStepRequest, opts ...grpc.CallOption) (*Workflow, error)
-	// (-- api-linter: core::0136::http-name-variable=disabled
-	//
-	//	aip.dev/not-precedent: We need to do this because
-	//	the phrasing reads easier. --)
-	//
 	// View Staking context information given a specific network address
 	ViewStakingContext(ctx context.Context, in *ViewStakingContextRequest, opts ...grpc.CallOption) (*ViewStakingContextResponse, error)
 }
@@ -188,25 +173,10 @@ type StakingServiceServer interface {
 	GetWorkflow(context.Context, *GetWorkflowRequest) (*Workflow, error)
 	// List all workflows in a project
 	ListWorkflows(context.Context, *ListWorkflowsRequest) (*ListWorkflowsResponse, error)
-	// (-- api-linter: core::0136::http-name-variable=disabled
-	//
-	//	aip.dev/not-precedent: We need to do this because
-	//	the phrasing reads easier. --)
-	//
 	// Perform the next step in a workflow
 	PerformWorkflowStep(context.Context, *PerformWorkflowStepRequest) (*Workflow, error)
-	// (-- api-linter: core::0136::http-name-variable=disabled
-	//
-	//	aip.dev/not-precedent: We need to do this because
-	//	the phrasing reads easier. --)
-	//
 	// Refresh the current step in a workflow
 	RefreshWorkflowStep(context.Context, *RefreshWorkflowStepRequest) (*Workflow, error)
-	// (-- api-linter: core::0136::http-name-variable=disabled
-	//
-	//	aip.dev/not-precedent: We need to do this because
-	//	the phrasing reads easier. --)
-	//
 	// View Staking context information given a specific network address
 	ViewStakingContext(context.Context, *ViewStakingContextRequest) (*ViewStakingContextResponse, error)
 	mustEmbedUnimplementedStakingServiceServer()

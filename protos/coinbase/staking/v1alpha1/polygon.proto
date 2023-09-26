@@ -31,8 +31,6 @@ message PolygonStakeParameters {
   Amount amount = 3 [(google.api.field_behavior) = REQUIRED];
 }
 
-// (-- api-linter: core::0140::prepositions=disabled
-//     aip.dev/not-precedent: We need to do this because it simplifies the api. --)
 // The parameters required for unstake action on Polygon
 message PolygonUnstakeParameters {
   option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
@@ -54,8 +52,6 @@ message PolygonUnstakeParameters {
   Amount amount = 3 [(google.api.field_behavior) = REQUIRED];
 }
 
-// (-- api-linter: core::0140::prepositions=disabled
-//     aip.dev/not-precedent: We need to do this because it simplifies the api. --)
 // The parameters required for unstake action on Polygon
 message PolygonRestakeParameters {
   option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
@@ -73,8 +69,6 @@ message PolygonRestakeParameters {
   string validator_address = 2 [(google.api.field_behavior) = REQUIRED];
 }
 
-// (-- api-linter: core::0140::prepositions=disabled
-//     aip.dev/not-precedent: We need to do this because it simplifies the api. --)
 // The parameters required for claim rewards action on Polygon
 message PolygonClaimRewardsParameters {
   option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {

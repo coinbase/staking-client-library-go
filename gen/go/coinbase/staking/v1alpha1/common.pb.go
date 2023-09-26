@@ -30,11 +30,6 @@ type Amount struct {
 
 	// The total value of the token.
 	Value string `protobuf:"bytes,1,opt,name=value,proto3" json:"value,omitempty"`
-	// (-- api-linter: core::0143::standardized-codes=disabled
-	//
-	//	aip.dev/not-precedent: We need to do this because it is in active.
-	//	discussion --)
-	//
 	// The name of the token.
 	Currency string `protobuf:"bytes,2,opt,name=currency,proto3" json:"currency,omitempty"`
 }

@@ -23,7 +23,6 @@ import (
 
 	v1alpha1 "github.com/coinbase/staking-client-library-go/gen/client/coinbase/staking/v1alpha1"
 	stakingpb "github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/v1alpha1"
-	"google.golang.org/api/iterator"
 )
 
 func main() {
@@ -43,18 +42,12 @@ func main() {
 		// TODO: Fill request struct fields.
 		// See https://pkg.go.dev/github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/v1alpha1#ListProtocolsRequest.
 	}
-	it := c.ListProtocols(ctx, req)
-	for {
-		resp, err := it.Next()
-		if err == iterator.Done {
-			break
-		}
-		if err != nil {
-			// TODO: Handle error.
-		}
-		// TODO: Use resp.
-		_ = resp
+	resp, err := c.ListProtocols(ctx, req)
+	if err != nil {
+		// TODO: Handle error.
 	}
+	// TODO: Use resp.
+	_ = resp
 }
 
 // [END staking_v1alpha1_generated_StakingService_ListProtocols_sync]

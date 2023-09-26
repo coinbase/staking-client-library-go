@@ -8,6 +8,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"os"
 	"time"
 
 	"github.com/coinbase/staking-client-library-go/auth"
@@ -36,7 +37,7 @@ func main() {
 
 	apiKey, err := auth.NewAPIKey(auth.WithLoadAPIKeyFromFile(true))
 	if err != nil {
-		log.Fatalf("error loading API key: %v", err)
+		log.Fatalf("error loading API key: %s", err.Error())
 	}
 
 	authOpt := client.WithAPIKey(apiKey)
@@ -44,7 +45,7 @@ func main() {
 	// Create a staking client.
 	stakingClient, err := v1alpha1client.NewStakingServiceClient(ctx, authOpt)
 	if err != nil {
-		log.Fatalf("error instantiating staking client: %v", err)
+		log.Fatalf("error instantiating staking client: %s", err.Error())
 	}
 
 	if projectID == "" || privateKey == "" || stakerAddress == "" {
@@ -69,6 +70,7 @@ func main() {
 					},
 				},
 			},
+			SkipBroadcast: false,
 		},
 	}
 
@@ -76,6 +78,7 @@ func main() {
 	if err != nil {
 		sae := stakingerrors.FromError(err)
 		_ = sae.Print()
+		os.Exit(1)
 	}
 
 	log.Printf("Workflow created %s ...\n", workflow.Name)
@@ -91,7 +94,7 @@ func main() {
 		printWorkflowProgressDetails(workflow)
 
 		// If workflow is in WAITING_FOR_SIGNING state, sign the transaction and update the workflow
-		if workflowWaitingForSigning(workflow) {
+		if v1alpha1client.WorkflowWaitingForSigning(workflow) {
 			unsignedTx := workflow.Steps[workflow.GetCurrentStepId()].GetTxStepOutput().GetUnsignedTx()
 
 			// Logic to sign the transaction. This can be substituted with any other signing mechanism.
@@ -105,14 +108,19 @@ func main() {
 			log.Printf("Returning back signed tx %s ...\n", string(signedTx.Data))
 
 			workflow, err = stakingClient.PerformWorkflowStep(ctx, &stakingpb.PerformWorkflowStepRequest{
-				Name:     workflow.Name,
-				Step:     workflow.GetCurrentStepId(),
-				SignedTx: string(signedTx.Data),
+				Name: workflow.Name,
+				Step: workflow.GetCurrentStepId(),
+				Data: string(signedTx.Data),
 			})
 			if err != nil {
 				log.Fatalf(fmt.Errorf("error updating workflow with signed tx: %w", err).Error())
 			}
-		} else if workflowFailedRefreshable(workflow) {
+		} else if v1alpha1client.WorkflowWaitingForExternalBroadcast(workflow) {
+			unsignedTx := workflow.Steps[workflow.GetCurrentStepId()].GetTxStepOutput().GetUnsignedTx()
+
+			fmt.Printf("Please sign and broadcast this unsigned tx %s externally and return back the tx hash via the PerformWorkflowStep API ...\n", unsignedTx)
+			break
+		} else if v1alpha1client.WorkflowFailedRefreshable(workflow) {
 			// If workflow is in FAILED_REFRESHABLE state, refresh the transaction and update the workflow
 			fmt.Printf("Step %d failed but is refreshable, refreshing ...\n", workflow.GetCurrentStepId())
 
@@ -123,7 +131,7 @@ func main() {
 			if err != nil {
 				log.Fatalf(fmt.Errorf("error refreshing transaction: %w", err).Error())
 			}
-		} else if workflowFinished(workflow) {
+		} else if v1alpha1client.WorkflowFinished(workflow) {
 			break
 		}
 
@@ -160,7 +168,7 @@ func printWorkflowProgressDetails(workflow *stakingpb.Workflow) {
 		)
 	}
 
-	if workflowFinished(workflow) {
+	if v1alpha1client.WorkflowFinished(workflow) {
 		log.Printf("Workflow reached end state - step name: %s %s workflow state: %s runtime: %v\n",
 			step.GetName(),
 			stepDetails,
@@ -175,19 +183,4 @@ func printWorkflowProgressDetails(workflow *stakingpb.Workflow) {
 			runtime,
 		)
 	}
-}
-
-func workflowFinished(workflow *stakingpb.Workflow) bool {
-	return workflow.State == stakingpb.Workflow_STATE_COMPLETED ||
-		workflow.State == stakingpb.Workflow_STATE_FAILED ||
-		workflow.State == stakingpb.Workflow_STATE_CANCELED ||
-		workflow.State == stakingpb.Workflow_STATE_CANCEL_FAILED
-}
-
-func workflowWaitingForSigning(workflow *stakingpb.Workflow) bool {
-	return workflow.State == stakingpb.Workflow_STATE_WAITING_FOR_SIGNING
-}
-
-func workflowFailedRefreshable(workflow *stakingpb.Workflow) bool {
-	return workflow.State == stakingpb.Workflow_STATE_FAILED_REFRESHABLE
 }

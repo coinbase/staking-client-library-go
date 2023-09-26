@@ -23,5 +23,5 @@ func (s *StakingServiceClient) ViewStakingContext(
 	sae := stakingerrors.FromError(err)
 	_ = sae.Print()
 
-	return nil, stakingerrors.FromError(err)
+	return nil, sae
 }

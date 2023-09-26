@@ -54,6 +54,42 @@
               "$ref": "#/definitions/v1alpha1ListProtocolsResponse"
             }
           },
+          "400": {
+            "description": "The request attempted has invalid parameters",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "401": {
+            "description": "Returned if authentication information is invalid",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "403": {
+            "description": "Returned when a user does not have permission to the resource.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "404": {
+            "description": "Returned when a resource is not found.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "429": {
+            "description": "Returned when a resource limit has been reached.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "500": {
+            "description": "Returned when an internal server error happens.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
           "default": {
             "description": "An unexpected error response.",
             "schema": {
@@ -61,23 +97,6 @@
             }
           }
         },
-        "parameters": [
-          {
-            "name": "pageSize",
-            "description": "*UNUSED* The maximum number of protocols to return. The service may\nreturn fewer than this value.\n\nIf unspecified, 50 protocols will be returned.\nThe maximum value is 1000; values over 1000 will be floored to 1000.",
-            "in": "query",
-            "required": false,
-            "type": "integer",
-            "format": "int32"
-          },
-          {
-            "name": "pageToken",
-            "description": "*UNUSED* A page token as part of the response of a previous call.\nProvide this to retrieve the next page.\n\nWhen paginating, all other parameters must match the previous\nrequest to list resources.",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          }
-        ],
         "tags": [
           "Protocol"
         ]
@@ -93,6 +112,42 @@
             "description": "OK",
             "schema": {
               "$ref": "#/definitions/v1alpha1ViewStakingContextResponse"
+            }
+          },
+          "400": {
+            "description": "The request attempted has invalid parameters",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "401": {
+            "description": "Returned if authentication information is invalid",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "403": {
+            "description": "Returned when a user does not have permission to the resource.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "404": {
+            "description": "Returned when a resource is not found.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "429": {
+            "description": "Returned when a resource limit has been reached.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "500": {
+            "description": "Returned when an internal server error happens.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
             }
           },
           "default": {
@@ -141,6 +196,42 @@
               "$ref": "#/definitions/v1alpha1Workflow"
             }
           },
+          "400": {
+            "description": "The request attempted has invalid parameters",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "401": {
+            "description": "Returned if authentication information is invalid",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "403": {
+            "description": "Returned when a user does not have permission to the resource.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "404": {
+            "description": "Returned when a resource is not found.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "429": {
+            "description": "Returned when a resource limit has been reached.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "500": {
+            "description": "Returned when an internal server error happens.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
           "default": {
             "description": "An unexpected error response.",
             "schema": {
@@ -173,6 +264,42 @@
             "description": "OK",
             "schema": {
               "$ref": "#/definitions/v1alpha1Workflow"
+            }
+          },
+          "400": {
+            "description": "The request attempted has invalid parameters",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "401": {
+            "description": "Returned if authentication information is invalid",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "403": {
+            "description": "Returned when a user does not have permission to the resource.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "404": {
+            "description": "Returned when a resource is not found.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "429": {
+            "description": "Returned when a resource limit has been reached.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "500": {
+            "description": "Returned when an internal server error happens.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
             }
           },
           "default": {
@@ -228,6 +355,42 @@
               "$ref": "#/definitions/v1alpha1Workflow"
             }
           },
+          "400": {
+            "description": "The request attempted has invalid parameters",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "401": {
+            "description": "Returned if authentication information is invalid",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "403": {
+            "description": "Returned when a user does not have permission to the resource.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "404": {
+            "description": "Returned when a resource is not found.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "429": {
+            "description": "Returned when a resource limit has been reached.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "500": {
+            "description": "Returned when an internal server error happens.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
           "default": {
             "description": "An unexpected error response.",
             "schema": {
@@ -256,15 +419,15 @@
                   "format": "int32",
                   "description": "The index of the step to be performed."
                 },
-                "signedTx": {
+                "data": {
                   "type": "string",
-                  "description": "The signed transaction to post to the network."
+                  "description": "Transaction metadata. This is either the signed transaction or transaction hash depending on the workflow's broadcast method."
                 }
               },
               "description": "The request message for PerformWorkflowStep.",
               "required": [
                 "step",
-                "signedTx"
+                "data"
               ]
             }
           }
@@ -286,6 +449,42 @@
               "$ref": "#/definitions/v1alpha1ListActionsResponse"
             }
           },
+          "400": {
+            "description": "The request attempted has invalid parameters",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "401": {
+            "description": "Returned if authentication information is invalid",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "403": {
+            "description": "Returned when a user does not have permission to the resource.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "404": {
+            "description": "Returned when a resource is not found.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "429": {
+            "description": "Returned when a resource limit has been reached.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "500": {
+            "description": "Returned when an internal server error happens.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
           "default": {
             "description": "An unexpected error response.",
             "schema": {
@@ -301,21 +500,6 @@
             "required": true,
             "type": "string",
             "pattern": "protocols/[^/]+/networks/[^/]+"
-          },
-          {
-            "name": "pageSize",
-            "description": "*UNUSED* The maximum number of actions to return. The service may\nreturn fewer than this value.\n\nIf unspecified, 50 actions will be returned.\nThe maximum value is 1000; values over 1000 will be floored to 1000.",
-            "in": "query",
-            "required": false,
-            "type": "integer",
-            "format": "int32"
-          },
-          {
-            "name": "pageToken",
-            "description": "*UNUSED* A page token as part of the response of a previous call.\nProvide this to retrieve the next page.\n\nWhen paginating, all other parameters must match the previous\nrequest to list resources.",
-            "in": "query",
-            "required": false,
-            "type": "string"
           }
         ],
         "tags": [
@@ -335,6 +519,42 @@
               "$ref": "#/definitions/v1alpha1ListNetworksResponse"
             }
           },
+          "400": {
+            "description": "The request attempted has invalid parameters",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "401": {
+            "description": "Returned if authentication information is invalid",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "403": {
+            "description": "Returned when a user does not have permission to the resource.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "404": {
+            "description": "Returned when a resource is not found.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "429": {
+            "description": "Returned when a resource limit has been reached.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "500": {
+            "description": "Returned when an internal server error happens.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
           "default": {
             "description": "An unexpected error response.",
             "schema": {
@@ -350,21 +570,6 @@
             "required": true,
             "type": "string",
             "pattern": "protocols/[^/]+"
-          },
-          {
-            "name": "pageSize",
-            "description": "*UNUSED* The maximum number of networks to return. The service may\nreturn fewer than this value.\n\nIf unspecified, 50 networks will be returned.\nThe maximum value is 1000; values over 1000 will be floored to 1000.",
-            "in": "query",
-            "required": false,
-            "type": "integer",
-            "format": "int32"
-          },
-          {
-            "name": "pageToken",
-            "description": "*UNUSED* A page token as part of the response of a previous call.\nProvide this to retrieve the next page.\n\nWhen paginating, all other parameters must match the previous\nrequest to list resources.",
-            "in": "query",
-            "required": false,
-            "type": "string"
           }
         ],
         "tags": [
@@ -382,6 +587,42 @@
             "description": "OK",
             "schema": {
               "$ref": "#/definitions/v1alpha1ListValidatorsResponse"
+            }
+          },
+          "400": {
+            "description": "The request attempted has invalid parameters",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "401": {
+            "description": "Returned if authentication information is invalid",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "403": {
+            "description": "Returned when a user does not have permission to the resource.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "404": {
+            "description": "Returned when a resource is not found.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "429": {
+            "description": "Returned when a resource limit has been reached.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "500": {
+            "description": "Returned when an internal server error happens.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
             }
           },
           "default": {
@@ -402,7 +643,7 @@
           },
           {
             "name": "pageSize",
-            "description": "*UNUSED* The maximum number of validators to return. The service may\nreturn fewer than this value.\n\nIf unspecified, 50 validators will be returned.\nThe maximum value is 1000; values over 1000 will be floored to 1000.",
+            "description": "The maximum number of validators to return. The service may\nreturn fewer than this value.\n\nIf unspecified, 50 validators will be returned.\nThe maximum value is 1000; values over 1000 will be floored to 1000.",
             "in": "query",
             "required": false,
             "type": "integer",
@@ -410,7 +651,7 @@
           },
           {
             "name": "pageToken",
-            "description": "*UNUSED* A page token as part of the response of a previous call.\nProvide this to retrieve the next page.\n\nWhen paginating, all other parameters must match the previous\nrequest to list resources.",
+            "description": "A page token as part of the response of a previous call.\nProvide this to retrieve the next page.\n\nWhen paginating, all other parameters must match the previous\nrequest to list resources.",
             "in": "query",
             "required": false,
             "type": "string"
@@ -430,6 +671,42 @@
             "description": "OK",
             "schema": {
               "$ref": "#/definitions/v1alpha1ListWorkflowsResponse"
+            }
+          },
+          "400": {
+            "description": "The request attempted has invalid parameters",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "401": {
+            "description": "Returned if authentication information is invalid",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "403": {
+            "description": "Returned when a user does not have permission to the resource.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "404": {
+            "description": "Returned when a resource is not found.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "429": {
+            "description": "Returned when a resource limit has been reached.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "500": {
+            "description": "Returned when an internal server error happens.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
             }
           },
           "default": {
@@ -483,6 +760,42 @@
             "description": "OK",
             "schema": {
               "$ref": "#/definitions/v1alpha1Workflow"
+            }
+          },
+          "400": {
+            "description": "The request attempted has invalid parameters",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "401": {
+            "description": "Returned if authentication information is invalid",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "403": {
+            "description": "Returned when a user does not have permission to the resource.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "404": {
+            "description": "Returned when a resource is not found.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "429": {
+            "description": "Returned when a resource limit has been reached.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          },
+          "500": {
+            "description": "Returned when an internal server error happens.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
             }
           },
           "default": {
@@ -567,7 +880,7 @@
       "properties": {
         "name": {
           "type": "string",
-          "title": "The resource name of the Action.\nFormat: protocols/{protocolName}/networks/{networkName}/actions/{actionName}\nEx: protocols/polygon/networks/testnet/validators/stake"
+          "title": "The resource name of the Action.\nFormat: protocols/{protocolName}/networks/{networkName}/actions/{actionName}\nEx: protocols/polygon/networks/goerli/validators/stake"
         }
       },
       "title": "An Action resource, which represents an action you may take on a network,\nposted to a validator. (i.e. stake, unstake)"
@@ -724,10 +1037,6 @@
             "$ref": "#/definitions/v1alpha1Action"
           },
           "description": "The list of actions."
-        },
-        "nextPageToken": {
-          "type": "string",
-          "description": "*UNUSED* A token which can be provided as `page_token` to retrieve the next page.\nIf this field is omitted, there are no additional pages."
         }
       },
       "description": "The response message for ListActions."
@@ -742,10 +1051,6 @@
             "$ref": "#/definitions/v1alpha1Network"
           },
           "description": "The list of networks."
-        },
-        "nextPageToken": {
-          "type": "string",
-          "description": "*UNUSED* A token which can be provided as `page_token` to retrieve the next page.\nIf this field is omitted, there are no additional pages."
         }
       },
       "description": "The response message for ListNetworks."
@@ -760,10 +1065,6 @@
             "$ref": "#/definitions/v1alpha1Protocol"
           },
           "description": "The list of protocols."
-        },
-        "nextPageToken": {
-          "type": "string",
-          "description": "*UNUSED* A token which can be provided as `page_token` to retrieve the next page.\nIf this field is omitted, there are no additional pages."
         }
       },
       "description": "The response message for ListProtocols."
@@ -781,7 +1082,7 @@
         },
         "nextPageToken": {
           "type": "string",
-          "description": "*UNUSED* A token which can be provided as `page_token` to retrieve the next page.\nIf this field is omitted, there are no additional pages."
+          "description": "A token which can be provided as `page_token` to retrieve the next page.\nIf this field is omitted, there are no additional pages."
         }
       },
       "description": "The response message for ListValidators."
@@ -809,7 +1110,7 @@
       "properties": {
         "name": {
           "type": "string",
-          "title": "The resource name of the Network.\nFormat: protocols/{protocolName}/networks/{networkName}\nEx: protocols/polygon/networks/testnet"
+          "title": "The resource name of the Network.\nFormat: protocols/{protocolName}/networks/{networkName}\nEx: protocols/polygon/networks/goerli"
         },
         "isMainnet": {
           "type": "boolean",
@@ -960,7 +1261,7 @@
         },
         "fromAddress": {
           "type": "string",
-          "title": "The address of the account which will fund the stake account. Pays the transaction fee. Signs the transaction.\n(-- api-linter: core::0140::prepositions=disabled\n    aip.dev/not-precedent: We need to do this because it's not relevant to our use case. --)"
+          "description": "The address of the account which will fund the stake account. Pays the transaction fee. Signs the transaction."
         },
         "stakeAuthority": {
           "type": "string",
@@ -1206,10 +1507,11 @@
         "STATE_CANCELED",
         "STATE_CANCEL_FAILED",
         "STATE_FAILED_REFRESHABLE",
-        "STATE_REFRESHING"
+        "STATE_REFRESHING",
+        "STATE_PENDING_EXT_BROADCAST"
       ],
       "default": "STATE_UNSPECIFIED",
-      "description": "- STATE_UNSPECIFIED: Unspecified transaction state, this is for backwards compatibility.\n - STATE_NOT_CONSTRUCTED: Tx has not yet been constructed in the backend\n - STATE_CONSTRUCTED: Tx construction is over in the backend\n - STATE_PENDING_SIGNING: Tx is waiting to be signed\n - STATE_SIGNED: Tx has been signed and returned to the backend\n - STATE_BROADCASTING: Tx is being broadcasted to the network\n - STATE_CONFIRMING: Tx is waiting for confirmation\n - STATE_CONFIRMED: Tx has been confirmed to be included in a block\n - STATE_FINALIZED: Tx has been finalized\n - STATE_FAILED: Tx construction or broadcasting failed\n - STATE_SUCCESS: Tx has been successfully executed\n - STATE_CANCELING: Tx is being canceled\n - STATE_CANCELED: Tx has been canceled\n - STATE_CANCEL_FAILED: Tx cancellation failed\n - STATE_FAILED_REFRESHABLE: Tx failed but can be refreshed\n - STATE_REFRESHING: Tx is being refreshed",
+      "description": "- STATE_UNSPECIFIED: Unspecified transaction state, this is for backwards compatibility.\n - STATE_NOT_CONSTRUCTED: Tx has not yet been constructed in the backend\n - STATE_CONSTRUCTED: Tx construction is over in the backend\n - STATE_PENDING_SIGNING: Tx is waiting to be signed\n - STATE_SIGNED: Tx has been signed and returned to the backend\n - STATE_BROADCASTING: Tx is being broadcasted to the network\n - STATE_CONFIRMING: Tx is waiting for confirmation\n - STATE_CONFIRMED: Tx has been confirmed to be included in a block\n - STATE_FINALIZED: Tx has been finalized\n - STATE_FAILED: Tx construction or broadcasting failed\n - STATE_SUCCESS: Tx has been successfully executed\n - STATE_CANCELING: Tx is being canceled\n - STATE_CANCELED: Tx has been canceled\n - STATE_CANCEL_FAILED: Tx cancellation failed\n - STATE_FAILED_REFRESHABLE: Tx failed but can be refreshed\n - STATE_REFRESHING: Tx is being refreshed\n - STATE_PENDING_EXT_BROADCAST: Tx is waiting to be externally broadcasted by the customer",
       "title": "State defines an enumeration of states for a staking transaction"
     },
     "v1alpha1Validator": {
@@ -1217,7 +1519,7 @@
       "properties": {
         "name": {
           "type": "string",
-          "title": "The resource name of the Validator.\nFormat: protocols/{protocolName}/networks/{networkName}/validators/{validatorName}\nEx: protocols/polygon/networks/testnet/validators/0x857679d69fE50E7B722f94aCd2629d80C355163d"
+          "title": "The resource name of the Validator.\nFormat: protocols/{protocolName}/networks/{networkName}/validators/{validatorName}\nEx: protocols/polygon/networks/goerli/validators/0x857679d69fE50E7B722f94aCd2629d80C355163d"
         },
         "validatorAddress": {
           "type": "string",
@@ -1350,6 +1652,16 @@
           "format": "date-time",
           "title": "The timestamp the workflow was last updated",
           "readOnly": true
+        },
+        "skipBroadcast": {
+          "type": "boolean",
+          "description": "Flag to skip tx broadcast to network on behalf of the user. Use this flag if you instead prefer to broadcast signed txs on your own."
+        },
+        "completeTime": {
+          "type": "string",
+          "format": "date-time",
+          "title": "The timestamp the workflow completed",
+          "readOnly": true
         }
       },
       "title": "A Workflow resource",
@@ -1371,10 +1683,11 @@
         "STATE_CANCELING",
         "STATE_CANCELED",
         "STATE_CANCEL_FAILED",
-        "STATE_FAILED_REFRESHABLE"
+        "STATE_FAILED_REFRESHABLE",
+        "STATE_WAITING_FOR_EXT_BROADCAST"
       ],
       "default": "STATE_UNSPECIFIED",
-      "description": "- STATE_UNSPECIFIED: Unspecified workflow state, this is for backwards compatibility.\n - STATE_IN_PROGRESS: In Progress represents a workflow that is currently in progress.\n - STATE_WAITING_FOR_SIGNING: Waiting for signing represents the workflow is waiting on the consumer to sign.\n - STATE_COMPLETED: Completed represents the workflow has completed.\n - STATE_FAILED: Failed represents the workflow has failed.\n - STATE_CANCELING: Canceling represents the workflow is being canceled.\n - STATE_CANCELED: Canceled represents the workflow has been canceled.\n - STATE_CANCEL_FAILED: Cancel failed represents the workflow failed to cancel.\n - STATE_FAILED_REFRESHABLE: Failed refreshable represents the workflow failed but can be refreshed.",
+      "description": "- STATE_UNSPECIFIED: Unspecified workflow state, this is for backwards compatibility.\n - STATE_IN_PROGRESS: In Progress represents a workflow that is currently in progress.\n - STATE_WAITING_FOR_SIGNING: Waiting for signing represents the workflow is waiting on the consumer to sign and return the corresponding signed tx.\n - STATE_COMPLETED: Completed represents the workflow has completed.\n - STATE_FAILED: Failed represents the workflow has failed.\n - STATE_CANCELING: Canceling represents the workflow is being canceled.\n - STATE_CANCELED: Canceled represents the workflow has been canceled.\n - STATE_CANCEL_FAILED: Cancel failed represents the workflow failed to cancel.\n - STATE_FAILED_REFRESHABLE: Failed refreshable represents the workflow failed but can be refreshed.\n - STATE_WAITING_FOR_EXT_BROADCAST: Waiting for external broadcast represents the workflow is waiting for the customer to broadcast a tx and return its corresponding tx hash.",
       "title": "The state of a workflow\nExample workflow states:\nIN_PROGRESS -\u003e WAITING_FOR_SIGNING -\u003e IN_PROGRESS -\u003e COMPLETED\n.................................................|-\u003e FAILED\nIN_PROGRESS -\u003e WAITING_FOR_SIGNING -\u003e CANCELING -\u003e CANCELED\n...............................................|-\u003e CANCEL_FAILED"
     },
     "v1alpha1WorkflowStep": {

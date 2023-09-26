@@ -126,7 +126,7 @@
             "name": "opts"
           }
         ],
-        "resultType": "ActionIterator",
+        "resultType": "*stakingpb.ListActionsResponse",
         "client": {
           "shortName": "StakingClient",
           "fullName": "coinbase.staking.v1alpha1.StakingClient"
@@ -144,7 +144,7 @@
       "segments": [
         {
           "start": 18,
-          "end": 60,
+          "end": 53,
           "type": "FULL"
         }
       ]
@@ -172,7 +172,7 @@
             "name": "opts"
           }
         ],
-        "resultType": "NetworkIterator",
+        "resultType": "*stakingpb.ListNetworksResponse",
         "client": {
           "shortName": "StakingClient",
           "fullName": "coinbase.staking.v1alpha1.StakingClient"
@@ -190,7 +190,7 @@
       "segments": [
         {
           "start": 18,
-          "end": 60,
+          "end": 53,
           "type": "FULL"
         }
       ]
@@ -218,7 +218,7 @@
             "name": "opts"
           }
         ],
-        "resultType": "ProtocolIterator",
+        "resultType": "*stakingpb.ListProtocolsResponse",
         "client": {
           "shortName": "StakingClient",
           "fullName": "coinbase.staking.v1alpha1.StakingClient"
@@ -236,7 +236,7 @@
       "segments": [
         {
           "start": 18,
-          "end": 60,
+          "end": 53,
           "type": "FULL"
         }
       ]
@@ -336,7 +336,7 @@
     {
       "regionTag": "staking_v1alpha1_generated_StakingService_PerformWorkflowStep_sync",
       "title": "staking PerformWorkflowStep Sample",
-      "description": "PerformWorkflowStep (-- api-linter: core: : 0136: : http-name-variable=disabled\naip.dev/not-precedent: We need to do this because\nthe phrasing reads easier. --)\n\nPerform the next step in a workflow",
+      "description": "PerformWorkflowStep perform the next step in a workflow",
       "file": "StakingClient/PerformWorkflowStep/main.go",
       "language": "GO",
       "clientMethod": {
@@ -382,7 +382,7 @@
     {
       "regionTag": "staking_v1alpha1_generated_StakingService_RefreshWorkflowStep_sync",
       "title": "staking RefreshWorkflowStep Sample",
-      "description": "RefreshWorkflowStep (-- api-linter: core: : 0136: : http-name-variable=disabled\naip.dev/not-precedent: We need to do this because\nthe phrasing reads easier. --)\n\nRefresh the current step in a workflow",
+      "description": "RefreshWorkflowStep refresh the current step in a workflow",
       "file": "StakingClient/RefreshWorkflowStep/main.go",
       "language": "GO",
       "clientMethod": {
@@ -428,7 +428,7 @@
     {
       "regionTag": "staking_v1alpha1_generated_StakingService_ViewStakingContext_sync",
       "title": "staking ViewStakingContext Sample",
-      "description": "ViewStakingContext (-- api-linter: core: : 0136: : http-name-variable=disabled\naip.dev/not-precedent: We need to do this because\nthe phrasing reads easier. --)\n\nView Staking context information given a specific network address",
+      "description": "ViewStakingContext view Staking context information given a specific network address",
       "file": "StakingClient/ViewStakingContext/main.go",
       "language": "GO",
       "clientMethod": {

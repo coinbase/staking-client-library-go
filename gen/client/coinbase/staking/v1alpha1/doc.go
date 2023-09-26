@@ -61,18 +61,12 @@
 //  	// TODO: Fill request struct fields.
 //  	// See https://pkg.go.dev/github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/v1alpha1#ListProtocolsRequest.
 //  }
-//  it := c.ListProtocols(ctx, req)
-//  for {
-//  	resp, err := it.Next()
-//  	if err == iterator.Done {
-//  		break
-//  	}
-//  	if err != nil {
-//  		// TODO: Handle error.
-//  	}
-//  	// TODO: Use resp.
-//  	_ = resp
+//  resp, err := c.ListProtocols(ctx, req)
+//  if err != nil {
+//  	// TODO: Handle error.
 //  }
+//  // TODO: Use resp.
+//  _ = resp
 //
 // Use of Context
 //

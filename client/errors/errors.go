@@ -41,11 +41,22 @@ func (s *StakingAPIError) Unwrap() error {
 	return s.err
 }
 
-// Error returns a readable representation of the APIError.
+// Error returns a readable representation of the StakingAPIError.
 func (s *StakingAPIError) Error() string {
-	msg := fmt.Sprintf("stakingapi error httpCode: %d message: %s", s.httpCode, s.message)
-	// TODO(rohit) find s way to pretty print details
-	return msg
+	// This happens when error returned wasn't a googleapi.Error in which case we don't know how to parse the error.
+	// This should never happen as the auto-generated staking-api client should always return a googleapi.Error.
+	// In this case, the best we can do is to print the original error.
+	if s.httpCode == 0 && s.message == "" {
+		return fmt.Sprintf("stakingapi error: %s", s.Unwrap().Error())
+	} else if s.httpCode != 0 && s.message != "" {
+		return fmt.Sprintf("stakingapi error: httpCode: %d message: %s", s.httpCode, s.message)
+	} else if s.err != nil {
+		// Either http code or message is missing. This should be very unlikely. It can happen when an internal
+		// service simply returns the response body say as "Unauthorized". In this case, we also print the original error.
+		return fmt.Sprintf("stakingapi error: httpCode: %d message: %s err: %s", s.httpCode, s.message, s.Unwrap().Error())
+	} else {
+		return fmt.Sprintf("stakingapi error: httpCode: %d message: %s", s.httpCode, s.message)
+	}
 }
 
 func (s *StakingAPIError) Print() error {
@@ -78,9 +89,18 @@ func FromError(err error) *StakingAPIError {
 	var herr *googleapi.Error
 
 	if errors.As(err, &herr) {
+		// A proper user facing error message from the staking api ends up being in the googleapi.Error.Body instead of
+		// other fields like Code, Message, Details already in it. This requires us to parse the Body field instead to
+		// get the actual error details.
+		// The body is a json string that can be parsed into a status.Status object.
 		s := status.Status{}
 		if err := protojson.Unmarshal([]byte(herr.Body), &s); err != nil {
-			return &sae
+			// If we can't parse the body, just return metadata from the googleapi.Error object.
+			return &StakingAPIError{
+				err:      herr.Unwrap(),
+				httpCode: herr.Code,
+				message:  herr.Message,
+			}
 		}
 
 		sae.httpCode = herr.Code

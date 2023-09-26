@@ -26,6 +26,72 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
     description: "Staking Service is a non-custodial staking service that aims to support multiple protocols and actions on them.";
     version: "v1alpha1";
   };
+  responses: {
+    key: "400";
+    value: {
+      description: "The request attempted has invalid parameters";
+      schema: {
+        json_schema: {
+          ref: "#/definitions/rpcStatus";
+        };
+      };
+    };
+  };
+  responses: {
+    key: "401";
+    value: {
+      description: "Returned if authentication information is invalid";
+      schema: {
+        json_schema: {
+          ref: "#/definitions/rpcStatus";
+        };
+      };
+    };
+  };
+  responses: {
+    key: "403";
+    value: {
+      description: "Returned when a user does not have permission to the resource.";
+      schema: {
+        json_schema: {
+          ref: "#/definitions/rpcStatus";
+        };
+      };
+    };
+  };
+  responses: {
+    key: "404";
+    value: {
+      description: "Returned when a resource is not found.";
+      schema: {
+        json_schema: {
+          ref: "#/definitions/rpcStatus";
+        };
+      };
+    };
+  };
+  responses: {
+    key: "429";
+    value: {
+      description: "Returned when a resource limit has been reached.";
+      schema: {
+        json_schema: {
+          ref: "#/definitions/rpcStatus";
+        };
+      };
+    };
+  };
+  responses: {
+    key: "500";
+    value: {
+      description: "Returned when an internal server error happens.";
+      schema: {
+        json_schema: {
+          ref: "#/definitions/rpcStatus";
+        };
+      };
+    };
+  };
   tags: [
     {
       name: "Protocol";
@@ -51,8 +117,6 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
 };
 
 // StakingService manages staking related resources such as protocols, networks, validators and workflows
-// (-- api-linter: core::0121::resource-must-support-get=disabled
-//     aip.dev/not-precedent: No plans to support GET on protocol, network, validator and action resources. --)
 service StakingService {
   option (google.api.default_host) = "staking.coinbase.com";
 
@@ -215,10 +279,6 @@ service StakingService {
 
   };
 
-  // (-- api-linter: core::0136::http-name-variable=disabled
-  //     aip.dev/not-precedent: We need to do this because
-  //     the phrasing reads easier. --)
-  //
   // Perform the next step in a workflow
   rpc PerformWorkflowStep(PerformWorkflowStepRequest) returns (Workflow) {
     option (google.api.http) = {
@@ -242,10 +302,6 @@ service StakingService {
   };
 
 
-  // (-- api-linter: core::0136::http-name-variable=disabled
-  //     aip.dev/not-precedent: We need to do this because
-  //     the phrasing reads easier. --)
-  //
   // Refresh the current step in a workflow
   rpc RefreshWorkflowStep(RefreshWorkflowStepRequest) returns (Workflow) {
     option (google.api.http) = {
@@ -268,10 +324,6 @@ service StakingService {
 
   };
 
-  // (-- api-linter: core::0136::http-name-variable=disabled
-  //     aip.dev/not-precedent: We need to do this because
-  //     the phrasing reads easier. --)
-  //
   // View Staking context information given a specific network address
   rpc ViewStakingContext(ViewStakingContextRequest) returns (ViewStakingContextResponse) {
     option (google.api.http) = {

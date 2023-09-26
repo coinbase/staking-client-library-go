@@ -12,9 +12,6 @@ message Amount {
   // The total value of the token.
   string value = 1;
 
-  // (-- api-linter: core::0143::standardized-codes=disabled
-  //     aip.dev/not-precedent: We need to do this because it is in active.
-  //     discussion --)
   // The name of the token.
   string currency = 2 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {description: "The currency of the token"}];
 }

@@ -35,12 +35,12 @@ func NewAuthenticator(apiKey *APIKey) *Authenticator {
 func (a *Authenticator) BuildJWT(service, uri string) (string, error) {
 	block, _ := pem.Decode([]byte(a.apiKey.PrivateKey))
 	if block == nil {
-		return "", fmt.Errorf("jwt: Could not decode private key")
+		return "", fmt.Errorf("could not decode private key")
 	}
 
 	key, err := x509.ParseECPrivateKey(block.Bytes)
 	if err != nil {
-		return "", fmt.Errorf("jwt: %w", err)
+		return "", fmt.Errorf("could not parse private key: %w", err)
 	}
 
 	sig, err := jose.NewSigner(
@@ -48,7 +48,7 @@ func (a *Authenticator) BuildJWT(service, uri string) (string, error) {
 		(&jose.SignerOptions{NonceSource: nonceSource{}}).WithType("JWT").WithHeader("kid", a.apiKey.Name),
 	)
 	if err != nil {
-		return "", fmt.Errorf("jwt: %w", err)
+		return "", fmt.Errorf("could not create signer: %w", err)
 	}
 
 	cl := &APIKeyClaims{
@@ -64,7 +64,7 @@ func (a *Authenticator) BuildJWT(service, uri string) (string, error) {
 
 	jwtString, err := jwt.Signed(sig).Claims(cl).CompactSerialize()
 	if err != nil {
-		return "", fmt.Errorf("jwt: %w", err)
+		return "", fmt.Errorf("could not sign: %w", err)
 	}
 
 	return jwtString, nil
@@ -78,7 +78,7 @@ type nonceSource struct{}
 func (n nonceSource) Nonce() (string, error) {
 	r, err := rand.Int(rand.Reader, big.NewInt(math.MaxInt64))
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("could not generate nonce: %w", err)
 	}
 
 	return r.String(), nil
