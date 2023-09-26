@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+package coinbase.staking.v1alpha1;
+
+option go_package = "github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/v1alpha1";
+
+import "google/api/resource.proto";
+
+// A Protocol resource (i.e. polygon, ethereum, etc.)
+message Protocol {
+  option (google.api.resource) = {
+    type: "staking.coinbase.com/Protocol"
+    pattern: "protocols/{protocol}"
+    singular: "protocol"
+    plural: "protocols"
+  };
+
+  // The resource name of the Protocol.
+  // Format: protocols/{protocolName}
+  // Ex: protocols/polygon
+  string name = 1;
+}
+
+// The request message for ListProtocols.
+message ListProtocolsRequest { }
+
+// The response message for ListProtocols.
+message ListProtocolsResponse {
+  // The list of protocols.
+  repeated Protocol protocols = 1;
+}
