@@ -6,7 +6,7 @@ option go_package = "github.com/coinbase/staking-client-library-go/gen/go/coinba
 
 import "google/api/resource.proto";
 
-// A Protocol resource (i.e. polygon, ethereum, etc.)
+// A Protocol resource (e.g. polygon, ethereum, etc.).
 message Protocol {
   option (google.api.resource) = {
     type: "staking.coinbase.com/Protocol"

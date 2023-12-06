@@ -46,7 +46,7 @@ var newStakingClientHook clientHook
 type StakingCallOptions struct {
 	ListProtocols []gax.CallOption
 	ListNetworks []gax.CallOption
-	ListValidators []gax.CallOption
+	ListStakingTargets []gax.CallOption
 	ListActions []gax.CallOption
 	CreateWorkflow []gax.CallOption
 	GetWorkflow []gax.CallOption
@@ -58,9 +58,9 @@ type StakingCallOptions struct {
 
 func defaultStakingGRPCClientOptions() []option.ClientOption {
 	return []option.ClientOption{
-		internaloption.WithDefaultEndpoint("staking.coinbase.com:443"),
-		internaloption.WithDefaultMTLSEndpoint("staking.coinbase.com:443"),
-		internaloption.WithDefaultAudience("https://staking.coinbase.com/"),
+		internaloption.WithDefaultEndpoint("api.developer.coinbase.com:443"),
+		internaloption.WithDefaultMTLSEndpoint("api.developer.coinbase.com:443"),
+		internaloption.WithDefaultAudience("https://api.developer.coinbase.com/"),
 		internaloption.WithDefaultScopes(DefaultAuthScopes()...),
 		internaloption.EnableJwtWithScope(),
 		option.WithGRPCDialOption(grpc.WithDefaultCallOptions(
@@ -74,7 +74,7 @@ func defaultStakingCallOptions() *StakingCallOptions {
 		},
 		ListNetworks: []gax.CallOption{
 		},
-		ListValidators: []gax.CallOption{
+		ListStakingTargets: []gax.CallOption{
 		},
 		ListActions: []gax.CallOption{
 		},
@@ -99,7 +99,7 @@ func defaultStakingRESTCallOptions() *StakingCallOptions {
 		},
 		ListNetworks: []gax.CallOption{
 		},
-		ListValidators: []gax.CallOption{
+		ListStakingTargets: []gax.CallOption{
 		},
 		ListActions: []gax.CallOption{
 		},
@@ -125,7 +125,7 @@ type internalStakingClient interface {
 	Connection() *grpc.ClientConn
 	ListProtocols(context.Context, *stakingpb.ListProtocolsRequest, ...gax.CallOption) (*stakingpb.ListProtocolsResponse, error)
 	ListNetworks(context.Context, *stakingpb.ListNetworksRequest, ...gax.CallOption) (*stakingpb.ListNetworksResponse, error)
-	ListValidators(context.Context, *stakingpb.ListValidatorsRequest, ...gax.CallOption) *ValidatorIterator
+	ListStakingTargets(context.Context, *stakingpb.ListStakingTargetsRequest, ...gax.CallOption) *StakingTargetIterator
 	ListActions(context.Context, *stakingpb.ListActionsRequest, ...gax.CallOption) (*stakingpb.ListActionsResponse, error)
 	CreateWorkflow(context.Context, *stakingpb.CreateWorkflowRequest, ...gax.CallOption) (*stakingpb.Workflow, error)
 	GetWorkflow(context.Context, *stakingpb.GetWorkflowRequest, ...gax.CallOption) (*stakingpb.Workflow, error)
@@ -138,7 +138,7 @@ type internalStakingClient interface {
 // StakingClient is a client for interacting with .
 // Methods, except Close, may be called concurrently. However, fields must not be modified concurrently with method calls.
 //
-// StakingService manages staking related resources such as protocols, networks, validators and workflows
+// StakingService manages staking related resources such as protocols, networks, validators and workflows.
 type StakingClient struct {
 	// The internal transport-dependent client.
 	internalClient internalStakingClient
@@ -171,52 +171,52 @@ func (c *StakingClient) Connection() *grpc.ClientConn {
 	return c.internalClient.Connection()
 }
 
-// ListProtocols list supported protocols
+// ListProtocols list supported protocols.
 func (c *StakingClient) ListProtocols(ctx context.Context, req *stakingpb.ListProtocolsRequest, opts ...gax.CallOption) (*stakingpb.ListProtocolsResponse, error) {
 	return c.internalClient.ListProtocols(ctx, req, opts...)
 }
 
-// ListNetworks list supported staking networks for a given protocol
+// ListNetworks list supported staking networks for a given protocol.
 func (c *StakingClient) ListNetworks(ctx context.Context, req *stakingpb.ListNetworksRequest, opts ...gax.CallOption) (*stakingpb.ListNetworksResponse, error) {
 	return c.internalClient.ListNetworks(ctx, req, opts...)
 }
 
-// ListValidators list supported validators for a given protocol and network
-func (c *StakingClient) ListValidators(ctx context.Context, req *stakingpb.ListValidatorsRequest, opts ...gax.CallOption) *ValidatorIterator {
-	return c.internalClient.ListValidators(ctx, req, opts...)
+// ListStakingTargets list supported staking targets for a given protocol and network.
+func (c *StakingClient) ListStakingTargets(ctx context.Context, req *stakingpb.ListStakingTargetsRequest, opts ...gax.CallOption) *StakingTargetIterator {
+	return c.internalClient.ListStakingTargets(ctx, req, opts...)
 }
 
-// ListActions list supported actions for a given protocol and network
+// ListActions list supported actions for a given protocol and network.
 func (c *StakingClient) ListActions(ctx context.Context, req *stakingpb.ListActionsRequest, opts ...gax.CallOption) (*stakingpb.ListActionsResponse, error) {
 	return c.internalClient.ListActions(ctx, req, opts...)
 }
 
-// CreateWorkflow create a workflow to perform an action
+// CreateWorkflow create a workflow to perform an action.
 func (c *StakingClient) CreateWorkflow(ctx context.Context, req *stakingpb.CreateWorkflowRequest, opts ...gax.CallOption) (*stakingpb.Workflow, error) {
 	return c.internalClient.CreateWorkflow(ctx, req, opts...)
 }
 
-// GetWorkflow get the current state of an active workflow
+// GetWorkflow get the current state of an active workflow.
 func (c *StakingClient) GetWorkflow(ctx context.Context, req *stakingpb.GetWorkflowRequest, opts ...gax.CallOption) (*stakingpb.Workflow, error) {
 	return c.internalClient.GetWorkflow(ctx, req, opts...)
 }
 
-// ListWorkflows list all workflows in a project
+// ListWorkflows list all workflows in a project.
 func (c *StakingClient) ListWorkflows(ctx context.Context, req *stakingpb.ListWorkflowsRequest, opts ...gax.CallOption) *WorkflowIterator {
 	return c.internalClient.ListWorkflows(ctx, req, opts...)
 }
 
-// PerformWorkflowStep perform the next step in a workflow
+// PerformWorkflowStep perform the next step in a workflow.
 func (c *StakingClient) PerformWorkflowStep(ctx context.Context, req *stakingpb.PerformWorkflowStepRequest, opts ...gax.CallOption) (*stakingpb.Workflow, error) {
 	return c.internalClient.PerformWorkflowStep(ctx, req, opts...)
 }
 
-// RefreshWorkflowStep refresh the current step in a workflow
+// RefreshWorkflowStep refresh the current step in a workflow.
 func (c *StakingClient) RefreshWorkflowStep(ctx context.Context, req *stakingpb.RefreshWorkflowStepRequest, opts ...gax.CallOption) (*stakingpb.Workflow, error) {
 	return c.internalClient.RefreshWorkflowStep(ctx, req, opts...)
 }
 
-// ViewStakingContext view Staking context information given a specific network address
+// ViewStakingContext view Staking context information given a specific network address.
 func (c *StakingClient) ViewStakingContext(ctx context.Context, req *stakingpb.ViewStakingContextRequest, opts ...gax.CallOption) (*stakingpb.ViewStakingContextResponse, error) {
 	return c.internalClient.ViewStakingContext(ctx, req, opts...)
 }
@@ -241,7 +241,7 @@ type stakingGRPCClient struct {
 // NewStakingClient creates a new staking service client based on gRPC.
 // The returned client must be Closed when it is done being used to clean up its underlying connections.
 //
-// StakingService manages staking related resources such as protocols, networks, validators and workflows
+// StakingService manages staking related resources such as protocols, networks, validators and workflows.
 func NewStakingClient(ctx context.Context, opts ...option.ClientOption) (*StakingClient, error) {
 	clientOpts := defaultStakingGRPCClientOptions()
 	if newStakingClientHook != nil {
@@ -311,7 +311,7 @@ type stakingRESTClient struct {
 
 // NewStakingRESTClient creates a new staking service rest client.
 //
-// StakingService manages staking related resources such as protocols, networks, validators and workflows
+// StakingService manages staking related resources such as protocols, networks, validators and workflows.
 func NewStakingRESTClient(ctx context.Context, opts ...option.ClientOption) (*StakingClient, error) {
 	clientOpts := append(defaultStakingRESTClientOptions(), opts...)
 	httpClient, endpoint, err := httptransport.NewClient(ctx, clientOpts...)
@@ -332,9 +332,9 @@ func NewStakingRESTClient(ctx context.Context, opts ...option.ClientOption) (*St
 
 func defaultStakingRESTClientOptions() []option.ClientOption {
 	return []option.ClientOption{
-		internaloption.WithDefaultEndpoint("https://staking.coinbase.com"),
-		internaloption.WithDefaultMTLSEndpoint("https://staking.coinbase.com"),
-		internaloption.WithDefaultAudience("https://staking.coinbase.com/"),
+		internaloption.WithDefaultEndpoint("https://api.developer.coinbase.com"),
+		internaloption.WithDefaultMTLSEndpoint("https://api.developer.coinbase.com"),
+		internaloption.WithDefaultAudience("https://api.developer.coinbase.com/"),
 		internaloption.WithDefaultScopes(DefaultAuthScopes()...),
 	}
 }
@@ -393,15 +393,15 @@ func (c *stakingGRPCClient) ListNetworks(ctx context.Context, req *stakingpb.Lis
 	return resp, nil
 }
 
-func (c *stakingGRPCClient) ListValidators(ctx context.Context, req *stakingpb.ListValidatorsRequest, opts ...gax.CallOption) *ValidatorIterator {
+func (c *stakingGRPCClient) ListStakingTargets(ctx context.Context, req *stakingpb.ListStakingTargetsRequest, opts ...gax.CallOption) *StakingTargetIterator {
 	md := metadata.Pairs("x-goog-request-params", fmt.Sprintf("%s=%v", "parent", url.QueryEscape(req.GetParent())))
 
 	ctx = insertMetadata(ctx, c.xGoogMetadata, md)
-	opts = append((*c.CallOptions).ListValidators[0:len((*c.CallOptions).ListValidators):len((*c.CallOptions).ListValidators)], opts...)
-	it := &ValidatorIterator{}
-	req = proto.Clone(req).(*stakingpb.ListValidatorsRequest)
-	it.InternalFetch = func(pageSize int, pageToken string) ([]*stakingpb.Validator, string, error) {
-		resp := &stakingpb.ListValidatorsResponse{}
+	opts = append((*c.CallOptions).ListStakingTargets[0:len((*c.CallOptions).ListStakingTargets):len((*c.CallOptions).ListStakingTargets)], opts...)
+	it := &StakingTargetIterator{}
+	req = proto.Clone(req).(*stakingpb.ListStakingTargetsRequest)
+	it.InternalFetch = func(pageSize int, pageToken string) ([]*stakingpb.StakingTarget, string, error) {
+		resp := &stakingpb.ListStakingTargetsResponse{}
 		if pageToken != "" {
 			req.PageToken = pageToken
 		}
@@ -412,7 +412,7 @@ func (c *stakingGRPCClient) ListValidators(ctx context.Context, req *stakingpb.L
 		}
 		err := gax.Invoke(ctx, func(ctx context.Context, settings gax.CallSettings) error {
 			var err error
-			resp, err = c.stakingClient.ListValidators(ctx, req, settings.GRPC...)
+			resp, err = c.stakingClient.ListStakingTargets(ctx, req, settings.GRPC...)
 			return err
 		}, opts...)
 		if err != nil {
@@ -420,7 +420,7 @@ func (c *stakingGRPCClient) ListValidators(ctx context.Context, req *stakingpb.L
 		}
 
 		it.Response = resp
-		return resp.GetValidators(), resp.GetNextPageToken(), nil
+		return resp.GetStakingTargets(), resp.GetNextPageToken(), nil
 	}
 	fetch := func(pageSize int, pageToken string) (string, error) {
 		items, nextPageToken, err := it.InternalFetch(pageSize, pageToken)
@@ -583,7 +583,7 @@ func (c *stakingGRPCClient) ViewStakingContext(ctx context.Context, req *staking
 	return resp, nil
 }
 
-// ListProtocols list supported protocols
+// ListProtocols list supported protocols.
 func (c *stakingRESTClient) ListProtocols(ctx context.Context, req *stakingpb.ListProtocolsRequest, opts ...gax.CallOption) (*stakingpb.ListProtocolsResponse, error) {
 	baseUrl, err := url.Parse(c.endpoint)
 	if err != nil {
@@ -633,7 +633,7 @@ func (c *stakingRESTClient) ListProtocols(ctx context.Context, req *stakingpb.Li
 	}
 	return resp, nil
 }
-// ListNetworks list supported staking networks for a given protocol
+// ListNetworks list supported staking networks for a given protocol.
 func (c *stakingRESTClient) ListNetworks(ctx context.Context, req *stakingpb.ListNetworksRequest, opts ...gax.CallOption) (*stakingpb.ListNetworksResponse, error) {
 	baseUrl, err := url.Parse(c.endpoint)
 	if err != nil {
@@ -685,13 +685,13 @@ func (c *stakingRESTClient) ListNetworks(ctx context.Context, req *stakingpb.Lis
 	}
 	return resp, nil
 }
-// ListValidators list supported validators for a given protocol and network
-func (c *stakingRESTClient) ListValidators(ctx context.Context, req *stakingpb.ListValidatorsRequest, opts ...gax.CallOption) *ValidatorIterator {
-	it := &ValidatorIterator{}
-	req = proto.Clone(req).(*stakingpb.ListValidatorsRequest)
+// ListStakingTargets list supported staking targets for a given protocol and network.
+func (c *stakingRESTClient) ListStakingTargets(ctx context.Context, req *stakingpb.ListStakingTargetsRequest, opts ...gax.CallOption) *StakingTargetIterator {
+	it := &StakingTargetIterator{}
+	req = proto.Clone(req).(*stakingpb.ListStakingTargetsRequest)
 	unm := protojson.UnmarshalOptions{AllowPartial: true, DiscardUnknown: true}
-	it.InternalFetch = func(pageSize int, pageToken string) ([]*stakingpb.Validator, string, error) {
-		resp := &stakingpb.ListValidatorsResponse{}
+	it.InternalFetch = func(pageSize int, pageToken string) ([]*stakingpb.StakingTarget, string, error) {
+		resp := &stakingpb.ListStakingTargetsResponse{}
 		if pageToken != "" {
 			req.PageToken = pageToken
 		}
@@ -704,7 +704,7 @@ func (c *stakingRESTClient) ListValidators(ctx context.Context, req *stakingpb.L
 		if err != nil {
 			return nil, "", err
 		}
-		baseUrl.Path += fmt.Sprintf("/api/v1alpha1/%v/validators", req.GetParent())
+		baseUrl.Path += fmt.Sprintf("/api/v1alpha1/%v/stakingTargets", req.GetParent())
 
 		params := url.Values{}
 		if req.GetPageSize() != 0 {
@@ -753,7 +753,7 @@ func (c *stakingRESTClient) ListValidators(ctx context.Context, req *stakingpb.L
 			return nil, "", e
 		}
 		it.Response = resp
-		return resp.GetValidators(), resp.GetNextPageToken(), nil
+		return resp.GetStakingTargets(), resp.GetNextPageToken(), nil
 	}
 
 	fetch := func(pageSize int, pageToken string) (string, error) {
@@ -771,7 +771,7 @@ func (c *stakingRESTClient) ListValidators(ctx context.Context, req *stakingpb.L
 
 	return it
 }
-// ListActions list supported actions for a given protocol and network
+// ListActions list supported actions for a given protocol and network.
 func (c *stakingRESTClient) ListActions(ctx context.Context, req *stakingpb.ListActionsRequest, opts ...gax.CallOption) (*stakingpb.ListActionsResponse, error) {
 	baseUrl, err := url.Parse(c.endpoint)
 	if err != nil {
@@ -823,7 +823,7 @@ func (c *stakingRESTClient) ListActions(ctx context.Context, req *stakingpb.List
 	}
 	return resp, nil
 }
-// CreateWorkflow create a workflow to perform an action
+// CreateWorkflow create a workflow to perform an action.
 func (c *stakingRESTClient) CreateWorkflow(ctx context.Context, req *stakingpb.CreateWorkflowRequest, opts ...gax.CallOption) (*stakingpb.Workflow, error) {
 	m := protojson.MarshalOptions{AllowPartial: true, UseEnumNumbers: true}
 	body := req.GetWorkflow()
@@ -882,7 +882,7 @@ func (c *stakingRESTClient) CreateWorkflow(ctx context.Context, req *stakingpb.C
 	}
 	return resp, nil
 }
-// GetWorkflow get the current state of an active workflow
+// GetWorkflow get the current state of an active workflow.
 func (c *stakingRESTClient) GetWorkflow(ctx context.Context, req *stakingpb.GetWorkflowRequest, opts ...gax.CallOption) (*stakingpb.Workflow, error) {
 	baseUrl, err := url.Parse(c.endpoint)
 	if err != nil {
@@ -934,7 +934,7 @@ func (c *stakingRESTClient) GetWorkflow(ctx context.Context, req *stakingpb.GetW
 	}
 	return resp, nil
 }
-// ListWorkflows list all workflows in a project
+// ListWorkflows list all workflows in a project.
 func (c *stakingRESTClient) ListWorkflows(ctx context.Context, req *stakingpb.ListWorkflowsRequest, opts ...gax.CallOption) *WorkflowIterator {
 	it := &WorkflowIterator{}
 	req = proto.Clone(req).(*stakingpb.ListWorkflowsRequest)
@@ -1023,7 +1023,7 @@ func (c *stakingRESTClient) ListWorkflows(ctx context.Context, req *stakingpb.Li
 
 	return it
 }
-// PerformWorkflowStep perform the next step in a workflow
+// PerformWorkflowStep perform the next step in a workflow.
 func (c *stakingRESTClient) PerformWorkflowStep(ctx context.Context, req *stakingpb.PerformWorkflowStepRequest, opts ...gax.CallOption) (*stakingpb.Workflow, error) {
 	m := protojson.MarshalOptions{AllowPartial: true, UseEnumNumbers: true}
 	jsonReq, err := m.Marshal(req)
@@ -1081,7 +1081,7 @@ func (c *stakingRESTClient) PerformWorkflowStep(ctx context.Context, req *stakin
 	}
 	return resp, nil
 }
-// RefreshWorkflowStep refresh the current step in a workflow
+// RefreshWorkflowStep refresh the current step in a workflow.
 func (c *stakingRESTClient) RefreshWorkflowStep(ctx context.Context, req *stakingpb.RefreshWorkflowStepRequest, opts ...gax.CallOption) (*stakingpb.Workflow, error) {
 	m := protojson.MarshalOptions{AllowPartial: true, UseEnumNumbers: true}
 	jsonReq, err := m.Marshal(req)
@@ -1139,7 +1139,7 @@ func (c *stakingRESTClient) RefreshWorkflowStep(ctx context.Context, req *stakin
 	}
 	return resp, nil
 }
-// ViewStakingContext view Staking context information given a specific network address
+// ViewStakingContext view Staking context information given a specific network address.
 func (c *stakingRESTClient) ViewStakingContext(ctx context.Context, req *stakingpb.ViewStakingContextRequest, opts ...gax.CallOption) (*stakingpb.ViewStakingContextResponse, error) {
 	baseUrl, err := url.Parse(c.endpoint)
 	if err != nil {
@@ -1198,9 +1198,9 @@ func (c *stakingRESTClient) ViewStakingContext(ctx context.Context, req *staking
 	}
 	return resp, nil
 }
-// ValidatorIterator manages a stream of *stakingpb.Validator.
-type ValidatorIterator struct {
-	items    []*stakingpb.Validator
+// StakingTargetIterator manages a stream of *stakingpb.StakingTarget.
+type StakingTargetIterator struct {
+	items    []*stakingpb.StakingTarget
 	pageInfo *iterator.PageInfo
 	nextFunc func() error
 
@@ -1215,18 +1215,18 @@ type ValidatorIterator struct {
 	// InternalFetch returns results from a single call to the underlying RPC.
 	// The number of results is no greater than pageSize.
 	// If there are no more results, nextPageToken is empty and err is nil.
-	InternalFetch func(pageSize int, pageToken string) (results []*stakingpb.Validator, nextPageToken string, err error)
+	InternalFetch func(pageSize int, pageToken string) (results []*stakingpb.StakingTarget, nextPageToken string, err error)
 }
 
 // PageInfo supports pagination. See the google.golang.org/api/iterator package for details.
-func (it *ValidatorIterator) PageInfo() *iterator.PageInfo {
+func (it *StakingTargetIterator) PageInfo() *iterator.PageInfo {
 	return it.pageInfo
 }
 
 // Next returns the next result. Its second return value is iterator.Done if there are no more
 // results. Once Next returns Done, all subsequent calls will return Done.
-func (it *ValidatorIterator) Next() (*stakingpb.Validator, error) {
-	var item *stakingpb.Validator
+func (it *StakingTargetIterator) Next() (*stakingpb.StakingTarget, error) {
+	var item *stakingpb.StakingTarget
 	if err := it.nextFunc(); err != nil {
 		return item, err
 	}
@@ -1235,11 +1235,11 @@ func (it *ValidatorIterator) Next() (*stakingpb.Validator, error) {
 	return item, nil
 }
 
-func (it *ValidatorIterator) bufLen() int {
+func (it *StakingTargetIterator) bufLen() int {
 	return len(it.items)
 }
 
-func (it *ValidatorIterator) takeBuf() interface{} {
+func (it *StakingTargetIterator) takeBuf() interface{} {
 	b := it.items
 	it.items = nil
 	return b

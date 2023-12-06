@@ -22,7 +22,7 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-// The parameters required for stake action on Polygon
+// The parameters required for stake action on Polygon.
 type PolygonStakeParameters struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -92,7 +92,7 @@ func (x *PolygonStakeParameters) GetAmount() *Amount {
 	return nil
 }
 
-// The parameters required for unstake action on Polygon
+// The parameters required for unstake action on Polygon.
 type PolygonUnstakeParameters struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -162,7 +162,7 @@ func (x *PolygonUnstakeParameters) GetAmount() *Amount {
 	return nil
 }
 
-// The parameters required for unstake action on Polygon
+// The parameters required for unstake action on Polygon.
 type PolygonRestakeParameters struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -222,7 +222,7 @@ func (x *PolygonRestakeParameters) GetValidatorAddress() string {
 	return ""
 }
 
-// The parameters required for claim rewards action on Polygon
+// The parameters required for claim rewards action on Polygon.
 type PolygonClaimRewardsParameters struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -282,7 +282,7 @@ func (x *PolygonClaimRewardsParameters) GetValidatorAddress() string {
 	return ""
 }
 
-// The parameters needed for staking on Polygon
+// The parameters needed for staking on Polygon.
 type PolygonStakingParameters struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -369,22 +369,22 @@ type isPolygonStakingParameters_Parameters interface {
 }
 
 type PolygonStakingParameters_StakeParameters struct {
-	// The parameters for stake action on Polygon
+	// The parameters for stake action on Polygon.
 	StakeParameters *PolygonStakeParameters `protobuf:"bytes,1,opt,name=stake_parameters,json=stakeParameters,proto3,oneof"`
 }
 
 type PolygonStakingParameters_UnstakeParameters struct {
-	// The parameters for unstake action on Polygon
+	// The parameters for unstake action on Polygon.
 	UnstakeParameters *PolygonUnstakeParameters `protobuf:"bytes,2,opt,name=unstake_parameters,json=unstakeParameters,proto3,oneof"`
 }
 
 type PolygonStakingParameters_RestakeParameters struct {
-	// The parameters for restake action on Polygon
+	// The parameters for restake action on Polygon.
 	RestakeParameters *PolygonRestakeParameters `protobuf:"bytes,3,opt,name=restake_parameters,json=restakeParameters,proto3,oneof"`
 }
 
 type PolygonStakingParameters_ClaimRewardsParameters struct {
-	// The parameters for claim rewards action on Polygon
+	// The parameters for claim rewards action on Polygon.
 	ClaimRewardsParameters *PolygonClaimRewardsParameters `protobuf:"bytes,4,opt,name=claim_rewards_parameters,json=claimRewardsParameters,proto3,oneof"`
 }
 

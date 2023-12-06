@@ -20,6 +20,9 @@ plugins:
       - paths=source_relative
   - name: openapiv2
     out: ./doc/openapi
+    opt:
+      - allow_merge=true
+      - merge_file_name=staking
   - name: doc
     out: ./doc/doc
     opt:
@@ -37,6 +40,6 @@ plugins:
       - Mcoinbase/staking/v1alpha1/network.proto=github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/v1alpha1;stakingpb
       - Mcoinbase/staking/v1alpha1/polygon.proto=github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/v1alpha1;stakingpb
       - Mcoinbase/staking/v1alpha1/protocol.proto=github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/v1alpha1;stakingpb
-      - Mcoinbase/staking/v1alpha1/validator.proto=github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/v1alpha1;stakingpb
+      - Mcoinbase/staking/v1alpha1/staking_target.proto=github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/v1alpha1;stakingpb
       - Mcoinbase/staking/v1alpha1/workflow.proto=github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/v1alpha1;stakingpb
       - Mcoinbase/staking/v1alpha1/staking_context.proto=github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/v1alpha1;stakingpb

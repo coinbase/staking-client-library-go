@@ -22,7 +22,7 @@ const (
 )
 
 // A Network resource, which represents a blockchain network.
-// (i.e. mainnet, testnet, etc.)
+// (e.g. mainnet, testnet, etc.)
 type Network struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache

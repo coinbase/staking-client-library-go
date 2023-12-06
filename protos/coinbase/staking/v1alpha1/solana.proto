@@ -147,7 +147,7 @@ message SolanaMergeStakeParameters {
   NonceOptions nonce_options = 4 [(google.api.field_behavior) = OPTIONAL];
 }
 
-// The parameters needed for staking on Solana
+// The parameters needed for staking on Solana.
 message SolanaStakingParameters {
   option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
     json_schema: {title: "Solana: Staking Parameters"}

@@ -102,11 +102,11 @@ func local_request_StakingService_ListNetworks_0(ctx context.Context, marshaler 
 }
 
 var (
-	filter_StakingService_ListValidators_0 = &utilities.DoubleArray{Encoding: map[string]int{"parent": 0}, Base: []int{1, 2, 0, 0}, Check: []int{0, 1, 2, 2}}
+	filter_StakingService_ListStakingTargets_0 = &utilities.DoubleArray{Encoding: map[string]int{"parent": 0}, Base: []int{1, 2, 0, 0}, Check: []int{0, 1, 2, 2}}
 )
 
-func request_StakingService_ListValidators_0(ctx context.Context, marshaler runtime.Marshaler, client StakingServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq ListValidatorsRequest
+func request_StakingService_ListStakingTargets_0(ctx context.Context, marshaler runtime.Marshaler, client StakingServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq ListStakingTargetsRequest
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -129,17 +129,17 @@ func request_StakingService_ListValidators_0(ctx context.Context, marshaler runt
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_StakingService_ListValidators_0); err != nil {
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_StakingService_ListStakingTargets_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
-	msg, err := client.ListValidators(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	msg, err := client.ListStakingTargets(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
 
 }
 
-func local_request_StakingService_ListValidators_0(ctx context.Context, marshaler runtime.Marshaler, server StakingServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq ListValidatorsRequest
+func local_request_StakingService_ListStakingTargets_0(ctx context.Context, marshaler runtime.Marshaler, server StakingServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq ListStakingTargetsRequest
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -162,11 +162,11 @@ func local_request_StakingService_ListValidators_0(ctx context.Context, marshale
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_StakingService_ListValidators_0); err != nil {
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_StakingService_ListStakingTargets_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
-	msg, err := server.ListValidators(ctx, &protoReq)
+	msg, err := server.ListStakingTargets(ctx, &protoReq)
 	return msg, metadata, err
 
 }
@@ -641,7 +641,7 @@ func RegisterStakingServiceHandlerServer(ctx context.Context, mux *runtime.Serve
 
 	})
 
-	mux.Handle("GET", pattern_StakingService_ListValidators_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_StakingService_ListStakingTargets_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
@@ -649,12 +649,12 @@ func RegisterStakingServiceHandlerServer(ctx context.Context, mux *runtime.Serve
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/coinbase.staking.v1alpha1.StakingService/ListValidators", runtime.WithHTTPPathPattern("/api/v1alpha1/{parent=protocols/*/networks/*}/validators"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/coinbase.staking.v1alpha1.StakingService/ListStakingTargets", runtime.WithHTTPPathPattern("/api/v1alpha1/{parent=protocols/*/networks/*}/stakingTargets"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_StakingService_ListValidators_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_StakingService_ListStakingTargets_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
@@ -662,7 +662,7 @@ func RegisterStakingServiceHandlerServer(ctx context.Context, mux *runtime.Serve
 			return
 		}
 
-		forward_StakingService_ListValidators_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_StakingService_ListStakingTargets_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
@@ -926,25 +926,25 @@ func RegisterStakingServiceHandlerClient(ctx context.Context, mux *runtime.Serve
 
 	})
 
-	mux.Handle("GET", pattern_StakingService_ListValidators_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_StakingService_ListStakingTargets_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/coinbase.staking.v1alpha1.StakingService/ListValidators", runtime.WithHTTPPathPattern("/api/v1alpha1/{parent=protocols/*/networks/*}/validators"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/coinbase.staking.v1alpha1.StakingService/ListStakingTargets", runtime.WithHTTPPathPattern("/api/v1alpha1/{parent=protocols/*/networks/*}/stakingTargets"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_StakingService_ListValidators_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_StakingService_ListStakingTargets_0(annotatedContext, inboundMarshaler, client, req, pathParams)
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_StakingService_ListValidators_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_StakingService_ListStakingTargets_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
@@ -1110,7 +1110,7 @@ var (
 
 	pattern_StakingService_ListNetworks_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 2, 5, 3, 2, 4}, []string{"api", "v1alpha1", "protocols", "parent", "networks"}, ""))
 
-	pattern_StakingService_ListValidators_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 2, 3, 1, 0, 4, 4, 5, 4, 2, 5}, []string{"api", "v1alpha1", "protocols", "networks", "parent", "validators"}, ""))
+	pattern_StakingService_ListStakingTargets_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 2, 3, 1, 0, 4, 4, 5, 4, 2, 5}, []string{"api", "v1alpha1", "protocols", "networks", "parent", "stakingTargets"}, ""))
 
 	pattern_StakingService_ListActions_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 2, 3, 1, 0, 4, 4, 5, 4, 2, 5}, []string{"api", "v1alpha1", "protocols", "networks", "parent", "actions"}, ""))
 
@@ -1132,7 +1132,7 @@ var (
 
 	forward_StakingService_ListNetworks_0 = runtime.ForwardResponseMessage
 
-	forward_StakingService_ListValidators_0 = runtime.ForwardResponseMessage
+	forward_StakingService_ListStakingTargets_0 = runtime.ForwardResponseMessage
 
 	forward_StakingService_ListActions_0 = runtime.ForwardResponseMessage
 

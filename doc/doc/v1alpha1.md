@@ -18,9 +18,11 @@
     - [ListNetworksResponse](#coinbase-staking-v1alpha1-ListNetworksResponse)
     - [Network](#coinbase-staking-v1alpha1-Network)
   
-- [coinbase/staking/v1alpha1/validator.proto](#coinbase_staking_v1alpha1_validator-proto)
-    - [ListValidatorsRequest](#coinbase-staking-v1alpha1-ListValidatorsRequest)
-    - [ListValidatorsResponse](#coinbase-staking-v1alpha1-ListValidatorsResponse)
+- [coinbase/staking/v1alpha1/staking_target.proto](#coinbase_staking_v1alpha1_staking_target-proto)
+    - [Contract](#coinbase-staking-v1alpha1-Contract)
+    - [ListStakingTargetsRequest](#coinbase-staking-v1alpha1-ListStakingTargetsRequest)
+    - [ListStakingTargetsResponse](#coinbase-staking-v1alpha1-ListStakingTargetsResponse)
+    - [StakingTarget](#coinbase-staking-v1alpha1-StakingTarget)
     - [Validator](#coinbase-staking-v1alpha1-Validator)
   
 - [coinbase/staking/v1alpha1/common.proto](#coinbase_staking_v1alpha1_common-proto)
@@ -28,6 +30,7 @@
   
 - [coinbase/staking/v1alpha1/ethereum_kiln.proto](#coinbase_staking_v1alpha1_ethereum_kiln-proto)
     - [EthereumKilnClaimRewardsParameters](#coinbase-staking-v1alpha1-EthereumKilnClaimRewardsParameters)
+    - [EthereumKilnClaimStakeParameters](#coinbase-staking-v1alpha1-EthereumKilnClaimStakeParameters)
     - [EthereumKilnStakeParameters](#coinbase-staking-v1alpha1-EthereumKilnStakeParameters)
     - [EthereumKilnStakingContextDetails](#coinbase-staking-v1alpha1-EthereumKilnStakingContextDetails)
     - [EthereumKilnStakingContextParameters](#coinbase-staking-v1alpha1-EthereumKilnStakingContextParameters)
@@ -90,7 +93,7 @@
 
 ### Action
 An Action resource, which represents an action you may take on a network,
-posted to a validator. (i.e. stake, unstake)
+posted to a validator (e.g. stake, unstake).
 
 
 | Field | Type | Label | Description |
@@ -176,7 +179,7 @@ The response message for ListProtocols.
 <a name="coinbase-staking-v1alpha1-Protocol"></a>
 
 ### Protocol
-A Protocol resource (i.e. polygon, ethereum, etc.)
+A Protocol resource (e.g. polygon, ethereum, etc.).
 
 
 | Field | Type | Label | Description |
@@ -238,7 +241,7 @@ The response message for ListNetworks.
 
 ### Network
 A Network resource, which represents a blockchain network.
-(i.e. mainnet, testnet, etc.)
+(e.g. mainnet, testnet, etc.)
 
 
 | Field | Type | Label | Description |
@@ -260,25 +263,43 @@ A Network resource, which represents a blockchain network.
 
 
 
-<a name="coinbase_staking_v1alpha1_validator-proto"></a>
+<a name="coinbase_staking_v1alpha1_staking_target-proto"></a>
 <p align="right"><a href="#top">Top</a></p>
 
-## coinbase/staking/v1alpha1/validator.proto
+## coinbase/staking/v1alpha1/staking_target.proto
 
 
 
-<a name="coinbase-staking-v1alpha1-ListValidatorsRequest"></a>
+<a name="coinbase-staking-v1alpha1-Contract"></a>
 
-### ListValidatorsRequest
-The request message for ListValidators.
+### Contract
+A Contract resource, which represents an active contract
+for the given protocol network which you can submit an action
+to.
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| parent | [string](#string) |  | The resource name of the parent that owns the collection of validators. Format: protocols/{protocol}/networks/{network} |
-| page_size | [int32](#int32) |  | The maximum number of validators to return. The service may return fewer than this value.
+| name | [string](#string) |  | The resource name of the Contract Address. Format: protocols/{protocolName}/networks/{networkName}/stakingTargets/{contractName} Ex: protocols/polygon/networks/goerli/stakingTargets/0x857679d69fE50E7B722f94aCd2629d80C355163d |
+| address | [string](#string) |  | The contract address you may submit actions to. |
 
-If unspecified, 50 validators will be returned. The maximum value is 1000; values over 1000 will be floored to 1000. |
+
+
+
+
+
+<a name="coinbase-staking-v1alpha1-ListStakingTargetsRequest"></a>
+
+### ListStakingTargetsRequest
+The request message for ListStakingTargets.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| parent | [string](#string) |  | The resource name of the parent that owns the collection of staking targets. Format: protocols/{protocol}/networks/{network} |
+| page_size | [int32](#int32) |  | The maximum number of staking targets to return. The service may return fewer than this value.
+
+If unspecified, 100 staking targets will be returned. The maximum value is 1000; values over 1000 will be floored to 1000. |
 | page_token | [string](#string) |  | A page token as part of the response of a previous call. Provide this to retrieve the next page.
 
 When paginating, all other parameters must match the previous request to list resources. |
@@ -288,16 +309,32 @@ When paginating, all other parameters must match the previous request to list re
 
 
 
-<a name="coinbase-staking-v1alpha1-ListValidatorsResponse"></a>
+<a name="coinbase-staking-v1alpha1-ListStakingTargetsResponse"></a>
 
-### ListValidatorsResponse
-The response message for ListValidators.
+### ListStakingTargetsResponse
+The response message for ListStakingTargets.
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| validators | [Validator](#coinbase-staking-v1alpha1-Validator) | repeated | The list of validators. |
+| staking_targets | [StakingTarget](#coinbase-staking-v1alpha1-StakingTarget) | repeated | The list of staking targets. |
 | next_page_token | [string](#string) |  | A token which can be provided as `page_token` to retrieve the next page. If this field is omitted, there are no additional pages. |
+
+
+
+
+
+
+<a name="coinbase-staking-v1alpha1-StakingTarget"></a>
+
+### StakingTarget
+A Staking Target represents a destination that you perform an action on related to staking.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| validator | [Validator](#coinbase-staking-v1alpha1-Validator) |  | A validator to stake to. |
+| contract | [Contract](#coinbase-staking-v1alpha1-Contract) |  | A contract to send a staking action to. |
 
 
 
@@ -307,15 +344,13 @@ The response message for ListValidators.
 <a name="coinbase-staking-v1alpha1-Validator"></a>
 
 ### Validator
-A Validator resource, which represents an active validator
-for the given protocol network which you can submit an action
-to.
+A Validator resource represents an active validator for the given protocol network.
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| name | [string](#string) |  | The resource name of the Validator. Format: protocols/{protocolName}/networks/{networkName}/validators/{validatorName} Ex: protocols/polygon/networks/goerli/validators/0x857679d69fE50E7B722f94aCd2629d80C355163d |
-| validator_address | [string](#string) |  | The public address of the validator that you may perform workflow actions on. |
+| name | [string](#string) |  | The resource name of the Validator. Format: protocols/{protocolName}/networks/{networkName}/stakingTargets/{validatorName} Ex: protocols/polygon/networks/goerli/stakingTargets/0x857679d69fE50E7B722f94aCd2629d80C355163d |
+| address | [string](#string) |  | The public address of the validator. |
 | commission_rate | [float](#float) |  | The rate of commission for the validator |
 
 
@@ -381,6 +416,22 @@ The parameters required for the claim rewards action on Ethereum Kiln.
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | staker_address | [string](#string) |  | The address you wish to claim rewards for. |
+| integrator_contract_address | [string](#string) |  | The address of the integrator contract. |
+
+
+
+
+
+
+<a name="coinbase-staking-v1alpha1-EthereumKilnClaimStakeParameters"></a>
+
+### EthereumKilnClaimStakeParameters
+The parameters required for the claim stake action on Ethereum Kiln.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| staker_address | [string](#string) |  | The address you wish to claim stake for. |
 | integrator_contract_address | [string](#string) |  | The address of the integrator contract |
 
 
@@ -397,7 +448,7 @@ The parameters required for the stake action on Ethereum Kiln.
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | staker_address | [string](#string) |  | The address you wish to stake from. |
-| integrator_contract_address | [string](#string) |  | The address of the integrator contract |
+| integrator_contract_address | [string](#string) |  | The address of the integrator contract. |
 | amount | [Amount](#coinbase-staking-v1alpha1-Amount) |  | The amount of Ethereum to stake in wei. |
 
 
@@ -413,10 +464,10 @@ The protocol specific details for an Ethereum Kiln staking context.
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| ethereum_balance | [Amount](#coinbase-staking-v1alpha1-Amount) |  | The Ethereum balance of the address |
+| ethereum_balance | [Amount](#coinbase-staking-v1alpha1-Amount) |  | The Ethereum balance of the address. This can be used to gate the stake action to make sure the requested stake amount is less than ethereum_balance. |
 | integrator_share_balance | [Amount](#coinbase-staking-v1alpha1-Amount) |  | The number of integrator shares owned by the address. |
-| integrator_share_underlying_balance | [Amount](#coinbase-staking-v1alpha1-Amount) |  | The total Ethereum you can exchange for your integrator shares. |
-| total_exitable_eth | [Amount](#coinbase-staking-v1alpha1-Amount) |  | The total amount of Ethereum you can redeem for all non-claimed vPool shares. |
+| integrator_share_underlying_balance | [Amount](#coinbase-staking-v1alpha1-Amount) |  | The total Ethereum you can exchange for your integrator shares. This can be used to gate the unstake action to make sure the requested unstake amount is less than integrator_share_underlying_balance |
+| total_exitable_eth | [Amount](#coinbase-staking-v1alpha1-Amount) |  | The total amount of Ethereum you can redeem for all non-claimed vPool shares. This along with the condition total_shares_pending_exit == fulfillable_share_count can be used to gate the claim_stake action. |
 | total_shares_pending_exit | [Amount](#coinbase-staking-v1alpha1-Amount) |  | The number of vPool shares are eligible to receive now or at a later point in time. |
 | fulfillable_share_count | [Amount](#coinbase-staking-v1alpha1-Amount) |  | The number of vPool shares you are able to claim now. |
 
@@ -433,7 +484,7 @@ The protocol specific parameters required for fetching a staking context.
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| integrator_contract_address | [string](#string) |  | Integrator contract address |
+| integrator_contract_address | [string](#string) |  | Integrator contract address. |
 
 
 
@@ -451,6 +502,7 @@ The parameters needed for staking on Ethereum via Kiln.
 | stake_parameters | [EthereumKilnStakeParameters](#coinbase-staking-v1alpha1-EthereumKilnStakeParameters) |  | The parameters for stake action on Ethereum Kiln. |
 | unstake_parameters | [EthereumKilnUnstakeParameters](#coinbase-staking-v1alpha1-EthereumKilnUnstakeParameters) |  | The parameters for unstake action on Ethereum Kiln. |
 | claim_rewards_parameters | [EthereumKilnClaimRewardsParameters](#coinbase-staking-v1alpha1-EthereumKilnClaimRewardsParameters) |  | The parameters for claim rewards action on Ethereum Kiln. |
+| claim_stake_parameters | [EthereumKilnClaimStakeParameters](#coinbase-staking-v1alpha1-EthereumKilnClaimStakeParameters) |  | The parameters for claim stake action on Ethereum Kiln. |
 
 
 
@@ -466,7 +518,7 @@ The parameters required for the unstake action on Ethereum Kiln.
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | staker_address | [string](#string) |  | The address you wish to unstake from. |
-| integrator_contract_address | [string](#string) |  | The address of the integrator contract |
+| integrator_contract_address | [string](#string) |  | The address of the integrator contract. |
 | amount | [Amount](#coinbase-staking-v1alpha1-Amount) |  | The amount of Ethereum to unstake in wei. |
 
 
@@ -493,7 +545,7 @@ The parameters required for the unstake action on Ethereum Kiln.
 <a name="coinbase-staking-v1alpha1-PolygonClaimRewardsParameters"></a>
 
 ### PolygonClaimRewardsParameters
-The parameters required for claim rewards action on Polygon
+The parameters required for claim rewards action on Polygon.
 
 
 | Field | Type | Label | Description |
@@ -509,7 +561,7 @@ The parameters required for claim rewards action on Polygon
 <a name="coinbase-staking-v1alpha1-PolygonRestakeParameters"></a>
 
 ### PolygonRestakeParameters
-The parameters required for unstake action on Polygon
+The parameters required for unstake action on Polygon.
 
 
 | Field | Type | Label | Description |
@@ -525,7 +577,7 @@ The parameters required for unstake action on Polygon
 <a name="coinbase-staking-v1alpha1-PolygonStakeParameters"></a>
 
 ### PolygonStakeParameters
-The parameters required for stake action on Polygon
+The parameters required for stake action on Polygon.
 
 
 | Field | Type | Label | Description |
@@ -542,15 +594,15 @@ The parameters required for stake action on Polygon
 <a name="coinbase-staking-v1alpha1-PolygonStakingParameters"></a>
 
 ### PolygonStakingParameters
-The parameters needed for staking on Polygon
+The parameters needed for staking on Polygon.
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| stake_parameters | [PolygonStakeParameters](#coinbase-staking-v1alpha1-PolygonStakeParameters) |  | The parameters for stake action on Polygon |
-| unstake_parameters | [PolygonUnstakeParameters](#coinbase-staking-v1alpha1-PolygonUnstakeParameters) |  | The parameters for unstake action on Polygon |
-| restake_parameters | [PolygonRestakeParameters](#coinbase-staking-v1alpha1-PolygonRestakeParameters) |  | The parameters for restake action on Polygon |
-| claim_rewards_parameters | [PolygonClaimRewardsParameters](#coinbase-staking-v1alpha1-PolygonClaimRewardsParameters) |  | The parameters for claim rewards action on Polygon |
+| stake_parameters | [PolygonStakeParameters](#coinbase-staking-v1alpha1-PolygonStakeParameters) |  | The parameters for stake action on Polygon. |
+| unstake_parameters | [PolygonUnstakeParameters](#coinbase-staking-v1alpha1-PolygonUnstakeParameters) |  | The parameters for unstake action on Polygon. |
+| restake_parameters | [PolygonRestakeParameters](#coinbase-staking-v1alpha1-PolygonRestakeParameters) |  | The parameters for restake action on Polygon. |
+| claim_rewards_parameters | [PolygonClaimRewardsParameters](#coinbase-staking-v1alpha1-PolygonClaimRewardsParameters) |  | The parameters for claim rewards action on Polygon. |
 
 
 
@@ -560,7 +612,7 @@ The parameters needed for staking on Polygon
 <a name="coinbase-staking-v1alpha1-PolygonUnstakeParameters"></a>
 
 ### PolygonUnstakeParameters
-The parameters required for unstake action on Polygon
+The parameters required for unstake action on Polygon.
 
 
 | Field | Type | Label | Description |
@@ -702,7 +754,7 @@ The parameters required for split stake action on Solana.
 <a name="coinbase-staking-v1alpha1-SolanaStakingParameters"></a>
 
 ### SolanaStakingParameters
-The parameters needed for staking on Solana
+The parameters needed for staking on Solana.
 
 
 | Field | Type | Label | Description |
@@ -763,7 +815,7 @@ The request message for CreateWorkflow.
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | parent | [string](#string) |  | The resource name of the parent that owns the workflow. Format: projects/{project} |
-| workflow | [Workflow](#coinbase-staking-v1alpha1-Workflow) |  | The workflow to create |
+| workflow | [Workflow](#coinbase-staking-v1alpha1-Workflow) |  | The workflow to create. |
 
 
 
@@ -794,10 +846,10 @@ The message for ListWorkflows.
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | parent | [string](#string) |  | The resource name of the parent that owns the collection of networks. Format: projects/{project} |
-| filter | [string](#string) |  | [AIP-160](https://google.aip.dev/160) filter Supported fields: - string delegator_address: &#34;0x...&#34; - string validator_address: &#34;0x...&#34; - string action: &#34;stake&#34;, &#34;unstake&#34; - string protocol: &#34;polygon&#34; - string network: &#34;testnet&#34;, &#34;mainnet&#34; - string amount: &#34;10000&#34; - string currency: &#34;MATIC&#34; |
+| filter | [string](#string) |  | [AIP-160](https://google.aip.dev/160) filter Supported fields: - string delegator_address: &#34;0x...&#34; - string validator_address: &#34;0x...&#34; - string action: &#34;stake&#34;, &#34;unstake&#34; - string protocol: &#34;ethereum_kiln&#34; - string network: &#34;goerli&#34;, &#34;mainnet&#34; - string amount: &#34;10000&#34; - string currency: &#34;ETH&#34; |
 | page_size | [int32](#int32) |  | The maximum number of workflows to return. The service may return fewer than this value.
 
-If unspecified, 50 workflows will be returned. The maximum value is 1000; values over 1000 will be floored to 1000. |
+If unspecified, 100 workflows will be returned. The maximum value is 1000; values over 1000 will be floored to 1000. |
 | page_token | [string](#string) |  | A page token as part of the response of a previous call. Provide this to retrieve the next page.
 
 When paginating, all other parameters must match the previous request to list resources. |
@@ -864,10 +916,11 @@ The details of a transaction being constructed and broadcasted to the network.
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| unsigned_tx | [string](#string) |  | The unsigned transaction which was signed in order to be broadcasted |
-| signed_tx | [string](#string) |  | The signed transaction which was asked to be broadcasted |
+| unsigned_tx | [string](#string) |  | The unsigned transaction which was signed in order to be broadcasted. |
+| signed_tx | [string](#string) |  | The signed transaction which was asked to be broadcasted. |
 | tx_hash | [string](#string) |  | The hash of the broadcasted transaction. |
 | state | [TxStepOutput.State](#coinbase-staking-v1alpha1-TxStepOutput-State) |  | The state of the transaction step. |
+| error_message | [string](#string) |  | The error message if the transaction step failed. |
 
 
 
@@ -877,7 +930,7 @@ The details of a transaction being constructed and broadcasted to the network.
 <a name="coinbase-staking-v1alpha1-WaitStepOutput"></a>
 
 ### WaitStepOutput
-The output details of a step where we wait for some kind of on-chain activity to finish like reaching a certain checkpoint, epoch or block
+The output details of a step where we wait for some kind of on-chain activity to finish like reaching a certain checkpoint, epoch or block.
 
 
 | Field | Type | Label | Description |
@@ -885,7 +938,7 @@ The output details of a step where we wait for some kind of on-chain activity to
 | start | [int64](#int64) |  | The beginning of wait period. |
 | current | [int64](#int64) |  | The current wait progress. |
 | target | [int64](#int64) |  | The target wait end point. |
-| unit | [WaitStepOutput.WaitUnit](#coinbase-staking-v1alpha1-WaitStepOutput-WaitUnit) |  | The wait unit (like checkpoint, block, epoch etc) |
+| unit | [WaitStepOutput.WaitUnit](#coinbase-staking-v1alpha1-WaitStepOutput-WaitUnit) |  | The wait unit (like checkpoint, block, epoch etc). |
 | state | [WaitStepOutput.State](#coinbase-staking-v1alpha1-WaitStepOutput-State) |  | The state of the wait step. |
 
 
@@ -896,23 +949,23 @@ The output details of a step where we wait for some kind of on-chain activity to
 <a name="coinbase-staking-v1alpha1-Workflow"></a>
 
 ### Workflow
-A Workflow resource
+A Workflow resource.
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | name | [string](#string) |  | The resource name of the workflow. Format: projects/{projectUUID}/workflows/{workflowUUID} Ex: projects/ 123e4567-e89b-12d3-a456-426614174000/workflows/123e4567-e89b-12d3-a456-426614174000 |
 | action | [string](#string) |  | The resource name of the action being performed. Format: protocols/{protocol}/networks/{network}/actions/{action} |
-| polygon_staking_parameters | [PolygonStakingParameters](#coinbase-staking-v1alpha1-PolygonStakingParameters) |  | Polygon staking parameters |
-| solana_staking_parameters | [SolanaStakingParameters](#coinbase-staking-v1alpha1-SolanaStakingParameters) |  | Solana staking parameters |
-| ethereum_kiln_staking_parameters | [EthereumKilnStakingParameters](#coinbase-staking-v1alpha1-EthereumKilnStakingParameters) |  | EthereumKiln staking parameters |
-| state | [Workflow.State](#coinbase-staking-v1alpha1-Workflow-State) |  | The current state of the workflow |
+| polygon_staking_parameters | [PolygonStakingParameters](#coinbase-staking-v1alpha1-PolygonStakingParameters) |  | Polygon staking parameters. |
+| solana_staking_parameters | [SolanaStakingParameters](#coinbase-staking-v1alpha1-SolanaStakingParameters) |  | Solana staking parameters. |
+| ethereum_kiln_staking_parameters | [EthereumKilnStakingParameters](#coinbase-staking-v1alpha1-EthereumKilnStakingParameters) |  | EthereumKiln staking parameters. |
+| state | [Workflow.State](#coinbase-staking-v1alpha1-Workflow-State) |  | The current state of the workflow. |
 | current_step_id | [int32](#int32) |  | The index of the current step. |
 | steps | [WorkflowStep](#coinbase-staking-v1alpha1-WorkflowStep) | repeated | The list of steps for this workflow. |
-| create_time | [google.protobuf.Timestamp](#google-protobuf-Timestamp) |  | The timestamp the workflow was created |
-| update_time | [google.protobuf.Timestamp](#google-protobuf-Timestamp) |  | The timestamp the workflow was last updated |
+| create_time | [google.protobuf.Timestamp](#google-protobuf-Timestamp) |  | The timestamp the workflow was created. |
+| update_time | [google.protobuf.Timestamp](#google-protobuf-Timestamp) |  | The timestamp the workflow was last updated. |
 | skip_broadcast | [bool](#bool) |  | Flag to skip tx broadcast to network on behalf of the user. Use this flag if you instead prefer to broadcast signed txs on your own. |
-| complete_time | [google.protobuf.Timestamp](#google-protobuf-Timestamp) |  | The timestamp the workflow completed |
+| complete_time | [google.protobuf.Timestamp](#google-protobuf-Timestamp) |  | The timestamp the workflow completed. |
 
 
 
@@ -922,14 +975,14 @@ A Workflow resource
 <a name="coinbase-staking-v1alpha1-WorkflowStep"></a>
 
 ### WorkflowStep
-The information for a step in the workflow
+The information for a step in the workflow.
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | name | [string](#string) |  | The human readable name of the step. |
-| tx_step_output | [TxStepOutput](#coinbase-staking-v1alpha1-TxStepOutput) |  | The tx step output (i.e. transaction metadata such as unsigned tx, signed tx etc). |
-| wait_step_output | [WaitStepOutput](#coinbase-staking-v1alpha1-WaitStepOutput) |  | The waiting details for any kind like how many checkpoints away for unbonding etc |
+| tx_step_output | [TxStepOutput](#coinbase-staking-v1alpha1-TxStepOutput) |  | The tx step output (e.g. transaction metadata such as unsigned tx, signed tx etc). |
+| wait_step_output | [WaitStepOutput](#coinbase-staking-v1alpha1-WaitStepOutput) |  | The waiting details for any kind like how many checkpoints away for unbonding etc. |
 
 
 
@@ -941,56 +994,56 @@ The information for a step in the workflow
 <a name="coinbase-staking-v1alpha1-TxStepOutput-State"></a>
 
 ### TxStepOutput.State
-State defines an enumeration of states for a staking transaction
+State defines an enumeration of states for a staking transaction.
 
 | Name | Number | Description |
 | ---- | ------ | ----------- |
 | STATE_UNSPECIFIED | 0 | Unspecified transaction state, this is for backwards compatibility. |
-| STATE_NOT_CONSTRUCTED | 1 | Tx has not yet been constructed in the backend |
-| STATE_CONSTRUCTED | 2 | Tx construction is over in the backend |
-| STATE_PENDING_SIGNING | 3 | Tx is waiting to be signed |
-| STATE_SIGNED | 4 | Tx has been signed and returned to the backend |
-| STATE_BROADCASTING | 5 | Tx is being broadcasted to the network |
-| STATE_CONFIRMING | 6 | Tx is waiting for confirmation |
-| STATE_CONFIRMED | 7 | Tx has been confirmed to be included in a block |
-| STATE_FINALIZED | 8 | Tx has been finalized |
-| STATE_FAILED | 9 | Tx construction or broadcasting failed |
-| STATE_SUCCESS | 10 | Tx has been successfully executed |
-| STATE_CANCELING | 11 | Tx is being canceled |
-| STATE_CANCELED | 12 | Tx has been canceled |
-| STATE_CANCEL_FAILED | 13 | Tx cancellation failed |
-| STATE_FAILED_REFRESHABLE | 14 | Tx failed but can be refreshed |
-| STATE_REFRESHING | 15 | Tx is being refreshed |
-| STATE_PENDING_EXT_BROADCAST | 16 | Tx is waiting to be externally broadcasted by the customer |
+| STATE_NOT_CONSTRUCTED | 1 | Tx has not yet been constructed in the backend. |
+| STATE_CONSTRUCTED | 2 | Tx construction is over in the backend. |
+| STATE_PENDING_SIGNING | 3 | Tx is waiting to be signed. |
+| STATE_SIGNED | 4 | Tx has been signed and returned to the backend. |
+| STATE_BROADCASTING | 5 | Tx is being broadcasted to the network. |
+| STATE_CONFIRMING | 6 | Tx is waiting for confirmation. |
+| STATE_CONFIRMED | 7 | Tx has been confirmed to be included in a block. |
+| STATE_FINALIZED | 8 | Tx has been finalized. |
+| STATE_FAILED | 9 | Tx construction or broadcasting failed. |
+| STATE_SUCCESS | 10 | Tx has been successfully executed. |
+| STATE_CANCELING | 11 | Tx is being canceled. |
+| STATE_CANCELED | 12 | Tx has been canceled. |
+| STATE_CANCEL_FAILED | 13 | Tx cancellation failed. |
+| STATE_FAILED_REFRESHABLE | 14 | Tx failed but can be refreshed. |
+| STATE_REFRESHING | 15 | Tx is being refreshed. |
+| STATE_PENDING_EXT_BROADCAST | 16 | Tx is waiting to be externally broadcasted by the customer. |
 
 
 
 <a name="coinbase-staking-v1alpha1-WaitStepOutput-State"></a>
 
 ### WaitStepOutput.State
-WaitStepState defines an enumeration of states for a wait step
+WaitStepState defines an enumeration of states for a wait step.
 
 | Name | Number | Description |
 | ---- | ------ | ----------- |
-| STATE_UNSPECIFIED | 0 | Unspecified wait step state |
-| STATE_NOT_STARTED | 1 | Wait step has not started |
-| STATE_IN_PROGRESS | 2 | Wait step is in-progress |
-| STATE_COMPLETED | 3 | Wait step completed |
+| STATE_UNSPECIFIED | 0 | Unspecified wait step state. |
+| STATE_NOT_STARTED | 1 | Wait step has not started. |
+| STATE_IN_PROGRESS | 2 | Wait step is in-progress. |
+| STATE_COMPLETED | 3 | Wait step completed. |
 
 
 
 <a name="coinbase-staking-v1alpha1-WaitStepOutput-WaitUnit"></a>
 
 ### WaitStepOutput.WaitUnit
-The unit of wait time
+The unit of wait time.
 
 | Name | Number | Description |
 | ---- | ------ | ----------- |
-| WAIT_UNIT_UNSPECIFIED | 0 | Unspecified wait time |
-| WAIT_UNIT_SECONDS | 1 | Wait time measured in seconds |
-| WAIT_UNIT_BLOCKS | 2 | Wait time measured in blocks |
-| WAIT_UNIT_EPOCHS | 3 | Wait time measured in epochs |
-| WAIT_UNIT_CHECKPOINTS | 4 | Wait time measured in checkpoints |
+| WAIT_UNIT_UNSPECIFIED | 0 | Unspecified wait time. |
+| WAIT_UNIT_SECONDS | 1 | Wait time measured in seconds. |
+| WAIT_UNIT_BLOCKS | 2 | Wait time measured in blocks. |
+| WAIT_UNIT_EPOCHS | 3 | Wait time measured in epochs. |
+| WAIT_UNIT_CHECKPOINTS | 4 | Wait time measured in checkpoints. |
 
 
 
@@ -1058,8 +1111,8 @@ The response message for the ViewStakingContext request.
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| address | [string](#string) |  | The address you are getting a staking context for |
-| ethereum_kiln_staking_context_details | [EthereumKilnStakingContextDetails](#coinbase-staking-v1alpha1-EthereumKilnStakingContextDetails) |  | EthereumKiln staking context details |
+| address | [string](#string) |  | The address you are getting a staking context for. |
+| ethereum_kiln_staking_context_details | [EthereumKilnStakingContextDetails](#coinbase-staking-v1alpha1-EthereumKilnStakingContextDetails) |  | EthereumKiln staking context details. |
 
 
 
@@ -1091,20 +1144,20 @@ The response message for the ViewStakingContext request.
 <a name="coinbase-staking-v1alpha1-StakingService"></a>
 
 ### StakingService
-StakingService manages staking related resources such as protocols, networks, validators and workflows
+StakingService manages staking related resources such as protocols, networks, validators and workflows.
 
 | Method Name | Request Type | Response Type | Description |
 | ----------- | ------------ | ------------- | ------------|
-| ListProtocols | [ListProtocolsRequest](#coinbase-staking-v1alpha1-ListProtocolsRequest) | [ListProtocolsResponse](#coinbase-staking-v1alpha1-ListProtocolsResponse) | List supported protocols |
-| ListNetworks | [ListNetworksRequest](#coinbase-staking-v1alpha1-ListNetworksRequest) | [ListNetworksResponse](#coinbase-staking-v1alpha1-ListNetworksResponse) | List supported staking networks for a given protocol |
-| ListValidators | [ListValidatorsRequest](#coinbase-staking-v1alpha1-ListValidatorsRequest) | [ListValidatorsResponse](#coinbase-staking-v1alpha1-ListValidatorsResponse) | List supported validators for a given protocol and network |
-| ListActions | [ListActionsRequest](#coinbase-staking-v1alpha1-ListActionsRequest) | [ListActionsResponse](#coinbase-staking-v1alpha1-ListActionsResponse) | List supported actions for a given protocol and network |
-| CreateWorkflow | [CreateWorkflowRequest](#coinbase-staking-v1alpha1-CreateWorkflowRequest) | [Workflow](#coinbase-staking-v1alpha1-Workflow) | Create a workflow to perform an action |
-| GetWorkflow | [GetWorkflowRequest](#coinbase-staking-v1alpha1-GetWorkflowRequest) | [Workflow](#coinbase-staking-v1alpha1-Workflow) | Get the current state of an active workflow |
-| ListWorkflows | [ListWorkflowsRequest](#coinbase-staking-v1alpha1-ListWorkflowsRequest) | [ListWorkflowsResponse](#coinbase-staking-v1alpha1-ListWorkflowsResponse) | List all workflows in a project |
-| PerformWorkflowStep | [PerformWorkflowStepRequest](#coinbase-staking-v1alpha1-PerformWorkflowStepRequest) | [Workflow](#coinbase-staking-v1alpha1-Workflow) | Perform the next step in a workflow |
-| RefreshWorkflowStep | [RefreshWorkflowStepRequest](#coinbase-staking-v1alpha1-RefreshWorkflowStepRequest) | [Workflow](#coinbase-staking-v1alpha1-Workflow) | Refresh the current step in a workflow |
-| ViewStakingContext | [ViewStakingContextRequest](#coinbase-staking-v1alpha1-ViewStakingContextRequest) | [ViewStakingContextResponse](#coinbase-staking-v1alpha1-ViewStakingContextResponse) | View Staking context information given a specific network address |
+| ListProtocols | [ListProtocolsRequest](#coinbase-staking-v1alpha1-ListProtocolsRequest) | [ListProtocolsResponse](#coinbase-staking-v1alpha1-ListProtocolsResponse) | List supported protocols. |
+| ListNetworks | [ListNetworksRequest](#coinbase-staking-v1alpha1-ListNetworksRequest) | [ListNetworksResponse](#coinbase-staking-v1alpha1-ListNetworksResponse) | List supported staking networks for a given protocol. |
+| ListStakingTargets | [ListStakingTargetsRequest](#coinbase-staking-v1alpha1-ListStakingTargetsRequest) | [ListStakingTargetsResponse](#coinbase-staking-v1alpha1-ListStakingTargetsResponse) | List supported staking targets for a given protocol and network. |
+| ListActions | [ListActionsRequest](#coinbase-staking-v1alpha1-ListActionsRequest) | [ListActionsResponse](#coinbase-staking-v1alpha1-ListActionsResponse) | List supported actions for a given protocol and network. |
+| CreateWorkflow | [CreateWorkflowRequest](#coinbase-staking-v1alpha1-CreateWorkflowRequest) | [Workflow](#coinbase-staking-v1alpha1-Workflow) | Create a workflow to perform an action. |
+| GetWorkflow | [GetWorkflowRequest](#coinbase-staking-v1alpha1-GetWorkflowRequest) | [Workflow](#coinbase-staking-v1alpha1-Workflow) | Get the current state of an active workflow. |
+| ListWorkflows | [ListWorkflowsRequest](#coinbase-staking-v1alpha1-ListWorkflowsRequest) | [ListWorkflowsResponse](#coinbase-staking-v1alpha1-ListWorkflowsResponse) | List all workflows in a project. |
+| PerformWorkflowStep | [PerformWorkflowStepRequest](#coinbase-staking-v1alpha1-PerformWorkflowStepRequest) | [Workflow](#coinbase-staking-v1alpha1-Workflow) | Perform the next step in a workflow. |
+| RefreshWorkflowStep | [RefreshWorkflowStepRequest](#coinbase-staking-v1alpha1-RefreshWorkflowStepRequest) | [Workflow](#coinbase-staking-v1alpha1-Workflow) | Refresh the current step in a workflow. |
+| ViewStakingContext | [ViewStakingContextRequest](#coinbase-staking-v1alpha1-ViewStakingContextRequest) | [ViewStakingContextResponse](#coinbase-staking-v1alpha1-ViewStakingContextResponse) | View Staking context information given a specific network address. |
 
  
 

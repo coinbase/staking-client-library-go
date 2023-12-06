@@ -11,7 +11,7 @@ import "protoc-gen-openapiv2/options/annotations.proto";
 import "coinbase/staking/v1alpha1/protocol.proto";
 import "coinbase/staking/v1alpha1/network.proto";
 import "coinbase/staking/v1alpha1/action.proto";
-import "coinbase/staking/v1alpha1/validator.proto";
+import "coinbase/staking/v1alpha1/staking_target.proto";
 import "coinbase/staking/v1alpha1/workflow.proto";
 import "coinbase/staking/v1alpha1/staking_context.proto";
 
@@ -116,11 +116,11 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
   ];
 };
 
-// StakingService manages staking related resources such as protocols, networks, validators and workflows
+// StakingService manages staking related resources such as protocols, networks, validators and workflows.
 service StakingService {
-  option (google.api.default_host) = "staking.coinbase.com";
+  option (google.api.default_host) = "api.developer.coinbase.com";
 
-  // List supported protocols
+  // List supported protocols.
   rpc ListProtocols(ListProtocolsRequest) returns (ListProtocolsResponse) {
     option (google.api.http) = {
       get: "/api/v1alpha1/protocols"
@@ -143,7 +143,7 @@ service StakingService {
 
   };
 
-  // List supported staking networks for a given protocol
+  // List supported staking networks for a given protocol.
   rpc ListNetworks(ListNetworksRequest) returns (ListNetworksResponse) {
     option (google.api.http) = {
       get: "/api/v1alpha1/{parent=protocols/*}/networks"
@@ -166,19 +166,19 @@ service StakingService {
 
   };
 
-  // List supported validators for a given protocol and network
-  rpc ListValidators(ListValidatorsRequest) returns (ListValidatorsResponse) {
+  // List supported staking targets for a given protocol and network.
+  rpc ListStakingTargets(ListStakingTargetsRequest) returns (ListStakingTargetsResponse) {
     option (google.api.http) = {
-      get: "/api/v1alpha1/{parent=protocols/*/networks/*}/validators"
+      get: "/api/v1alpha1/{parent=protocols/*/networks/*}/stakingTargets"
     };
 
     option (google.api.method_signature) = "parent";
 
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-      summary: "List supported validators";
-      description: "List supported validators";
-      operation_id: "listValidators";
-      tags: "Validator";
+      summary: "List supported staking targets";
+      description: "List supported staking targets";
+      operation_id: "listStakingTargets";
+      tags: "StakingTarget";
       responses: {
         key: "200"
         value: {
@@ -189,7 +189,7 @@ service StakingService {
 
   };
 
-  // List supported actions for a given protocol and network
+  // List supported actions for a given protocol and network.
   rpc ListActions(ListActionsRequest) returns (ListActionsResponse) {
     option (google.api.http) = {
       get: "/api/v1alpha1/{parent=protocols/*/networks/*}/actions"
@@ -212,7 +212,7 @@ service StakingService {
 
   };
 
-  // Create a workflow to perform an action
+  // Create a workflow to perform an action.
   rpc CreateWorkflow(CreateWorkflowRequest) returns (Workflow) {
     option (google.api.method_signature) = "parent,workflow";
 
@@ -235,7 +235,7 @@ service StakingService {
 
   };
 
-  // Get the current state of an active workflow
+  // Get the current state of an active workflow.
   rpc GetWorkflow(GetWorkflowRequest) returns (Workflow) {
     option (google.api.http) = {
       get: "/api/v1alpha1/{name=projects/*/workflows/*}"
@@ -257,7 +257,7 @@ service StakingService {
 
   };
 
-  // List all workflows in a project
+  // List all workflows in a project.
   rpc ListWorkflows(ListWorkflowsRequest) returns (ListWorkflowsResponse) {
     option (google.api.http) = {
       get: "/api/v1alpha1/{parent=projects/*}/workflows"
@@ -279,7 +279,7 @@ service StakingService {
 
   };
 
-  // Perform the next step in a workflow
+  // Perform the next step in a workflow.
   rpc PerformWorkflowStep(PerformWorkflowStepRequest) returns (Workflow) {
     option (google.api.http) = {
       post: "/api/v1alpha1/{name=projects/*/workflows/*}/step"
@@ -302,7 +302,7 @@ service StakingService {
   };
 
 
-  // Refresh the current step in a workflow
+  // Refresh the current step in a workflow.
   rpc RefreshWorkflowStep(RefreshWorkflowStepRequest) returns (Workflow) {
     option (google.api.http) = {
       post: "/api/v1alpha1/{name=projects/*/workflows/*}/refresh"
@@ -324,7 +324,7 @@ service StakingService {
 
   };
 
-  // View Staking context information given a specific network address
+  // View Staking context information given a specific network address.
   rpc ViewStakingContext(ViewStakingContextRequest) returns (ViewStakingContextResponse) {
     option (google.api.http) = {
       get: "/api/v1alpha1/viewStakingContext:view"
@@ -344,4 +344,3 @@ service StakingService {
     };
   };
 }
-

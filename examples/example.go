@@ -74,21 +74,27 @@ func main() {
 		log.Printf("got action: %s", action.Name)
 	}
 
-	// List all validators for a supported network.
-	validatorIter := stakingClient.ListValidators(ctx, &stakingpb.ListValidatorsRequest{
+	// List all staking targets for a supported network.
+	iter := stakingClient.ListStakingTargets(ctx, &stakingpb.ListStakingTargetsRequest{
 		Parent: network,
 	})
 
 	for {
-		validator, err := validatorIter.Next()
+		stakingTarget, err := iter.Next()
 		if errors.Is(err, iterator.Done) {
 			break
 		}
 
 		if err != nil {
-			log.Fatalf("error listing validators: %s", err.Error())
+			log.Fatalf("error listing staking targets: %s", err.Error())
 		}
 
-		log.Printf("got validator: %s", validator.Name)
+		switch stakingTarget.GetStakingTargets().(type) {
+		case *stakingpb.StakingTarget_Validator:
+			log.Printf("got validator: %s", stakingTarget.GetValidator().String())
+		case *stakingpb.StakingTarget_Contract:
+			log.Printf("got contract: %s", stakingTarget.GetContract().String())
+		}
+
 	}
 }

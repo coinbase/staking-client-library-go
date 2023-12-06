@@ -22,7 +22,7 @@ const (
 )
 
 // An Action resource, which represents an action you may take on a network,
-// posted to a validator. (i.e. stake, unstake)
+// posted to a validator (e.g. stake, unstake).
 type Action struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache

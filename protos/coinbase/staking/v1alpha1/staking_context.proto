@@ -25,13 +25,13 @@ message ViewStakingContextRequest {
 
 // The response message for the ViewStakingContext request.
 message ViewStakingContextResponse {
-  // The address you are getting a staking context for
+  // The address you are getting a staking context for.
   string address = 1 [(google.api.field_behavior) = REQUIRED];
 
   // The protocol specific details of the staking context.
   oneof staking_context_details {
 
-    // EthereumKiln staking context details
+    // EthereumKiln staking context details.
     EthereumKilnStakingContextDetails ethereum_kiln_staking_context_details = 2 [(google.api.field_behavior) = REQUIRED];
   }
 }

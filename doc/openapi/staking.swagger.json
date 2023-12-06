@@ -7,9 +7,6 @@
   },
   "tags": [
     {
-      "name": "StakingService"
-    },
-    {
       "name": "Protocol",
       "description": "Protocols details"
     },
@@ -28,6 +25,9 @@
     {
       "name": "Workflow",
       "description": "Workflow management details"
+    },
+    {
+      "name": "StakingService"
     }
   ],
   "host": "api.developer.coinbase.com",
@@ -174,7 +174,7 @@
           },
           {
             "name": "ethereumKilnStakingContextParameters.integratorContractAddress",
-            "description": "Integrator contract address",
+            "description": "Integrator contract address.",
             "in": "query",
             "required": false,
             "type": "string"
@@ -577,16 +577,16 @@
         ]
       }
     },
-    "/api/v1alpha1/{parent}/validators": {
+    "/api/v1alpha1/{parent}/stakingTargets": {
       "get": {
-        "summary": "List supported validators",
-        "description": "List supported validators",
-        "operationId": "listValidators",
+        "summary": "List supported staking targets",
+        "description": "List supported staking targets",
+        "operationId": "listStakingTargets",
         "responses": {
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/v1alpha1ListValidatorsResponse"
+              "$ref": "#/definitions/v1alpha1ListStakingTargetsResponse"
             }
           },
           "400": {
@@ -635,7 +635,7 @@
         "parameters": [
           {
             "name": "parent",
-            "description": "The resource name of the parent that owns\nthe collection of validators.\nFormat: protocols/{protocol}/networks/{network}",
+            "description": "The resource name of the parent that owns\nthe collection of staking targets.\nFormat: protocols/{protocol}/networks/{network}",
             "in": "path",
             "required": true,
             "type": "string",
@@ -643,7 +643,7 @@
           },
           {
             "name": "pageSize",
-            "description": "The maximum number of validators to return. The service may\nreturn fewer than this value.\n\nIf unspecified, 50 validators will be returned.\nThe maximum value is 1000; values over 1000 will be floored to 1000.",
+            "description": "The maximum number of staking targets to return. The service may\nreturn fewer than this value.\n\nIf unspecified, 100 staking targets will be returned.\nThe maximum value is 1000; values over 1000 will be floored to 1000.",
             "in": "query",
             "required": false,
             "type": "integer",
@@ -658,7 +658,7 @@
           }
         ],
         "tags": [
-          "Validator"
+          "StakingTarget"
         ]
       }
     },
@@ -727,14 +727,14 @@
           },
           {
             "name": "filter",
-            "description": "[AIP-160](https://google.aip.dev/160) filter\nSupported fields:\n- string delegator_address: \"0x...\"\n- string validator_address: \"0x...\"\n- string action: \"stake\", \"unstake\"\n- string protocol: \"polygon\"\n- string network: \"testnet\", \"mainnet\"\n- string amount: \"10000\"\n- string currency: \"MATIC\"",
+            "description": "[AIP-160](https://google.aip.dev/160) filter\nSupported fields:\n- string delegator_address: \"0x...\"\n- string validator_address: \"0x...\"\n- string action: \"stake\", \"unstake\"\n- string protocol: \"ethereum_kiln\"\n- string network: \"goerli\", \"mainnet\"\n- string amount: \"10000\"\n- string currency: \"ETH\"",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
             "name": "pageSize",
-            "description": "The maximum number of workflows to return. The service may\nreturn fewer than this value.\n\nIf unspecified, 50 workflows will be returned.\nThe maximum value is 1000; values over 1000 will be floored to 1000.",
+            "description": "The maximum number of workflows to return. The service may\nreturn fewer than this value.\n\nIf unspecified, 100 workflows will be returned.\nThe maximum value is 1000; values over 1000 will be floored to 1000.",
             "in": "query",
             "required": false,
             "type": "integer",
@@ -816,7 +816,7 @@
           },
           {
             "name": "workflow",
-            "description": "The workflow to create",
+            "description": "The workflow to create.",
             "in": "body",
             "required": true,
             "schema": {
@@ -844,8 +844,7 @@
         "WAIT_UNIT_CHECKPOINTS"
       ],
       "default": "WAIT_UNIT_UNSPECIFIED",
-      "description": "- WAIT_UNIT_UNSPECIFIED: Unspecified wait time\n - WAIT_UNIT_SECONDS: Wait time measured in seconds\n - WAIT_UNIT_BLOCKS: Wait time measured in blocks\n - WAIT_UNIT_EPOCHS: Wait time measured in epochs\n - WAIT_UNIT_CHECKPOINTS: Wait time measured in checkpoints",
-      "title": "The unit of wait time"
+      "description": "The unit of wait time.\n\n - WAIT_UNIT_UNSPECIFIED: Unspecified wait time.\n - WAIT_UNIT_SECONDS: Wait time measured in seconds.\n - WAIT_UNIT_BLOCKS: Wait time measured in blocks.\n - WAIT_UNIT_EPOCHS: Wait time measured in epochs.\n - WAIT_UNIT_CHECKPOINTS: Wait time measured in checkpoints."
     },
     "protobufAny": {
       "type": "object",
@@ -883,7 +882,7 @@
           "title": "The resource name of the Action.\nFormat: protocols/{protocolName}/networks/{networkName}/actions/{actionName}\nEx: protocols/polygon/networks/goerli/validators/stake"
         }
       },
-      "title": "An Action resource, which represents an action you may take on a network,\nposted to a validator. (i.e. stake, unstake)"
+      "description": "An Action resource, which represents an action you may take on a network,\nposted to a validator (e.g. stake, unstake)."
     },
     "v1alpha1Amount": {
       "type": "object",
@@ -899,6 +898,20 @@
       },
       "description": "The amount of a token you wish to perform an action\nwith."
     },
+    "v1alpha1Contract": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "title": "The resource name of the Contract Address.\nFormat: protocols/{protocolName}/networks/{networkName}/stakingTargets/{contractName}\nEx: protocols/polygon/networks/goerli/stakingTargets/0x857679d69fE50E7B722f94aCd2629d80C355163d"
+        },
+        "address": {
+          "type": "string",
+          "description": "The contract address you may submit actions to."
+        }
+      },
+      "description": "A Contract resource, which represents an active contract\nfor the given protocol network which you can submit an action\nto."
+    },
     "v1alpha1EthereumKilnClaimRewardsParameters": {
       "type": "object",
       "properties": {
@@ -908,11 +921,30 @@
         },
         "integratorContractAddress": {
           "type": "string",
-          "title": "The address of the integrator contract"
+          "description": "The address of the integrator contract."
         }
       },
       "description": "The parameters required for the claim rewards action on Ethereum Kiln.",
       "title": "EthereumKiln: Claim Rewards Parameters",
+      "required": [
+        "stakerAddress",
+        "integratorContractAddress"
+      ]
+    },
+    "v1alpha1EthereumKilnClaimStakeParameters": {
+      "type": "object",
+      "properties": {
+        "stakerAddress": {
+          "type": "string",
+          "description": "The address you wish to claim stake for."
+        },
+        "integratorContractAddress": {
+          "type": "string",
+          "title": "The address of the integrator contract"
+        }
+      },
+      "description": "The parameters required for the claim stake action on Ethereum Kiln.",
+      "title": "EthereumKiln: Claim Stake Parameters",
       "required": [
         "stakerAddress",
         "integratorContractAddress"
@@ -927,7 +959,7 @@
         },
         "integratorContractAddress": {
           "type": "string",
-          "title": "The address of the integrator contract"
+          "description": "The address of the integrator contract."
         },
         "amount": {
           "$ref": "#/definitions/v1alpha1Amount",
@@ -947,7 +979,7 @@
       "properties": {
         "ethereumBalance": {
           "$ref": "#/definitions/v1alpha1Amount",
-          "title": "The Ethereum balance of the address"
+          "description": "The Ethereum balance of the address.\nThis can be used to gate the stake action to make sure the requested stake amount\nis less than ethereum_balance."
         },
         "integratorShareBalance": {
           "$ref": "#/definitions/v1alpha1Amount",
@@ -955,11 +987,11 @@
         },
         "integratorShareUnderlyingBalance": {
           "$ref": "#/definitions/v1alpha1Amount",
-          "description": "The total Ethereum you can exchange for your integrator shares."
+          "title": "The total Ethereum you can exchange for your integrator shares.\nThis can be used to gate the unstake action to make sure the requested unstake amount\nis less than integrator_share_underlying_balance"
         },
         "totalExitableEth": {
           "$ref": "#/definitions/v1alpha1Amount",
-          "description": "The total amount of Ethereum you can redeem for all non-claimed vPool shares."
+          "description": "The total amount of Ethereum you can redeem for all non-claimed vPool shares.\nThis along with the condition total_shares_pending_exit == fulfillable_share_count\ncan be used to gate the claim_stake action."
         },
         "totalSharesPendingExit": {
           "$ref": "#/definitions/v1alpha1Amount",
@@ -978,7 +1010,7 @@
       "properties": {
         "integratorContractAddress": {
           "type": "string",
-          "title": "Integrator contract address"
+          "description": "Integrator contract address."
         }
       },
       "description": "The protocol specific parameters required for fetching a staking context.",
@@ -998,6 +1030,10 @@
         "claimRewardsParameters": {
           "$ref": "#/definitions/v1alpha1EthereumKilnClaimRewardsParameters",
           "description": "The parameters for claim rewards action on Ethereum Kiln."
+        },
+        "claimStakeParameters": {
+          "$ref": "#/definitions/v1alpha1EthereumKilnClaimStakeParameters",
+          "description": "The parameters for claim stake action on Ethereum Kiln."
         }
       },
       "description": "The parameters needed for staking on Ethereum via Kiln.",
@@ -1012,7 +1048,7 @@
         },
         "integratorContractAddress": {
           "type": "string",
-          "title": "The address of the integrator contract"
+          "description": "The address of the integrator contract."
         },
         "amount": {
           "$ref": "#/definitions/v1alpha1Amount",
@@ -1069,23 +1105,23 @@
       },
       "description": "The response message for ListProtocols."
     },
-    "v1alpha1ListValidatorsResponse": {
+    "v1alpha1ListStakingTargetsResponse": {
       "type": "object",
       "properties": {
-        "validators": {
+        "stakingTargets": {
           "type": "array",
           "items": {
             "type": "object",
-            "$ref": "#/definitions/v1alpha1Validator"
+            "$ref": "#/definitions/v1alpha1StakingTarget"
           },
-          "description": "The list of validators."
+          "description": "The list of staking targets."
         },
         "nextPageToken": {
           "type": "string",
           "description": "A token which can be provided as `page_token` to retrieve the next page.\nIf this field is omitted, there are no additional pages."
         }
       },
-      "description": "The response message for ListValidators."
+      "description": "The response message for ListStakingTargets."
     },
     "v1alpha1ListWorkflowsResponse": {
       "type": "object",
@@ -1117,7 +1153,7 @@
           "description": "Represents if the network is the mainnet network\nfor the given protocol."
         }
       },
-      "title": "A Network resource, which represents a blockchain network.\n(i.e. mainnet, testnet, etc.)"
+      "title": "A Network resource, which represents a blockchain network.\n(e.g. mainnet, testnet, etc.)"
     },
     "v1alpha1NonceOptions": {
       "type": "object",
@@ -1150,6 +1186,7 @@
           "description": "The public address of the validator you wish to\nperform the action to."
         }
       },
+      "description": "The parameters required for claim rewards action on Polygon.",
       "title": "The parameters needed to claim rewards on Polygon.",
       "required": [
         "delegatorAddress",
@@ -1168,6 +1205,7 @@
           "description": "The public address of the validator you wish to\nperform the action to."
         }
       },
+      "description": "The parameters required for unstake action on Polygon.",
       "title": "The parameters needed to restake on Polygon.",
       "required": [
         "delegatorAddress",
@@ -1190,6 +1228,7 @@
           "description": "The amount of the asset. For native assets or ERC-20 contracts, this is presented in terms of\natomic units (e.g., Wei for Ether) as a base-10 number."
         }
       },
+      "description": "The parameters required for stake action on Polygon.",
       "title": "The parameters needed to stake on Polygon.",
       "required": [
         "delegatorAddress",
@@ -1202,22 +1241,22 @@
       "properties": {
         "stakeParameters": {
           "$ref": "#/definitions/v1alpha1PolygonStakeParameters",
-          "title": "The parameters for stake action on Polygon"
+          "description": "The parameters for stake action on Polygon."
         },
         "unstakeParameters": {
           "$ref": "#/definitions/v1alpha1PolygonUnstakeParameters",
-          "title": "The parameters for unstake action on Polygon"
+          "description": "The parameters for unstake action on Polygon."
         },
         "restakeParameters": {
           "$ref": "#/definitions/v1alpha1PolygonRestakeParameters",
-          "title": "The parameters for restake action on Polygon"
+          "description": "The parameters for restake action on Polygon."
         },
         "claimRewardsParameters": {
           "$ref": "#/definitions/v1alpha1PolygonClaimRewardsParameters",
-          "title": "The parameters for claim rewards action on Polygon"
+          "description": "The parameters for claim rewards action on Polygon."
         }
       },
-      "title": "The parameters needed for staking on Polygon"
+      "description": "The parameters needed for staking on Polygon."
     },
     "v1alpha1PolygonUnstakeParameters": {
       "type": "object",
@@ -1235,6 +1274,7 @@
           "description": "The amount of the asset. For native assets or ERC-20 contracts, this is presented in terms of\natomic units (e.g., Wei for Ether) as a base-10 number."
         }
       },
+      "description": "The parameters required for unstake action on Polygon.",
       "title": "The parameters needed to unstake on Polygon.",
       "required": [
         "delegatorAddress",
@@ -1250,7 +1290,7 @@
           "title": "The resource name of the Protocol.\nFormat: protocols/{protocolName}\nEx: protocols/polygon"
         }
       },
-      "title": "A Protocol resource (i.e. polygon, ethereum, etc.)"
+      "description": "A Protocol resource (e.g. polygon, ethereum, etc.)."
     },
     "v1alpha1SolanaCreateStakeAccountParameters": {
       "type": "object",
@@ -1428,6 +1468,7 @@
           "description": "The parameters for merge stake action on Solana."
         }
       },
+      "description": "The parameters needed for staking on Solana.",
       "title": "Solana: Staking Parameters"
     },
     "v1alpha1SolanaWithdrawStakeParameters": {
@@ -1463,17 +1504,31 @@
         "amount"
       ]
     },
+    "v1alpha1StakingTarget": {
+      "type": "object",
+      "properties": {
+        "validator": {
+          "$ref": "#/definitions/v1alpha1Validator",
+          "description": "A validator to stake to."
+        },
+        "contract": {
+          "$ref": "#/definitions/v1alpha1Contract",
+          "description": "A contract to send a staking action to."
+        }
+      },
+      "description": "A Staking Target represents a destination that you perform an action on related to staking."
+    },
     "v1alpha1TxStepOutput": {
       "type": "object",
       "properties": {
         "unsignedTx": {
           "type": "string",
-          "title": "The unsigned transaction which was signed in order to be broadcasted",
+          "description": "The unsigned transaction which was signed in order to be broadcasted.",
           "readOnly": true
         },
         "signedTx": {
           "type": "string",
-          "title": "The signed transaction which was asked to be broadcasted",
+          "description": "The signed transaction which was asked to be broadcasted.",
           "readOnly": true
         },
         "txHash": {
@@ -1484,6 +1539,11 @@
         "state": {
           "$ref": "#/definitions/v1alpha1TxStepOutputState",
           "description": "The state of the transaction step.",
+          "readOnly": true
+        },
+        "errorMessage": {
+          "type": "string",
+          "description": "The error message if the transaction step failed.",
           "readOnly": true
         }
       },
@@ -1511,19 +1571,18 @@
         "STATE_PENDING_EXT_BROADCAST"
       ],
       "default": "STATE_UNSPECIFIED",
-      "description": "- STATE_UNSPECIFIED: Unspecified transaction state, this is for backwards compatibility.\n - STATE_NOT_CONSTRUCTED: Tx has not yet been constructed in the backend\n - STATE_CONSTRUCTED: Tx construction is over in the backend\n - STATE_PENDING_SIGNING: Tx is waiting to be signed\n - STATE_SIGNED: Tx has been signed and returned to the backend\n - STATE_BROADCASTING: Tx is being broadcasted to the network\n - STATE_CONFIRMING: Tx is waiting for confirmation\n - STATE_CONFIRMED: Tx has been confirmed to be included in a block\n - STATE_FINALIZED: Tx has been finalized\n - STATE_FAILED: Tx construction or broadcasting failed\n - STATE_SUCCESS: Tx has been successfully executed\n - STATE_CANCELING: Tx is being canceled\n - STATE_CANCELED: Tx has been canceled\n - STATE_CANCEL_FAILED: Tx cancellation failed\n - STATE_FAILED_REFRESHABLE: Tx failed but can be refreshed\n - STATE_REFRESHING: Tx is being refreshed\n - STATE_PENDING_EXT_BROADCAST: Tx is waiting to be externally broadcasted by the customer",
-      "title": "State defines an enumeration of states for a staking transaction"
+      "description": "State defines an enumeration of states for a staking transaction.\n\n - STATE_UNSPECIFIED: Unspecified transaction state, this is for backwards compatibility.\n - STATE_NOT_CONSTRUCTED: Tx has not yet been constructed in the backend.\n - STATE_CONSTRUCTED: Tx construction is over in the backend.\n - STATE_PENDING_SIGNING: Tx is waiting to be signed.\n - STATE_SIGNED: Tx has been signed and returned to the backend.\n - STATE_BROADCASTING: Tx is being broadcasted to the network.\n - STATE_CONFIRMING: Tx is waiting for confirmation.\n - STATE_CONFIRMED: Tx has been confirmed to be included in a block.\n - STATE_FINALIZED: Tx has been finalized.\n - STATE_FAILED: Tx construction or broadcasting failed.\n - STATE_SUCCESS: Tx has been successfully executed.\n - STATE_CANCELING: Tx is being canceled.\n - STATE_CANCELED: Tx has been canceled.\n - STATE_CANCEL_FAILED: Tx cancellation failed.\n - STATE_FAILED_REFRESHABLE: Tx failed but can be refreshed.\n - STATE_REFRESHING: Tx is being refreshed.\n - STATE_PENDING_EXT_BROADCAST: Tx is waiting to be externally broadcasted by the customer."
     },
     "v1alpha1Validator": {
       "type": "object",
       "properties": {
         "name": {
           "type": "string",
-          "title": "The resource name of the Validator.\nFormat: protocols/{protocolName}/networks/{networkName}/validators/{validatorName}\nEx: protocols/polygon/networks/goerli/validators/0x857679d69fE50E7B722f94aCd2629d80C355163d"
+          "title": "The resource name of the Validator.\nFormat: protocols/{protocolName}/networks/{networkName}/stakingTargets/{validatorName}\nEx: protocols/polygon/networks/goerli/stakingTargets/0x857679d69fE50E7B722f94aCd2629d80C355163d"
         },
-        "validatorAddress": {
+        "address": {
           "type": "string",
-          "description": "The public address of the validator that you may perform workflow actions on."
+          "description": "The public address of the validator."
         },
         "commissionRate": {
           "type": "number",
@@ -1531,18 +1590,18 @@
           "title": "The rate of commission for the validator"
         }
       },
-      "description": "A Validator resource, which represents an active validator\nfor the given protocol network which you can submit an action\nto."
+      "description": "A Validator resource represents an active validator for the given protocol network."
     },
     "v1alpha1ViewStakingContextResponse": {
       "type": "object",
       "properties": {
         "address": {
           "type": "string",
-          "title": "The address you are getting a staking context for"
+          "description": "The address you are getting a staking context for."
         },
         "ethereumKilnStakingContextDetails": {
           "$ref": "#/definitions/v1alpha1EthereumKilnStakingContextDetails",
-          "title": "EthereumKiln staking context details"
+          "description": "EthereumKiln staking context details."
         }
       },
       "description": "The response message for the ViewStakingContext request.",
@@ -1574,7 +1633,7 @@
         },
         "unit": {
           "$ref": "#/definitions/WaitStepOutputWaitUnit",
-          "title": "The wait unit (like checkpoint, block, epoch etc)",
+          "description": "The wait unit (like checkpoint, block, epoch etc).",
           "readOnly": true
         },
         "state": {
@@ -1583,7 +1642,7 @@
           "readOnly": true
         }
       },
-      "title": "The output details of a step where we wait for some kind of on-chain activity to finish like reaching a certain checkpoint, epoch or block"
+      "description": "The output details of a step where we wait for some kind of on-chain activity to finish like reaching a certain checkpoint, epoch or block."
     },
     "v1alpha1WaitStepOutputState": {
       "type": "string",
@@ -1594,8 +1653,7 @@
         "STATE_COMPLETED"
       ],
       "default": "STATE_UNSPECIFIED",
-      "description": "- STATE_UNSPECIFIED: Unspecified wait step state\n - STATE_NOT_STARTED: Wait step has not started\n - STATE_IN_PROGRESS: Wait step is in-progress\n - STATE_COMPLETED: Wait step completed",
-      "title": "WaitStepState defines an enumeration of states for a wait step"
+      "description": "WaitStepState defines an enumeration of states for a wait step.\n\n - STATE_UNSPECIFIED: Unspecified wait step state.\n - STATE_NOT_STARTED: Wait step has not started.\n - STATE_IN_PROGRESS: Wait step is in-progress.\n - STATE_COMPLETED: Wait step completed."
     },
     "v1alpha1Workflow": {
       "type": "object",
@@ -1611,19 +1669,19 @@
         },
         "polygonStakingParameters": {
           "$ref": "#/definitions/v1alpha1PolygonStakingParameters",
-          "title": "Polygon staking parameters"
+          "description": "Polygon staking parameters."
         },
         "solanaStakingParameters": {
           "$ref": "#/definitions/v1alpha1SolanaStakingParameters",
-          "title": "Solana staking parameters"
+          "description": "Solana staking parameters."
         },
         "ethereumKilnStakingParameters": {
           "$ref": "#/definitions/v1alpha1EthereumKilnStakingParameters",
-          "title": "EthereumKiln staking parameters"
+          "description": "EthereumKiln staking parameters."
         },
         "state": {
           "$ref": "#/definitions/v1alpha1WorkflowState",
-          "title": "The current state of the workflow",
+          "description": "The current state of the workflow.",
           "readOnly": true
         },
         "currentStepId": {
@@ -1644,13 +1702,13 @@
         "createTime": {
           "type": "string",
           "format": "date-time",
-          "title": "The timestamp the workflow was created",
+          "description": "The timestamp the workflow was created.",
           "readOnly": true
         },
         "updateTime": {
           "type": "string",
           "format": "date-time",
-          "title": "The timestamp the workflow was last updated",
+          "description": "The timestamp the workflow was last updated.",
           "readOnly": true
         },
         "skipBroadcast": {
@@ -1660,11 +1718,11 @@
         "completeTime": {
           "type": "string",
           "format": "date-time",
-          "title": "The timestamp the workflow completed",
+          "description": "The timestamp the workflow completed.",
           "readOnly": true
         }
       },
-      "title": "A Workflow resource",
+      "description": "A Workflow resource.",
       "required": [
         "action",
         "polygonStakingParameters",
@@ -1700,15 +1758,16 @@
         },
         "txStepOutput": {
           "$ref": "#/definitions/v1alpha1TxStepOutput",
-          "description": "The tx step output (i.e. transaction metadata such as unsigned tx, signed tx etc).",
+          "description": "The tx step output (e.g. transaction metadata such as unsigned tx, signed tx etc).",
           "readOnly": true
         },
         "waitStepOutput": {
           "$ref": "#/definitions/v1alpha1WaitStepOutput",
-          "title": "The waiting details for any kind like how many checkpoints away for unbonding etc",
+          "description": "The waiting details for any kind like how many checkpoints away for unbonding etc.",
           "readOnly": true
         }
       },
+      "description": "The information for a step in the workflow.",
       "title": "The information for a step in the workflow"
     }
   }

@@ -572,7 +572,7 @@ func (x *SolanaMergeStakeParameters) GetNonceOptions() *NonceOptions {
 	return nil
 }
 
-// The parameters needed for staking on Solana
+// The parameters needed for staking on Solana.
 type SolanaStakingParameters struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache

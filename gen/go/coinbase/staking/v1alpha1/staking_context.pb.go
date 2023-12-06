@@ -117,7 +117,7 @@ type ViewStakingContextResponse struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	// The address you are getting a staking context for
+	// The address you are getting a staking context for.
 	Address string `protobuf:"bytes,1,opt,name=address,proto3" json:"address,omitempty"`
 	// The protocol specific details of the staking context.
 	//
@@ -185,7 +185,7 @@ type isViewStakingContextResponse_StakingContextDetails interface {
 }
 
 type ViewStakingContextResponse_EthereumKilnStakingContextDetails struct {
-	// EthereumKiln staking context details
+	// EthereumKiln staking context details.
 	EthereumKilnStakingContextDetails *EthereumKilnStakingContextDetails `protobuf:"bytes,2,opt,name=ethereum_kiln_staking_context_details,json=ethereumKilnStakingContextDetails,proto3,oneof"`
 }
 

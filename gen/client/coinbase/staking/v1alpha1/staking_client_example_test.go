@@ -109,7 +109,7 @@ func ExampleStakingClient_ListNetworks() {
 	_ = resp
 }
 
-func ExampleStakingClient_ListValidators() {
+func ExampleStakingClient_ListStakingTargets() {
 	ctx := context.Background()
 	// This snippet has been automatically generated and should be regarded as a code template only.
 	// It will require modifications to work:
@@ -122,11 +122,11 @@ func ExampleStakingClient_ListValidators() {
 	}
 	defer c.Close()
 
-	req := &stakingpb.ListValidatorsRequest{
+	req := &stakingpb.ListStakingTargetsRequest{
 		// TODO: Fill request struct fields.
-		// See https://pkg.go.dev/github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/v1alpha1#ListValidatorsRequest.
+		// See https://pkg.go.dev/github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/v1alpha1#ListStakingTargetsRequest.
 	}
-	it := c.ListValidators(ctx, req)
+	it := c.ListStakingTargets(ctx, req)
 	for {
 		resp, err := it.Next()
 		if err == iterator.Done {

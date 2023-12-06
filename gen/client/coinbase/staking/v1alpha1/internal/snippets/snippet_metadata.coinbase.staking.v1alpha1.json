@@ -12,9 +12,9 @@
   },
   "snippets": [
     {
-      "regionTag": "staking_v1alpha1_generated_StakingService_CreateWorkflow_sync",
-      "title": "staking CreateWorkflow Sample",
-      "description": "CreateWorkflow create a workflow to perform an action",
+      "regionTag": "api_v1alpha1_generated_StakingService_CreateWorkflow_sync",
+      "title": "api CreateWorkflow Sample",
+      "description": "CreateWorkflow create a workflow to perform an action.",
       "file": "StakingClient/CreateWorkflow/main.go",
       "language": "GO",
       "clientMethod": {
@@ -58,9 +58,9 @@
       ]
     },
     {
-      "regionTag": "staking_v1alpha1_generated_StakingService_GetWorkflow_sync",
-      "title": "staking GetWorkflow Sample",
-      "description": "GetWorkflow get the current state of an active workflow",
+      "regionTag": "api_v1alpha1_generated_StakingService_GetWorkflow_sync",
+      "title": "api GetWorkflow Sample",
+      "description": "GetWorkflow get the current state of an active workflow.",
       "file": "StakingClient/GetWorkflow/main.go",
       "language": "GO",
       "clientMethod": {
@@ -104,9 +104,9 @@
       ]
     },
     {
-      "regionTag": "staking_v1alpha1_generated_StakingService_ListActions_sync",
-      "title": "staking ListActions Sample",
-      "description": "ListActions list supported actions for a given protocol and network",
+      "regionTag": "api_v1alpha1_generated_StakingService_ListActions_sync",
+      "title": "api ListActions Sample",
+      "description": "ListActions list supported actions for a given protocol and network.",
       "file": "StakingClient/ListActions/main.go",
       "language": "GO",
       "clientMethod": {
@@ -150,9 +150,9 @@
       ]
     },
     {
-      "regionTag": "staking_v1alpha1_generated_StakingService_ListNetworks_sync",
-      "title": "staking ListNetworks Sample",
-      "description": "ListNetworks list supported staking networks for a given protocol",
+      "regionTag": "api_v1alpha1_generated_StakingService_ListNetworks_sync",
+      "title": "api ListNetworks Sample",
+      "description": "ListNetworks list supported staking networks for a given protocol.",
       "file": "StakingClient/ListNetworks/main.go",
       "language": "GO",
       "clientMethod": {
@@ -196,9 +196,9 @@
       ]
     },
     {
-      "regionTag": "staking_v1alpha1_generated_StakingService_ListProtocols_sync",
-      "title": "staking ListProtocols Sample",
-      "description": "ListProtocols list supported protocols",
+      "regionTag": "api_v1alpha1_generated_StakingService_ListProtocols_sync",
+      "title": "api ListProtocols Sample",
+      "description": "ListProtocols list supported protocols.",
       "file": "StakingClient/ListProtocols/main.go",
       "language": "GO",
       "clientMethod": {
@@ -242,21 +242,21 @@
       ]
     },
     {
-      "regionTag": "staking_v1alpha1_generated_StakingService_ListValidators_sync",
-      "title": "staking ListValidators Sample",
-      "description": "ListValidators list supported validators for a given protocol and network",
-      "file": "StakingClient/ListValidators/main.go",
+      "regionTag": "api_v1alpha1_generated_StakingService_ListStakingTargets_sync",
+      "title": "api ListStakingTargets Sample",
+      "description": "ListStakingTargets list supported staking targets for a given protocol and network.",
+      "file": "StakingClient/ListStakingTargets/main.go",
       "language": "GO",
       "clientMethod": {
-        "shortName": "ListValidators",
-        "fullName": "coinbase.staking.v1alpha1.StakingClient.ListValidators",
+        "shortName": "ListStakingTargets",
+        "fullName": "coinbase.staking.v1alpha1.StakingClient.ListStakingTargets",
         "parameters": [
           {
             "type": "context.Context",
             "name": "ctx"
           },
           {
-            "type": "stakingpb.ListValidatorsRequest",
+            "type": "stakingpb.ListStakingTargetsRequest",
             "name": "req"
           },
           {
@@ -264,14 +264,14 @@
             "name": "opts"
           }
         ],
-        "resultType": "ValidatorIterator",
+        "resultType": "StakingTargetIterator",
         "client": {
           "shortName": "StakingClient",
           "fullName": "coinbase.staking.v1alpha1.StakingClient"
         },
         "method": {
-          "shortName": "ListValidators",
-          "fullName": "coinbase.staking.v1alpha1.StakingService.ListValidators",
+          "shortName": "ListStakingTargets",
+          "fullName": "coinbase.staking.v1alpha1.StakingService.ListStakingTargets",
           "service": {
             "shortName": "StakingService",
             "fullName": "coinbase.staking.v1alpha1.StakingService"
@@ -288,9 +288,9 @@
       ]
     },
     {
-      "regionTag": "staking_v1alpha1_generated_StakingService_ListWorkflows_sync",
-      "title": "staking ListWorkflows Sample",
-      "description": "ListWorkflows list all workflows in a project",
+      "regionTag": "api_v1alpha1_generated_StakingService_ListWorkflows_sync",
+      "title": "api ListWorkflows Sample",
+      "description": "ListWorkflows list all workflows in a project.",
       "file": "StakingClient/ListWorkflows/main.go",
       "language": "GO",
       "clientMethod": {
@@ -334,9 +334,9 @@
       ]
     },
     {
-      "regionTag": "staking_v1alpha1_generated_StakingService_PerformWorkflowStep_sync",
-      "title": "staking PerformWorkflowStep Sample",
-      "description": "PerformWorkflowStep perform the next step in a workflow",
+      "regionTag": "api_v1alpha1_generated_StakingService_PerformWorkflowStep_sync",
+      "title": "api PerformWorkflowStep Sample",
+      "description": "PerformWorkflowStep perform the next step in a workflow.",
       "file": "StakingClient/PerformWorkflowStep/main.go",
       "language": "GO",
       "clientMethod": {
@@ -380,9 +380,9 @@
       ]
     },
     {
-      "regionTag": "staking_v1alpha1_generated_StakingService_RefreshWorkflowStep_sync",
-      "title": "staking RefreshWorkflowStep Sample",
-      "description": "RefreshWorkflowStep refresh the current step in a workflow",
+      "regionTag": "api_v1alpha1_generated_StakingService_RefreshWorkflowStep_sync",
+      "title": "api RefreshWorkflowStep Sample",
+      "description": "RefreshWorkflowStep refresh the current step in a workflow.",
       "file": "StakingClient/RefreshWorkflowStep/main.go",
       "language": "GO",
       "clientMethod": {
@@ -426,9 +426,9 @@
       ]
     },
     {
-      "regionTag": "staking_v1alpha1_generated_StakingService_ViewStakingContext_sync",
-      "title": "staking ViewStakingContext Sample",
-      "description": "ViewStakingContext view Staking context information given a specific network address",
+      "regionTag": "api_v1alpha1_generated_StakingService_ViewStakingContext_sync",
+      "title": "api ViewStakingContext Sample",
+      "description": "ViewStakingContext view Staking context information given a specific network address.",
       "file": "StakingClient/ViewStakingContext/main.go",
       "language": "GO",
       "clientMethod": {

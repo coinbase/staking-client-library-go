@@ -46,17 +46,25 @@ To test that your API Key gives you access as expected to the Staking APIs:
 ### Create an Ethereum Kiln workflow
 To test creating an Ethereum Kiln workflow perform the following:
 
-1. Run `go run examples/ethereum_kiln/example.go`
-2. To proceed with the entire example.go, you will need to set the following variables in the example.go file and run the code again:
+1. Open `examples/ethereum_kiln/example.go` and set the following variables:
    * `projectID` - this is the project ID of your Coinbase Cloud project
    * `privateKey` - this is the private key of the address with this you want to perform staking actions
    * `stakerAddress` - this is the address with which you want to perform staking actions
+   * `integratorContractAddress` - this is the integrator contract address to which you want to stake. This is typically procured by engaging with the Coinbase Cloud sales team.
+2. Run `go run examples/ethereum_kiln/example.go`
 
 ### Create a Polygon workflow
 To test creating a Polygon workflow perform the following:
 
-1. Run `go run examples/polygon/example.go`
-2. To proceed with the entire example.go, you will need to set the following variables in the example.go file and run the code again:
+1. Open `examples/polygon/example.go` and set the following variables:
    * `projectID` - this is the project ID of your Coinbase Cloud project
    * `privateKey` - this is the private key of the address with this you want to perform staking actions
    * `delegatorAddress` - this is the address with which you want to perform staking actions
+2. Run `go run examples/polygon/example.go`
+
+### Listing workflows
+To test listing workflows within a project, perform the following:
+
+1. Open `examples/example_list_workflows.go` and set the following variables:
+   * `projectID` - this is the project ID of your Coinbase Cloud project
+2. Run `go run examples/example_list_workflows.go`

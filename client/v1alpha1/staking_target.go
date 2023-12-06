@@ -13,49 +13,49 @@ import (
 	stakingpb "github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/v1alpha1"
 )
 
-// ValidatorIterator is an interface for iterating through the response to ListValidators.
-type ValidatorIterator interface {
+// StakingTargetIterator is an interface for iterating through the response to ListStakingTargets.
+type StakingTargetIterator interface {
 	// PageInfo supports pagination. See the google.golang.org/api/iterator package for details.
 	PageInfo() *iterator.PageInfo
 
 	// Next returns the next result. Its second return value is iterator.Done if there are no more
 	// results. Once Next returns Done, all subsequent calls will return Done.
-	Next() (*stakingpb.Validator, error)
+	Next() (*stakingpb.StakingTarget, error)
 
 	// Response is the raw response for the current page.
 	// Calling Next() or InternalFetch() updates this value.
-	Response() *stakingpb.ListValidatorsResponse
+	Response() *stakingpb.ListStakingTargetsResponse
 }
 
-// ValidatorIteratorImpl is an implementation of ValidatorIterator that unwraps correctly.
-type ValidatorIteratorImpl struct {
-	iter *innerClient.ValidatorIterator
+// StakingTargetIteratorImpl is an implementation of StakingTargetIterator that unwraps correctly.
+type StakingTargetIteratorImpl struct {
+	iter *innerClient.StakingTargetIterator
 }
 
 // PageInfo supports pagination. See the google.golang.org/api/iterator package for details.
-func (n *ValidatorIteratorImpl) PageInfo() *iterator.PageInfo {
+func (n *StakingTargetIteratorImpl) PageInfo() *iterator.PageInfo {
 	return n.iter.PageInfo()
 }
 
 // Next returns the next result. Its second return value is iterator.Done if there are no more
 // results. Once Next returns Done, all subsequent calls will return Done.
-func (n *ValidatorIteratorImpl) Next() (*stakingpb.Validator, error) {
-	validator, err := n.iter.Next()
+func (n *StakingTargetIteratorImpl) Next() (*stakingpb.StakingTarget, error) {
+	stakingTarget, err := n.iter.Next()
 	if errors.Is(err, iterator.Done) || err == nil {
-		return validator, err
+		return stakingTarget, err
 	}
 
-	return validator, stakingerrors.FromError(err)
+	return stakingTarget, stakingerrors.FromError(err)
 }
 
 // Response is the raw response for the current page.
 // Calling Next() or InternalFetch() updates this value.
-func (n *ValidatorIteratorImpl) Response() *stakingpb.ListValidatorsResponse {
+func (n *StakingTargetIteratorImpl) Response() *stakingpb.ListStakingTargetsResponse {
 	if n.iter.Response == nil {
 		return nil
 	}
 
-	response, ok := n.iter.Response.(*stakingpb.ListValidatorsResponse)
+	response, ok := n.iter.Response.(*stakingpb.ListStakingTargetsResponse)
 	if !ok {
 		return nil
 	}
@@ -63,11 +63,11 @@ func (n *ValidatorIteratorImpl) Response() *stakingpb.ListValidatorsResponse {
 	return response
 }
 
-// ListValidators lists the Validators supported by Staking API.
-func (s *StakingServiceClient) ListValidators(
+// ListStakingTargets lists the StakingTargets supported by Staking API.
+func (s *StakingServiceClient) ListStakingTargets(
 	ctx context.Context,
-	req *stakingpb.ListValidatorsRequest,
+	req *stakingpb.ListStakingTargetsRequest,
 	opts ...gax.CallOption,
-) ValidatorIterator {
-	return &ValidatorIteratorImpl{iter: s.client.ListValidators(ctx, req, opts...)}
+) StakingTargetIterator {
+	return &StakingTargetIteratorImpl{iter: s.client.ListStakingTargets(ctx, req, opts...)}
 }

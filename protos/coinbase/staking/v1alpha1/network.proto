@@ -8,7 +8,7 @@ import "google/api/field_behavior.proto";
 import "google/api/resource.proto";
 
 // A Network resource, which represents a blockchain network.
-// (i.e. mainnet, testnet, etc.)
+// (e.g. mainnet, testnet, etc.)
 message Network {
   option (google.api.resource) = {
     type: "staking.coinbase.com/Network"

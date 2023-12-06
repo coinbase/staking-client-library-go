@@ -17,7 +17,7 @@ message EthereumKilnStakeParameters {
   // The address you wish to stake from.
   string staker_address = 1 [(google.api.field_behavior) = REQUIRED];
 
-  // The address of the integrator contract
+  // The address of the integrator contract.
   string integrator_contract_address = 2 [(google.api.field_behavior) = REQUIRED];
 
   // The amount of Ethereum to stake in wei.
@@ -33,7 +33,7 @@ message EthereumKilnUnstakeParameters {
   // The address you wish to unstake from.
   string staker_address = 1 [(google.api.field_behavior) = REQUIRED];
 
-  // The address of the integrator contract
+  // The address of the integrator contract.
   string integrator_contract_address = 2 [(google.api.field_behavior) = REQUIRED];
 
   // The amount of Ethereum to unstake in wei.
@@ -42,11 +42,25 @@ message EthereumKilnUnstakeParameters {
 
 // The parameters required for the claim rewards action on Ethereum Kiln.
 message EthereumKilnClaimRewardsParameters {
+  option deprecated = true;
   option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
     json_schema: {title: "EthereumKiln: Claim Rewards Parameters"}
   };
 
   // The address you wish to claim rewards for.
+  string staker_address = 1 [(google.api.field_behavior) = REQUIRED];
+
+  // The address of the integrator contract.
+  string integrator_contract_address = 2 [(google.api.field_behavior) = REQUIRED];
+}
+
+// The parameters required for the claim stake action on Ethereum Kiln.
+message EthereumKilnClaimStakeParameters {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema: {title: "EthereumKiln: Claim Stake Parameters"}
+  };
+
+  // The address you wish to claim stake for.
   string staker_address = 1 [(google.api.field_behavior) = REQUIRED];
 
   // The address of the integrator contract
@@ -66,6 +80,8 @@ message EthereumKilnStakingParameters {
     EthereumKilnUnstakeParameters unstake_parameters = 2;
     // The parameters for claim rewards action on Ethereum Kiln.
     EthereumKilnClaimRewardsParameters claim_rewards_parameters = 3;
+    // The parameters for claim stake action on Ethereum Kiln.
+    EthereumKilnClaimStakeParameters claim_stake_parameters = 4;
   }
 }
 
@@ -75,7 +91,7 @@ message EthereumKilnStakingContextParameters {
     json_schema: {title: "EthereumKiln: Staking Context Parameters"}
   };
 
-  // Integrator contract address
+  // Integrator contract address.
   string integrator_contract_address = 1;
 }
 
@@ -85,16 +101,22 @@ message EthereumKilnStakingContextDetails {
     json_schema: {title: "EthereumKiln: Staking context details"}
   };
 
-  // The Ethereum balance of the address
+  // The Ethereum balance of the address.
+  // This can be used to gate the stake action to make sure the requested stake amount
+  // is less than ethereum_balance.
   Amount ethereum_balance = 1;
 
   // The number of integrator shares owned by the address.
   Amount integrator_share_balance = 2;
 
   // The total Ethereum you can exchange for your integrator shares.
+  // This can be used to gate the unstake action to make sure the requested unstake amount
+  // is less than integrator_share_underlying_balance
   Amount integrator_share_underlying_balance = 3;
 
   // The total amount of Ethereum you can redeem for all non-claimed vPool shares.
+  // This along with the condition total_shares_pending_exit == fulfillable_share_count
+  // can be used to gate the claim_stake action.
   Amount total_exitable_eth = 4;
 
   // The number of vPool shares are eligible to receive now or at a later point in time.

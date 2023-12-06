@@ -21,7 +21,7 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-// A Protocol resource (i.e. polygon, ethereum, etc.)
+// A Protocol resource (e.g. polygon, ethereum, etc.).
 type Protocol struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache

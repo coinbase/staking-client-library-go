@@ -21,7 +21,7 @@ const _ = grpc.SupportPackageIsVersion7
 const (
 	StakingService_ListProtocols_FullMethodName       = "/coinbase.staking.v1alpha1.StakingService/ListProtocols"
 	StakingService_ListNetworks_FullMethodName        = "/coinbase.staking.v1alpha1.StakingService/ListNetworks"
-	StakingService_ListValidators_FullMethodName      = "/coinbase.staking.v1alpha1.StakingService/ListValidators"
+	StakingService_ListStakingTargets_FullMethodName  = "/coinbase.staking.v1alpha1.StakingService/ListStakingTargets"
 	StakingService_ListActions_FullMethodName         = "/coinbase.staking.v1alpha1.StakingService/ListActions"
 	StakingService_CreateWorkflow_FullMethodName      = "/coinbase.staking.v1alpha1.StakingService/CreateWorkflow"
 	StakingService_GetWorkflow_FullMethodName         = "/coinbase.staking.v1alpha1.StakingService/GetWorkflow"
@@ -35,25 +35,25 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type StakingServiceClient interface {
-	// List supported protocols
+	// List supported protocols.
 	ListProtocols(ctx context.Context, in *ListProtocolsRequest, opts ...grpc.CallOption) (*ListProtocolsResponse, error)
-	// List supported staking networks for a given protocol
+	// List supported staking networks for a given protocol.
 	ListNetworks(ctx context.Context, in *ListNetworksRequest, opts ...grpc.CallOption) (*ListNetworksResponse, error)
-	// List supported validators for a given protocol and network
-	ListValidators(ctx context.Context, in *ListValidatorsRequest, opts ...grpc.CallOption) (*ListValidatorsResponse, error)
-	// List supported actions for a given protocol and network
+	// List supported staking targets for a given protocol and network.
+	ListStakingTargets(ctx context.Context, in *ListStakingTargetsRequest, opts ...grpc.CallOption) (*ListStakingTargetsResponse, error)
+	// List supported actions for a given protocol and network.
 	ListActions(ctx context.Context, in *ListActionsRequest, opts ...grpc.CallOption) (*ListActionsResponse, error)
-	// Create a workflow to perform an action
+	// Create a workflow to perform an action.
 	CreateWorkflow(ctx context.Context, in *CreateWorkflowRequest, opts ...grpc.CallOption) (*Workflow, error)
-	// Get the current state of an active workflow
+	// Get the current state of an active workflow.
 	GetWorkflow(ctx context.Context, in *GetWorkflowRequest, opts ...grpc.CallOption) (*Workflow, error)
-	// List all workflows in a project
+	// List all workflows in a project.
 	ListWorkflows(ctx context.Context, in *ListWorkflowsRequest, opts ...grpc.CallOption) (*ListWorkflowsResponse, error)
-	// Perform the next step in a workflow
+	// Perform the next step in a workflow.
 	PerformWorkflowStep(ctx context.Context, in *PerformWorkflowStepRequest, opts ...grpc.CallOption) (*Workflow, error)
-	// Refresh the current step in a workflow
+	// Refresh the current step in a workflow.
 	RefreshWorkflowStep(ctx context.Context, in *RefreshWorkflowStepRequest, opts ...grpc.CallOption) (*Workflow, error)
-	// View Staking context information given a specific network address
+	// View Staking context information given a specific network address.
 	ViewStakingContext(ctx context.Context, in *ViewStakingContextRequest, opts ...grpc.CallOption) (*ViewStakingContextResponse, error)
 }
 
@@ -83,9 +83,9 @@ func (c *stakingServiceClient) ListNetworks(ctx context.Context, in *ListNetwork
 	return out, nil
 }
 
-func (c *stakingServiceClient) ListValidators(ctx context.Context, in *ListValidatorsRequest, opts ...grpc.CallOption) (*ListValidatorsResponse, error) {
-	out := new(ListValidatorsResponse)
-	err := c.cc.Invoke(ctx, StakingService_ListValidators_FullMethodName, in, out, opts...)
+func (c *stakingServiceClient) ListStakingTargets(ctx context.Context, in *ListStakingTargetsRequest, opts ...grpc.CallOption) (*ListStakingTargetsResponse, error) {
+	out := new(ListStakingTargetsResponse)
+	err := c.cc.Invoke(ctx, StakingService_ListStakingTargets_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -159,25 +159,25 @@ func (c *stakingServiceClient) ViewStakingContext(ctx context.Context, in *ViewS
 // All implementations must embed UnimplementedStakingServiceServer
 // for forward compatibility
 type StakingServiceServer interface {
-	// List supported protocols
+	// List supported protocols.
 	ListProtocols(context.Context, *ListProtocolsRequest) (*ListProtocolsResponse, error)
-	// List supported staking networks for a given protocol
+	// List supported staking networks for a given protocol.
 	ListNetworks(context.Context, *ListNetworksRequest) (*ListNetworksResponse, error)
-	// List supported validators for a given protocol and network
-	ListValidators(context.Context, *ListValidatorsRequest) (*ListValidatorsResponse, error)
-	// List supported actions for a given protocol and network
+	// List supported staking targets for a given protocol and network.
+	ListStakingTargets(context.Context, *ListStakingTargetsRequest) (*ListStakingTargetsResponse, error)
+	// List supported actions for a given protocol and network.
 	ListActions(context.Context, *ListActionsRequest) (*ListActionsResponse, error)
-	// Create a workflow to perform an action
+	// Create a workflow to perform an action.
 	CreateWorkflow(context.Context, *CreateWorkflowRequest) (*Workflow, error)
-	// Get the current state of an active workflow
+	// Get the current state of an active workflow.
 	GetWorkflow(context.Context, *GetWorkflowRequest) (*Workflow, error)
-	// List all workflows in a project
+	// List all workflows in a project.
 	ListWorkflows(context.Context, *ListWorkflowsRequest) (*ListWorkflowsResponse, error)
-	// Perform the next step in a workflow
+	// Perform the next step in a workflow.
 	PerformWorkflowStep(context.Context, *PerformWorkflowStepRequest) (*Workflow, error)
-	// Refresh the current step in a workflow
+	// Refresh the current step in a workflow.
 	RefreshWorkflowStep(context.Context, *RefreshWorkflowStepRequest) (*Workflow, error)
-	// View Staking context information given a specific network address
+	// View Staking context information given a specific network address.
 	ViewStakingContext(context.Context, *ViewStakingContextRequest) (*ViewStakingContextResponse, error)
 	mustEmbedUnimplementedStakingServiceServer()
 }
@@ -192,8 +192,8 @@ func (UnimplementedStakingServiceServer) ListProtocols(context.Context, *ListPro
 func (UnimplementedStakingServiceServer) ListNetworks(context.Context, *ListNetworksRequest) (*ListNetworksResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListNetworks not implemented")
 }
-func (UnimplementedStakingServiceServer) ListValidators(context.Context, *ListValidatorsRequest) (*ListValidatorsResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ListValidators not implemented")
+func (UnimplementedStakingServiceServer) ListStakingTargets(context.Context, *ListStakingTargetsRequest) (*ListStakingTargetsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListStakingTargets not implemented")
 }
 func (UnimplementedStakingServiceServer) ListActions(context.Context, *ListActionsRequest) (*ListActionsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListActions not implemented")
@@ -265,20 +265,20 @@ func _StakingService_ListNetworks_Handler(srv interface{}, ctx context.Context, 
 	return interceptor(ctx, in, info, handler)
 }
 
-func _StakingService_ListValidators_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListValidatorsRequest)
+func _StakingService_ListStakingTargets_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListStakingTargetsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(StakingServiceServer).ListValidators(ctx, in)
+		return srv.(StakingServiceServer).ListStakingTargets(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: StakingService_ListValidators_FullMethodName,
+		FullMethod: StakingService_ListStakingTargets_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(StakingServiceServer).ListValidators(ctx, req.(*ListValidatorsRequest))
+		return srv.(StakingServiceServer).ListStakingTargets(ctx, req.(*ListStakingTargetsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -425,8 +425,8 @@ var StakingService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _StakingService_ListNetworks_Handler,
 		},
 		{
-			MethodName: "ListValidators",
-			Handler:    _StakingService_ListValidators_Handler,
+			MethodName: "ListStakingTargets",
+			Handler:    _StakingService_ListStakingTargets_Handler,
 		},
 		{
 			MethodName: "ListActions",
