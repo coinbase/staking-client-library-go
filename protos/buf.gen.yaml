@@ -1,0 +1,45 @@
+version: v1
+plugins:
+  - name: go
+    out: ./gen/go
+    opt:
+      - paths=source_relative
+  # generate gRPC stubs in golang
+  - name: go-grpc
+    out: ./gen/go
+    opt:
+      - paths=source_relative
+  # generate reverse proxy from protocol definitions
+  - name: grpc-gateway
+    out: ./gen/go
+    opt:
+      - paths=source_relative
+  - name: go-aip
+    out: ./gen/go
+    opt:
+      - paths=source_relative
+  - name: openapiv2
+    out: ./doc/openapi
+    opt:
+      - allow_merge=true
+      - merge_file_name=staking
+  - name: doc
+    out: ./doc/doc
+    opt:
+      - markdown,v1alpha1.md:store/*
+  - name: go_gapic
+    out: ./gen/client/
+    opt:
+      - transport=grpc+rest
+      - release-level=alpha
+      - go-gapic-package=github.com/coinbase/staking-client-library-go/gen/client/coinbase/staking/v1alpha1;v1alpha1
+      - module=github.com/coinbase/staking-client-library-go/gen/client
+      - Mcoinbase/staking/v1alpha1/api.proto=github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/v1alpha1;stakingpb
+      - Mcoinbase/staking/v1alpha1/action.proto=github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/v1alpha1;stakingpb
+      - Mcoinbase/staking/v1alpha1/common.proto=github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/v1alpha1;stakingpb
+      - Mcoinbase/staking/v1alpha1/network.proto=github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/v1alpha1;stakingpb
+      - Mcoinbase/staking/v1alpha1/polygon.proto=github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/v1alpha1;stakingpb
+      - Mcoinbase/staking/v1alpha1/protocol.proto=github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/v1alpha1;stakingpb
+      - Mcoinbase/staking/v1alpha1/staking_target.proto=github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/v1alpha1;stakingpb
+      - Mcoinbase/staking/v1alpha1/workflow.proto=github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/v1alpha1;stakingpb
+      - Mcoinbase/staking/v1alpha1/staking_context.proto=github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/v1alpha1;stakingpb

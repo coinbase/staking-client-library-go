@@ -1,0 +1,475 @@
+{
+  "clientLibrary": {
+    "name": "github.com/coinbase/staking-client-library-go/gen/client/coinbase/staking/v1alpha1",
+    "version": "$VERSION",
+    "language": "GO",
+    "apis": [
+      {
+        "id": "coinbase.staking.v1alpha1",
+        "version": "v1alpha1"
+      }
+    ]
+  },
+  "snippets": [
+    {
+      "regionTag": "api_v1alpha1_generated_StakingService_CreateWorkflow_sync",
+      "title": "api CreateWorkflow Sample",
+      "description": "CreateWorkflow create a workflow to perform an action.",
+      "file": "StakingClient/CreateWorkflow/main.go",
+      "language": "GO",
+      "clientMethod": {
+        "shortName": "CreateWorkflow",
+        "fullName": "coinbase.staking.v1alpha1.StakingClient.CreateWorkflow",
+        "parameters": [
+          {
+            "type": "context.Context",
+            "name": "ctx"
+          },
+          {
+            "type": "stakingpb.CreateWorkflowRequest",
+            "name": "req"
+          },
+          {
+            "type": "...gax.CallOption",
+            "name": "opts"
+          }
+        ],
+        "resultType": "*stakingpb.Workflow",
+        "client": {
+          "shortName": "StakingClient",
+          "fullName": "coinbase.staking.v1alpha1.StakingClient"
+        },
+        "method": {
+          "shortName": "CreateWorkflow",
+          "fullName": "coinbase.staking.v1alpha1.StakingService.CreateWorkflow",
+          "service": {
+            "shortName": "StakingService",
+            "fullName": "coinbase.staking.v1alpha1.StakingService"
+          }
+        }
+      },
+      "origin": "API_DEFINITION",
+      "segments": [
+        {
+          "start": 18,
+          "end": 53,
+          "type": "FULL"
+        }
+      ]
+    },
+    {
+      "regionTag": "api_v1alpha1_generated_StakingService_GetWorkflow_sync",
+      "title": "api GetWorkflow Sample",
+      "description": "GetWorkflow get the current state of an active workflow.",
+      "file": "StakingClient/GetWorkflow/main.go",
+      "language": "GO",
+      "clientMethod": {
+        "shortName": "GetWorkflow",
+        "fullName": "coinbase.staking.v1alpha1.StakingClient.GetWorkflow",
+        "parameters": [
+          {
+            "type": "context.Context",
+            "name": "ctx"
+          },
+          {
+            "type": "stakingpb.GetWorkflowRequest",
+            "name": "req"
+          },
+          {
+            "type": "...gax.CallOption",
+            "name": "opts"
+          }
+        ],
+        "resultType": "*stakingpb.Workflow",
+        "client": {
+          "shortName": "StakingClient",
+          "fullName": "coinbase.staking.v1alpha1.StakingClient"
+        },
+        "method": {
+          "shortName": "GetWorkflow",
+          "fullName": "coinbase.staking.v1alpha1.StakingService.GetWorkflow",
+          "service": {
+            "shortName": "StakingService",
+            "fullName": "coinbase.staking.v1alpha1.StakingService"
+          }
+        }
+      },
+      "origin": "API_DEFINITION",
+      "segments": [
+        {
+          "start": 18,
+          "end": 53,
+          "type": "FULL"
+        }
+      ]
+    },
+    {
+      "regionTag": "api_v1alpha1_generated_StakingService_ListActions_sync",
+      "title": "api ListActions Sample",
+      "description": "ListActions list supported actions for a given protocol and network.",
+      "file": "StakingClient/ListActions/main.go",
+      "language": "GO",
+      "clientMethod": {
+        "shortName": "ListActions",
+        "fullName": "coinbase.staking.v1alpha1.StakingClient.ListActions",
+        "parameters": [
+          {
+            "type": "context.Context",
+            "name": "ctx"
+          },
+          {
+            "type": "stakingpb.ListActionsRequest",
+            "name": "req"
+          },
+          {
+            "type": "...gax.CallOption",
+            "name": "opts"
+          }
+        ],
+        "resultType": "*stakingpb.ListActionsResponse",
+        "client": {
+          "shortName": "StakingClient",
+          "fullName": "coinbase.staking.v1alpha1.StakingClient"
+        },
+        "method": {
+          "shortName": "ListActions",
+          "fullName": "coinbase.staking.v1alpha1.StakingService.ListActions",
+          "service": {
+            "shortName": "StakingService",
+            "fullName": "coinbase.staking.v1alpha1.StakingService"
+          }
+        }
+      },
+      "origin": "API_DEFINITION",
+      "segments": [
+        {
+          "start": 18,
+          "end": 53,
+          "type": "FULL"
+        }
+      ]
+    },
+    {
+      "regionTag": "api_v1alpha1_generated_StakingService_ListNetworks_sync",
+      "title": "api ListNetworks Sample",
+      "description": "ListNetworks list supported staking networks for a given protocol.",
+      "file": "StakingClient/ListNetworks/main.go",
+      "language": "GO",
+      "clientMethod": {
+        "shortName": "ListNetworks",
+        "fullName": "coinbase.staking.v1alpha1.StakingClient.ListNetworks",
+        "parameters": [
+          {
+            "type": "context.Context",
+            "name": "ctx"
+          },
+          {
+            "type": "stakingpb.ListNetworksRequest",
+            "name": "req"
+          },
+          {
+            "type": "...gax.CallOption",
+            "name": "opts"
+          }
+        ],
+        "resultType": "*stakingpb.ListNetworksResponse",
+        "client": {
+          "shortName": "StakingClient",
+          "fullName": "coinbase.staking.v1alpha1.StakingClient"
+        },
+        "method": {
+          "shortName": "ListNetworks",
+          "fullName": "coinbase.staking.v1alpha1.StakingService.ListNetworks",
+          "service": {
+            "shortName": "StakingService",
+            "fullName": "coinbase.staking.v1alpha1.StakingService"
+          }
+        }
+      },
+      "origin": "API_DEFINITION",
+      "segments": [
+        {
+          "start": 18,
+          "end": 53,
+          "type": "FULL"
+        }
+      ]
+    },
+    {
+      "regionTag": "api_v1alpha1_generated_StakingService_ListProtocols_sync",
+      "title": "api ListProtocols Sample",
+      "description": "ListProtocols list supported protocols.",
+      "file": "StakingClient/ListProtocols/main.go",
+      "language": "GO",
+      "clientMethod": {
+        "shortName": "ListProtocols",
+        "fullName": "coinbase.staking.v1alpha1.StakingClient.ListProtocols",
+        "parameters": [
+          {
+            "type": "context.Context",
+            "name": "ctx"
+          },
+          {
+            "type": "stakingpb.ListProtocolsRequest",
+            "name": "req"
+          },
+          {
+            "type": "...gax.CallOption",
+            "name": "opts"
+          }
+        ],
+        "resultType": "*stakingpb.ListProtocolsResponse",
+        "client": {
+          "shortName": "StakingClient",
+          "fullName": "coinbase.staking.v1alpha1.StakingClient"
+        },
+        "method": {
+          "shortName": "ListProtocols",
+          "fullName": "coinbase.staking.v1alpha1.StakingService.ListProtocols",
+          "service": {
+            "shortName": "StakingService",
+            "fullName": "coinbase.staking.v1alpha1.StakingService"
+          }
+        }
+      },
+      "origin": "API_DEFINITION",
+      "segments": [
+        {
+          "start": 18,
+          "end": 53,
+          "type": "FULL"
+        }
+      ]
+    },
+    {
+      "regionTag": "api_v1alpha1_generated_StakingService_ListStakingTargets_sync",
+      "title": "api ListStakingTargets Sample",
+      "description": "ListStakingTargets list supported staking targets for a given protocol and network.",
+      "file": "StakingClient/ListStakingTargets/main.go",
+      "language": "GO",
+      "clientMethod": {
+        "shortName": "ListStakingTargets",
+        "fullName": "coinbase.staking.v1alpha1.StakingClient.ListStakingTargets",
+        "parameters": [
+          {
+            "type": "context.Context",
+            "name": "ctx"
+          },
+          {
+            "type": "stakingpb.ListStakingTargetsRequest",
+            "name": "req"
+          },
+          {
+            "type": "...gax.CallOption",
+            "name": "opts"
+          }
+        ],
+        "resultType": "StakingTargetIterator",
+        "client": {
+          "shortName": "StakingClient",
+          "fullName": "coinbase.staking.v1alpha1.StakingClient"
+        },
+        "method": {
+          "shortName": "ListStakingTargets",
+          "fullName": "coinbase.staking.v1alpha1.StakingService.ListStakingTargets",
+          "service": {
+            "shortName": "StakingService",
+            "fullName": "coinbase.staking.v1alpha1.StakingService"
+          }
+        }
+      },
+      "origin": "API_DEFINITION",
+      "segments": [
+        {
+          "start": 18,
+          "end": 60,
+          "type": "FULL"
+        }
+      ]
+    },
+    {
+      "regionTag": "api_v1alpha1_generated_StakingService_ListWorkflows_sync",
+      "title": "api ListWorkflows Sample",
+      "description": "ListWorkflows list all workflows in a project.",
+      "file": "StakingClient/ListWorkflows/main.go",
+      "language": "GO",
+      "clientMethod": {
+        "shortName": "ListWorkflows",
+        "fullName": "coinbase.staking.v1alpha1.StakingClient.ListWorkflows",
+        "parameters": [
+          {
+            "type": "context.Context",
+            "name": "ctx"
+          },
+          {
+            "type": "stakingpb.ListWorkflowsRequest",
+            "name": "req"
+          },
+          {
+            "type": "...gax.CallOption",
+            "name": "opts"
+          }
+        ],
+        "resultType": "WorkflowIterator",
+        "client": {
+          "shortName": "StakingClient",
+          "fullName": "coinbase.staking.v1alpha1.StakingClient"
+        },
+        "method": {
+          "shortName": "ListWorkflows",
+          "fullName": "coinbase.staking.v1alpha1.StakingService.ListWorkflows",
+          "service": {
+            "shortName": "StakingService",
+            "fullName": "coinbase.staking.v1alpha1.StakingService"
+          }
+        }
+      },
+      "origin": "API_DEFINITION",
+      "segments": [
+        {
+          "start": 18,
+          "end": 60,
+          "type": "FULL"
+        }
+      ]
+    },
+    {
+      "regionTag": "api_v1alpha1_generated_StakingService_PerformWorkflowStep_sync",
+      "title": "api PerformWorkflowStep Sample",
+      "description": "PerformWorkflowStep perform the next step in a workflow.",
+      "file": "StakingClient/PerformWorkflowStep/main.go",
+      "language": "GO",
+      "clientMethod": {
+        "shortName": "PerformWorkflowStep",
+        "fullName": "coinbase.staking.v1alpha1.StakingClient.PerformWorkflowStep",
+        "parameters": [
+          {
+            "type": "context.Context",
+            "name": "ctx"
+          },
+          {
+            "type": "stakingpb.PerformWorkflowStepRequest",
+            "name": "req"
+          },
+          {
+            "type": "...gax.CallOption",
+            "name": "opts"
+          }
+        ],
+        "resultType": "*stakingpb.Workflow",
+        "client": {
+          "shortName": "StakingClient",
+          "fullName": "coinbase.staking.v1alpha1.StakingClient"
+        },
+        "method": {
+          "shortName": "PerformWorkflowStep",
+          "fullName": "coinbase.staking.v1alpha1.StakingService.PerformWorkflowStep",
+          "service": {
+            "shortName": "StakingService",
+            "fullName": "coinbase.staking.v1alpha1.StakingService"
+          }
+        }
+      },
+      "origin": "API_DEFINITION",
+      "segments": [
+        {
+          "start": 18,
+          "end": 53,
+          "type": "FULL"
+        }
+      ]
+    },
+    {
+      "regionTag": "api_v1alpha1_generated_StakingService_RefreshWorkflowStep_sync",
+      "title": "api RefreshWorkflowStep Sample",
+      "description": "RefreshWorkflowStep refresh the current step in a workflow.",
+      "file": "StakingClient/RefreshWorkflowStep/main.go",
+      "language": "GO",
+      "clientMethod": {
+        "shortName": "RefreshWorkflowStep",
+        "fullName": "coinbase.staking.v1alpha1.StakingClient.RefreshWorkflowStep",
+        "parameters": [
+          {
+            "type": "context.Context",
+            "name": "ctx"
+          },
+          {
+            "type": "stakingpb.RefreshWorkflowStepRequest",
+            "name": "req"
+          },
+          {
+            "type": "...gax.CallOption",
+            "name": "opts"
+          }
+        ],
+        "resultType": "*stakingpb.Workflow",
+        "client": {
+          "shortName": "StakingClient",
+          "fullName": "coinbase.staking.v1alpha1.StakingClient"
+        },
+        "method": {
+          "shortName": "RefreshWorkflowStep",
+          "fullName": "coinbase.staking.v1alpha1.StakingService.RefreshWorkflowStep",
+          "service": {
+            "shortName": "StakingService",
+            "fullName": "coinbase.staking.v1alpha1.StakingService"
+          }
+        }
+      },
+      "origin": "API_DEFINITION",
+      "segments": [
+        {
+          "start": 18,
+          "end": 53,
+          "type": "FULL"
+        }
+      ]
+    },
+    {
+      "regionTag": "api_v1alpha1_generated_StakingService_ViewStakingContext_sync",
+      "title": "api ViewStakingContext Sample",
+      "description": "ViewStakingContext view Staking context information given a specific network address.",
+      "file": "StakingClient/ViewStakingContext/main.go",
+      "language": "GO",
+      "clientMethod": {
+        "shortName": "ViewStakingContext",
+        "fullName": "coinbase.staking.v1alpha1.StakingClient.ViewStakingContext",
+        "parameters": [
+          {
+            "type": "context.Context",
+            "name": "ctx"
+          },
+          {
+            "type": "stakingpb.ViewStakingContextRequest",
+            "name": "req"
+          },
+          {
+            "type": "...gax.CallOption",
+            "name": "opts"
+          }
+        ],
+        "resultType": "*stakingpb.ViewStakingContextResponse",
+        "client": {
+          "shortName": "StakingClient",
+          "fullName": "coinbase.staking.v1alpha1.StakingClient"
+        },
+        "method": {
+          "shortName": "ViewStakingContext",
+          "fullName": "coinbase.staking.v1alpha1.StakingService.ViewStakingContext",
+          "service": {
+            "shortName": "StakingService",
+            "fullName": "coinbase.staking.v1alpha1.StakingService"
+          }
+        }
+      },
+      "origin": "API_DEFINITION",
+      "segments": [
+        {
+          "start": 18,
+          "end": 53,
+          "type": "FULL"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,101 @@
+syntax = "proto3";
+
+package coinbase.staking.v1alpha1;
+
+option go_package = "github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/v1alpha1";
+
+import "google/api/field_behavior.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+import "coinbase/staking/v1alpha1/common.proto";
+
+
+// The parameters required for stake action on Polygon.
+message PolygonStakeParameters {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema: {
+      title: "The parameters needed to stake on Polygon."
+    }
+  };
+
+  // The public address of the delegator you wish to
+  // interact with.
+  string delegator_address = 1 [(google.api.field_behavior) = REQUIRED];
+
+  // The public address of the validator you wish to
+  // perform the action to.
+  string validator_address = 2 [(google.api.field_behavior) = REQUIRED];
+
+  // The amount of the asset. For native assets or ERC-20 contracts, this is presented in terms of
+  // atomic units (e.g., Wei for Ether) as a base-10 number.
+  Amount amount = 3 [(google.api.field_behavior) = REQUIRED];
+}
+
+// The parameters required for unstake action on Polygon.
+message PolygonUnstakeParameters {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema: {
+      title: "The parameters needed to unstake on Polygon."
+    }
+  };
+
+  // The public address of the delegator you wish to
+  // interact with.
+  string delegator_address = 1 [(google.api.field_behavior) = REQUIRED];
+
+  // The public address of the validator you wish to
+  // perform the action to.
+  string validator_address = 2 [(google.api.field_behavior) = REQUIRED];
+
+  // The amount of the asset. For native assets or ERC-20 contracts, this is presented in terms of
+  // atomic units (e.g., Wei for Ether) as a base-10 number.
+  Amount amount = 3 [(google.api.field_behavior) = REQUIRED];
+}
+
+// The parameters required for unstake action on Polygon.
+message PolygonRestakeParameters {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema: {
+      title: "The parameters needed to restake on Polygon."
+    }
+  };
+
+  // The public address of the delegator you wish to
+  // interact with.
+  string delegator_address = 1 [(google.api.field_behavior) = REQUIRED];
+
+  // The public address of the validator you wish to
+  // perform the action to.
+  string validator_address = 2 [(google.api.field_behavior) = REQUIRED];
+}
+
+// The parameters required for claim rewards action on Polygon.
+message PolygonClaimRewardsParameters {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema: {
+      title: "The parameters needed to claim rewards on Polygon."
+    }
+  };
+
+  // The public address of the delegator you wish to
+  // interact with.
+  string delegator_address = 1 [(google.api.field_behavior) = REQUIRED];
+
+  // The public address of the validator you wish to
+  // perform the action to.
+  string validator_address = 2 [(google.api.field_behavior) = REQUIRED];
+}
+
+// The parameters needed for staking on Polygon.
+message PolygonStakingParameters {
+  oneof parameters {
+    // The parameters for stake action on Polygon.
+    PolygonStakeParameters stake_parameters = 1;
+    // The parameters for unstake action on Polygon.
+    PolygonUnstakeParameters unstake_parameters = 2;
+    // The parameters for restake action on Polygon.
+    PolygonRestakeParameters restake_parameters = 3;
+    // The parameters for claim rewards action on Polygon.
+    PolygonClaimRewardsParameters claim_rewards_parameters = 4;
+  }
+}
