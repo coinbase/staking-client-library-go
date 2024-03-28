@@ -51,7 +51,7 @@ func (s *StakingAPIError) Error() string {
 	} else if s.httpCode != 0 && s.message != "" {
 		return fmt.Sprintf("stakingapi error: httpCode: %d message: %s", s.httpCode, s.message)
 	} else if s.err != nil {
-		// Either http code or message is missing. This should be very unlikely. It can happen when an internal
+		// Either http code or message is missing. This should be very unlikely. It can happen when an orchestration
 		// service simply returns the response body say as "Unauthorized". In this case, we also print the original error.
 		return fmt.Sprintf("stakingapi error: httpCode: %d message: %s err: %s", s.httpCode, s.message, s.Unwrap().Error())
 	} else {
@@ -146,7 +146,7 @@ type ErrDetails struct {
 // sort of proto.Message that can be cast to the google/rpc/error_details.proto
 // types.
 //
-// This is for internal use only.
+// This is for orchestration use only.
 func parseDetails(details []interface{}) ErrDetails {
 	var ed ErrDetails
 

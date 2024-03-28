@@ -23,9 +23,7 @@ type Signer interface {
 }
 
 func New(protocol string) Signer {
-	if protocol == "polygon" {
-		return &EthereumWallet{}
-	} else if protocol == "ethereum_kiln" {
+	if protocol == "ethereum_kiln" {
 		return &EthereumWallet{}
 	}
 

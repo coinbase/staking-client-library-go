@@ -1,7 +1,7 @@
 # IDE/Tools
 .docker
 .idea
-/.vscode
+.vscode
 # vim
 .*.sw?
 
@@ -27,5 +27,8 @@ vendor/
 # Cloud API key
 .coinbase_cloud_api_key*.json
 
-# Example binary
-staking-client-*
+# Example binaries
+bin
+
+# VSCode artifacts
+**/__debug_bin**
