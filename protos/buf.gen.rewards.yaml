@@ -1,0 +1,41 @@
+version: v1
+plugins:
+  - name: go
+    out: ./gen/go
+    opt:
+      - paths=source_relative
+  # NOTE: This generates gRPC boilerplate in golang
+  - name: go-grpc
+    out: ./gen/go
+    opt:
+      - paths=source_relative
+  # NOTE: This generates a REST reverse proxy from protobuf definitions
+  - name: grpc-gateway
+    out: ./gen/go
+    opt:
+      - paths=source_relative
+  - name: go-aip
+    out: ./gen/go
+    opt:
+      - paths=source_relative
+  # NOTE: This generates the OpenAPI v2 spec (aka Swagger spec) based on protobuf definitions
+  - name: openapiv2
+    out: ./docs/openapi
+    opt:
+      - allow_merge=true
+      - merge_file_name=rewards
+  - name: go_gapic
+    out: ./gen/client
+    opt:
+      # Details on these configuration options can be found at: https://github.com/googleapis/gapic-generator-go#invocation
+      - transport=rest
+      - release-level=alpha
+      # The go package of the generated library
+      - go-gapic-package=github.com/coinbase/staking-client-library-go/gen/client/coinbase/staking/rewards/v1;v1
+      # Prefix to be stripped from the go-gapic-package used in the generated filenames.
+      - module=github.com/coinbase/staking-client-library-go/gen/client
+      - Mcoinbase/staking/rewards/v1/reward_service.proto=github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/rewards/v1;rewardpb
+      - Mcoinbase/staking/rewards/v1/protocol.proto=github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/rewards/v1;rewardpb
+      - Mcoinbase/staking/rewards/v1/reward.proto=github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/rewards/v1;rewardpb
+      - Mcoinbase/staking/rewards/v1/stake.proto=github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/rewards/v1;rewardpb
+      - Mcoinbase/staking/rewards/v1/common.proto=github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/rewards/v1;rewardpb
