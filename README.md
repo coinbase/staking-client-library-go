@@ -1,4 +1,4 @@
-![Coinbase Staking API](docs/images/banner.svg)
+<img src='docs/images/banner.svg' width='1100' alt='Coinbase Staking API'>
 
 # [Coinbase Staking API](https://github.com/coinbase/staking-client-library-go)
 

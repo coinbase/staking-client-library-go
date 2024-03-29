@@ -35,9 +35,8 @@ func main() {
 		log.Fatalf("error instantiating staking client: %s", err.Error())
 	}
 
-	// List all rewards for the given address, aggregated by epoch, for epochs that ended in the last 30 days.
-
-	rewardsIter := stakingClient.Rewards.ListStakes(ctx, &rewardspb.ListStakesRequest{
+	// List staking activities for a given protocol.
+	stakesIter := stakingClient.Rewards.ListStakes(ctx, &rewardspb.ListStakesRequest{
 		Parent:   rewardspb.ProtocolResourceName{Protocol: "ethereum"}.String(),
 		PageSize: 200,
 		Filter:   `address='0xac53512c39d0081ca4437c285305eb423f474e6153693c12fbba4a3df78bcaa3422b31d800c5bea71c1b017168a60474' AND evaluation_time>='2023-12-12T07:25:11-04:00' AND evaluation_time<='2023-12-12T08:20:50-04:00'`,
@@ -45,21 +44,21 @@ func main() {
 
 	count := 0
 	for {
-		reward, err := rewardsIter.Next()
+		stake, err := stakesIter.Next()
 		if errors.Is(err, iterator.Done) {
 			break
 		}
 
 		if err != nil {
-			log.Fatalf("error listing rewards: %s", err.Error())
+			log.Fatalf("error listing stakes: %s", err.Error())
 		}
 
-		d, err := protojson.Marshal(reward)
+		d, err := protojson.Marshal(stake)
 		if err != nil {
-			log.Fatalf("error marshalling reward object: %s", err.Error())
+			log.Fatalf("error marshalling stake object: %s", err.Error())
 		}
 
-		log.Printf("[%d] Reward details: %s", count, d)
+		log.Printf("[%d] Stake details: %s", count, d)
 		count += 1
 	}
 }
