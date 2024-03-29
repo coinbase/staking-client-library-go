@@ -8,18 +8,16 @@
 
 ## Overview
 
-The **Coinbase Staking API** empowers developers to deliver a fully-featured staking experience in their Web2 apps, wallets, or dApps using *one common interface* across protocols.
+`staking-client-library-go` is the Go SDK for the **Coinbase Staking API** :large_blue_circle:.
 
-A traditional infrastructure-heavy staking integration can take months. Coinbase's Staking API enables onboarding within hours by providing powerful and simple APIs on both sides of the staking experience.
+The Coinbase Staking API empowers developers to deliver a fully-featured staking experience in their Web2 apps, wallets, or dApps using *one common interface* across protocols.
 
-* [Orchestration](./protos/coinbase/staking/orchestration/v1): *Write*. Power non-custodial staking workflows for your users.
-
-* [Rewards](./protos/coinbase/staking/rewards/v1): *Read*. Access onchain, staking-related rewards data.
+A traditional infrastructure-heavy staking integration can take months. Coinbase's Staking API enables onboarding within hours :sparkles:.
 
 ## Quick Start
 
 1. Create and download an API key from the [Cloud Platform](https://portal.cloud.coinbase.com/access/api).
-2. Place the key named `.coinbase_cloud_api_key.json` at the root of this repository.
+2. Place the key named `.coinbase_cloud_api_key.json` at the root of your repository.
 3. Run one of the code samples [below](#stake-partial-eth-💠) or any of our [provided examples](./examples/) :rocket:.
 
 ### Stake Partial ETH :diamond_shape_with_a_dot_inside:
