@@ -36,10 +36,10 @@ import (
     "fmt"
     "log"
 
-    "github.cbhq.net/cloud/staking-client-library-go/auth"
-    "github.cbhq.net/cloud/staking-client-library-go/client"
-    "github.cbhq.net/cloud/staking-client-library-go/client/options"
-    stakingpb "github.cbhq.net/cloud/staking-client-library-go/gen/go/coinbase/staking/orchestration/v1"
+    "github.com/coinbase/staking-client-library-go/auth"
+    "github.com/coinbase/staking-client-library-go/client"
+    "github.com/coinbase/staking-client-library-go/client/options"
+    stakingpb "github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/orchestration/v1"
 )
 
 func main() {
@@ -124,11 +124,11 @@ import (
 
     "google.golang.org/api/iterator"
 
-    "github.cbhq.net/cloud/staking-client-library-go/auth"
-    "github.cbhq.net/cloud/staking-client-library-go/client"
-    "github.cbhq.net/cloud/staking-client-library-go/client/options"
-    rewardsV1 "github.cbhq.net/cloud/staking-client-library-go/client/rewards/v1"
-    rewardspb "github.cbhq.net/cloud/staking-client-library-go/gen/go/coinbase/staking/rewards/v1"
+    "github.com/coinbase/staking-client-library-go/auth"
+    "github.com/coinbase/staking-client-library-go/client"
+    "github.com/coinbase/staking-client-library-go/client/options"
+    rewardsV1 "github.com/coinbase/staking-client-library-go/client/rewards/v1"
+    rewardspb "github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/rewards/v1"
 )
 
 func main() {
