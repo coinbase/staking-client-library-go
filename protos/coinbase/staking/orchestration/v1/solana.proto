@@ -1,0 +1,168 @@
+syntax = "proto3";
+
+package coinbase.staking.orchestration.v1;
+
+import "coinbase/staking/orchestration/v1/common.proto";
+import "google/api/field_behavior.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+option go_package = "github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/orchestration/v1";
+
+// A prioritization fee that can be added to a Solana transaction.
+message PriorityFee {
+  // The maximum number of compute units a transaction is allowed to consume.
+  int64 compute_unit_limit = 1;
+
+  // The price to pay per compute unit.
+  int64 unit_price = 2;
+}
+
+// The parameters required to perform a stake operation on Solana.
+message SolanaStakeParameters {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema: {title: "Solana: Stake Parameters"}
+  };
+
+  // The address where the funds are coming from to stake.
+  string wallet_address = 1;
+
+  // The address of the validator.
+  string validator_address = 2;
+
+  // The amount of Solana to stake in lamports. (1 lamport = 0.000000001 SOL)
+  Amount amount = 3;
+
+  // The option to set a priority fee for the transaction.
+  PriorityFee priority_fee = 4;
+}
+
+// The parameters required to perform a unstake operation on Solana.
+message SolanaUnstakeParameters {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema: {title: "Solana: Unstake Parameters"}
+  };
+
+  // The address which is the signing authority to unstake.
+  string wallet_address = 1;
+
+  // The address of the stake account to unstake from.
+  string stake_account_address = 2;
+
+  // The amount of Solana to unstake in lamports. (1 lamport = 0.000000001 SOL)
+  Amount amount = 3;
+
+  // The option to set a priority fee for the transaction.
+  PriorityFee priority_fee = 4;
+}
+
+// The parameters required to perform a claim stake operation on Solana.
+message SolanaClaimStakeParameters {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema: {title: "Solana: Claim Stake Parameters"}
+  };
+
+  // The address which is the signing authority to claim stake.
+  string wallet_address = 1;
+
+  // The address of the stake account to claim stake from.
+  string stake_account_address = 2;
+
+  // The option to set a priority fee for the transaction.
+  PriorityFee priority_fee = 3;
+}
+
+// The protocol specific parameters required for fetching a staking context.
+message SolanaStakingContextParameters {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema: {title: "Solana: Staking Context Parameters"}
+  };
+}
+
+// The protocol specific details for a Solana staking context.
+message SolanaStakingContextDetails {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema: {title: "Solana: Staking Context Details"}
+  };
+
+  // The total balance of the main wallet address (system account).
+  // Used to check the balance for any future staking or transaction to send.
+  Amount balance = 1;
+
+  // The current epoch that the Solana blockchain is in.
+  // Used as a frame of reference for future stake activations and deactivations.
+  int64 current_epoch = 2;
+
+  // How much of the epoch has passed as a percentage.
+  // Used to inform how much time is left before a stake is activated or deactivated.
+  string epoch_completion_percentage = 3;
+
+  // The list of staking accounts that are linked to the main wallet address (system account).
+  // Used to check for statuses and balances of all stake accounts related to the main wallet address that
+  // they're linked to.
+  repeated StakeAccount stake_accounts = 4;
+}
+
+// The balance information for a stake account.
+message StakeAccount {
+  // The address of the stake account.
+  // Used to hold the staked funds transferred over from the main wallet.
+  string address = 1;
+
+  // The bonded balance in lamports on the stake account (rent is not included in bonded amount).
+  // Used to check the amount that is currently staked.
+  Amount bonded_stake = 2;
+
+  // The rent amount for the stake account in lamports.
+  // Used to highlight the amount used as the rent to maintain the address on the Solana blockchain.
+  Amount rent_reserve = 3;
+
+  // The total balance on the address in lamports.
+  // Used to check the total balance for the stake account.
+  Amount balance = 4;
+
+  // Represents the different states a stake account balance can have.
+  // Used to check to see if stake is actively earning rewards or ready to be withdrawn.
+  enum BalanceState {
+    // The balance is not known.
+    BALANCE_STATE_UNSPECIFIED = 0;
+
+    // The balance is not actively staking.
+    BALANCE_STATE_INACTIVE = 1;
+
+    // The balance is in a warm up period and will activate in the next epoch.
+    BALANCE_STATE_ACTIVATING = 2;
+
+    // The balance is actively staking and earning rewards.
+    BALANCE_STATE_ACTIVE = 3;
+
+    // The balance is in a cool down period and will be deactivated in the next epoch.
+    BALANCE_STATE_DEACTIVATING = 4;
+  }
+
+  // The balance state of the stake account.
+  // Used to show what state the currently staked funds are in.
+  BalanceState balance_state = 5 [(google.api.field_behavior) = OUTPUT_ONLY];
+
+  // The validator (vote account) that the stake account is assigned to stake to.
+  // Used to show where the staked funds are staked to.
+  string validator = 6;
+}
+
+// The parameters needed for staking on Solana.
+message SolanaStakingParameters {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema: {title: "Solana: Staking Parameters"}
+  };
+
+  reserved 1 to 6;
+  reserved "create_stake_parameters", "delegate_stake_parameters", "deactivate_stake_parameters", "withdraw_stake_parameters", "split_stake_parameters", "merge_stake_parameters";
+
+  oneof parameters {
+    // The parameters for stake action on Solana.
+    SolanaStakeParameters stake_parameters = 7;
+    // The parameters for unstake action on Solana.
+    SolanaUnstakeParameters unstake_parameters = 8;
+    // The parameters for claim stake action on Solana.
+    SolanaClaimStakeParameters claim_stake_parameters = 9;
+  }
+}

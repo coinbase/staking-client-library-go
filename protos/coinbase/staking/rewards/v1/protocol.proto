@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package coinbase.staking.rewards.v1;
+
+import "google/api/field_behavior.proto";
+import "google/api/resource.proto";
+
+option go_package = "github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/rewards/v1";
+
+// A resource for a protocol.
+message Protocol {
+  option (google.api.resource) = {
+    type: "coinbase.staking.rewards/Protocol"
+    pattern: "protocols/{protocol}"
+    singular: "protocol"
+    plural: "protocols"
+  };
+
+  // Name of the protocol (eg. ethereum, solana, cosmos, etc.).
+  string name = 1 [(google.api.field_behavior) = OUTPUT_ONLY];
+}
