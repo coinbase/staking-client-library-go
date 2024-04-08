@@ -1,0 +1,110 @@
+syntax = "proto3";
+
+package coinbase.staking.rewards.v1;
+
+import "coinbase/staking/rewards/v1/reward.proto";
+import "coinbase/staking/rewards/v1/stake.proto";
+import "google/api/annotations.proto";
+import "google/api/client.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+option go_package = "github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/rewards/v1";
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  host: "api.developer.coinbase.com";
+  base_path: "/rewards";
+  schemes: HTTPS
+  consumes: "application/json";
+  produces: "application/json";
+  info: {
+    title: "Rewards Service";
+    description: "Service that provides access to onchain, staking-related rewards data.";
+    version: "v1";
+  };
+
+  responses: {
+    key: "401";
+    value: {
+      description: "Returned if authentication information is invalid";
+      schema: {example: '"Unauthorized"'};
+    };
+  };
+
+  responses: {
+    key: "500";
+    value: {
+      description: "Returned when an internal server error happens.";
+      schema: {example: '{"code":3,"message":"Internal server error.","details":[]}'};
+    };
+  };
+  tags: [
+    {
+      name: "Reward";
+      description: "A high-level view of an address's rewards aggregated over some period of time (ex: over an Epoch).";
+    },
+    {
+      name: "Stake";
+      description: "A snapshot of an address's staking-related balance at a particular point in time. Feature coming soon.";
+    }
+  ];
+};
+
+// RewardService exposes publicly available onchain staking-related rewards data across all supported protocols.
+service RewardService {
+  option (google.api.default_host) = "api.developer.coinbase.com";
+
+  // List rewards for a given protocol.
+  rpc ListRewards(ListRewardsRequest) returns (ListRewardsResponse) {
+    option (google.api.http) = {get: "/v1/{parent=protocols/*}/rewards"};
+
+    option (google.api.method_signature) = "parent";
+
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "List and filter rewards";
+      description: "Lists onchain rewards of an address for a specific protocol, with optional filters for time range, aggregation period, and more.";
+      tags: "Reward";
+      responses: {
+        key: "200"
+        value: {
+          description: "OK"
+          schema: {example: '{"rewards":[{"address":"beefKGBWeSpHzYBHZXwp5So7wdQGX6mu4ZHCsH3uTar","epoch":"533","aggregationUnit":"epoch","periodStartTime":null,"periodEndTime":"2023-11-16T00:13:44Z","totalEarnedNativeUnit":{"amount":"224.7098145","exp":"9","ticker":"SOL","rawNumeric":"224709814509"},"totalEarnedUsd":null,"endingBalance":null,"protocol":"solana"},{"address":"beefKGBWeSpHzYBHZXwp5So7wdQGX6mu4ZHCsH3uTar","epoch":"532","aggregationUnit":"epoch","periodStartTime":null,"periodEndTime":"2023-11-13T19:38:36Z","totalEarnedNativeUnit":{"amount":"225.0794241","exp":"9","ticker":"SOL","rawNumeric":"225079424094"},"totalEarnedUsd":null,"endingBalance":null,"protocol":"solana"}],"nextPageToken":"VAql-wtdiJWkWII9bJBDnE9oEc-8IlgU0DtKbxSDtBg=:1:1700241277"}'},
+        }
+      }
+      responses: {
+        key: "400";
+        value: {
+          description: "The request attempted has invalid parameters";
+          schema: {example: '{"code":3,"message":"Filter validation failed. <Remediation assistance here>.","details":[]}'};
+        };
+      };
+    };
+  }
+
+  // List staking activities for a given protocol.
+  rpc ListStakes(ListStakesRequest) returns (ListStakesResponse) {
+    option (google.api.http) = {get: "/v1/{parent=protocols/*}/stakes"};
+
+    option (google.api.method_signature) = "parent";
+
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "List and filter staking balances";
+      description: "Lists staking balance of a protocol, with optional filters for time range and address.";
+      tags: "Stake";
+      responses: {
+        key: "200"
+        value: {
+          description: "OK"
+          schema: {
+            json_schema: {ref: "#/definitions/v1ListStakesResponse"}
+          }
+        }
+      }
+      responses: {
+        key: "400";
+        value: {
+          description: "The request attempted has invalid parameters";
+          schema: {example: '{"code":3,"message":"Filter validation failed. <Remediation assistance here>.","details":[]}'};
+        };
+      };
+    };
+  }
+}

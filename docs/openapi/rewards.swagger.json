@@ -1,0 +1,563 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Rewards Service",
+    "description": "Service that provides access to onchain, staking-related rewards data.",
+    "version": "v1"
+  },
+  "tags": [
+    {
+      "name": "Reward",
+      "description": "A high-level view of an address's rewards aggregated over some period of time (ex: over an Epoch)."
+    },
+    {
+      "name": "Stake",
+      "description": "A snapshot of an address's staking-related balance at a particular point in time. Feature coming soon."
+    },
+    {
+      "name": "RewardService"
+    }
+  ],
+  "host": "api.developer.coinbase.com",
+  "basePath": "/rewards",
+  "schemes": [
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/v1/{parent}/rewards": {
+      "get": {
+        "summary": "List and filter rewards",
+        "description": "Lists onchain rewards of an address for a specific protocol, with optional filters for time range, aggregation period, and more.",
+        "operationId": "RewardService_ListRewards",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "example": {
+                "rewards": [
+                  {
+                    "address": "beefKGBWeSpHzYBHZXwp5So7wdQGX6mu4ZHCsH3uTar",
+                    "epoch": "533",
+                    "aggregationUnit": "epoch",
+                    "periodStartTime": null,
+                    "periodEndTime": "2023-11-16T00:13:44Z",
+                    "totalEarnedNativeUnit": {
+                      "amount": "224.7098145",
+                      "exp": "9",
+                      "ticker": "SOL",
+                      "rawNumeric": "224709814509"
+                    },
+                    "totalEarnedUsd": null,
+                    "endingBalance": null,
+                    "protocol": "solana"
+                  },
+                  {
+                    "address": "beefKGBWeSpHzYBHZXwp5So7wdQGX6mu4ZHCsH3uTar",
+                    "epoch": "532",
+                    "aggregationUnit": "epoch",
+                    "periodStartTime": null,
+                    "periodEndTime": "2023-11-13T19:38:36Z",
+                    "totalEarnedNativeUnit": {
+                      "amount": "225.0794241",
+                      "exp": "9",
+                      "ticker": "SOL",
+                      "rawNumeric": "225079424094"
+                    },
+                    "totalEarnedUsd": null,
+                    "endingBalance": null,
+                    "protocol": "solana"
+                  }
+                ],
+                "nextPageToken": "VAql-wtdiJWkWII9bJBDnE9oEc-8IlgU0DtKbxSDtBg=:1:1700241277"
+              }
+            }
+          },
+          "400": {
+            "description": "The request attempted has invalid parameters",
+            "schema": {
+              "example": {
+                "code": 3,
+                "message": "Filter validation failed. \u003cRemediation assistance here\u003e.",
+                "details": []
+              }
+            }
+          },
+          "401": {
+            "description": "Returned if authentication information is invalid",
+            "schema": {
+              "example": "Unauthorized"
+            }
+          },
+          "500": {
+            "description": "Returned when an internal server error happens.",
+            "schema": {
+              "example": {
+                "code": 3,
+                "message": "Internal server error.",
+                "details": []
+              }
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "parent",
+            "description": "The protocol that the rewards were earned on.\nThe response will only include rewards for the protocol specified here.",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "pattern": "protocols/[^/]+"
+          },
+          {
+            "name": "pageSize",
+            "description": "The maximum number of items to return. Maximum size of this value is 500.\nIf user supplies a value \u003e 500, the API will truncate to 500.",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "pageToken",
+            "description": "A page token as part of the response of a previous call.\nProvide this to retrieve the next page.\n\nWhen paginating, all other parameters must match the previous\nrequest to list resources correctly.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "filter",
+            "description": "[AIP-160](https://google.aip.dev/160) format compliant filter. Supported protocols are 'ethereum', 'solana', and 'cosmos'.\nSupplying other protocols will return an error.\n* **Ethereum**:\n  - Fields:\n  - `address` - A ethereum validator public key.\n  - `date` - A date in format 'YYYY-MM-DD'. Supports multiple comparisons (ex: '2024-01-15).\n  - `period_end_time` - A timestamp in RFC-3339 format. Supports multiple comparisons (ex: '2024-01-01T00:00:00Z' and '2024-01-15T00:00:00Z').\n  - Example(s):\n  - `\"address='0xac53512c39d0081ca4437c285305eb423f474e6153693c12fbba4a3df78bcaa3422b31d800c5bea71c1b017168a60474' AND date \u003e= '2024-01-01' AND date \u003c '2024-01-15'\"`\n  - `\"address='0xac53512c39d0081ca4437c285305eb423f474e6153693c12fbba4a3df78bcaa3422b31d800c5bea71c1b017168a60474' AND period_end_time \u003e= '2024-01-01T00:00:00Z' AND period_end_time \u003c '2024-01-15T00:00:00Z'\"`\n  - `\"address='0xac53512c39d0081ca4437c285305eb423f474e6153693c12fbba4a3df78bcaa3422b31d800c5bea71c1b017168a60474' AND date = '2024-01-01'\"`\n\n* **Solana**:\n  - Fields:\n  - `address` - A solana validator or delegator address.\n  - `epoch` - A solana epoch. Supports epoch comparisons (ex: `epoch \u003e= 1000 AND epoch \u003c= 2000`).\n  - `period_end_time` - A timestamp in RFC-3339 format. Supports multiple comparisons (ex: '2024-01-01T00:00:00Z' and '2024-01-15T00:00:00Z').\n  - Example(s):\n  - `\"address='beefKGBWeSpHzYBHZXwp5So7wdQGX6mu4ZHCsH3uTar' AND epoch \u003e= 540 AND epoch \u003c 550\"`\n  - `\"address='beefKGBWeSpHzYBHZXwp5So7wdQGX6mu4ZHCsH3uTar' AND period_end_time \u003e= '2024-01-01T00:00:00Z' AND period_end_time \u003c '2024-01-15T00:00:00Z'\"`\n  - `\"address='beefKGBWeSpHzYBHZXwp5So7wdQGX6mu4ZHCsH3uTar' AND epoch = 550\"`\n\n* **Cosmos**:\n  - Fields:\n  - `address` - A cosmos validator or delegator address (ex: `cosmosvaloper1c4k24jzduc365kywrsvf5ujz4ya6mwympnc4en` and `cosmos1c4k24jzduc365kywrsvf5ujz4ya6mwymy8vq4q`)\n  - `date` - A date in format 'YYYY-MM-DD'. Supports multiple comparisons (ex: '2024-01-15).\n  - `period_end_time` - A timestamp in RFC-3339 format. Supports multiple comparisons (ex: '2024-01-01T00:00:00Z' and '2024-01-15T00:00:00Z').\n  - Example(s):\n  - `\"address='cosmos1mfduj0qax6ut8rd6cfc4j0ds06z0mwlhrljhqh' AND date = '2024-11-16'\"`\n  - `\"address='cosmos1mfduj0qax6ut8rd6cfc4j0ds06z0mwlhrljhqh' AND period_end_time \u003e= '2024-01-01T00:00:00Z' AND period_end_time \u003c '2024-01-15T00:00:00Z'\"`\n  - `\"address='cosmos1mfduj0qax6ut8rd6cfc4j0ds06z0mwlhrljhqh' AND date = '2024-01-01'\"`",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Reward"
+        ]
+      }
+    },
+    "/v1/{parent}/stakes": {
+      "get": {
+        "summary": "List and filter staking balances",
+        "description": "Lists staking balance of a protocol, with optional filters for time range and address.",
+        "operationId": "RewardService_ListStakes",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/v1ListStakesResponse"
+            }
+          },
+          "400": {
+            "description": "The request attempted has invalid parameters",
+            "schema": {
+              "example": {
+                "code": 3,
+                "message": "Filter validation failed. \u003cRemediation assistance here\u003e.",
+                "details": []
+              }
+            }
+          },
+          "401": {
+            "description": "Returned if authentication information is invalid",
+            "schema": {
+              "example": "Unauthorized"
+            }
+          },
+          "500": {
+            "description": "Returned when an internal server error happens.",
+            "schema": {
+              "example": {
+                "code": 3,
+                "message": "Internal server error.",
+                "details": []
+              }
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "parent",
+            "description": "The protocol that the staking balance exists on.\nThe response will only include staking balances for the protocol specified here.",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "pattern": "protocols/[^/]+"
+          },
+          {
+            "name": "pageSize",
+            "description": "The maximum number of items to return.",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "pageToken",
+            "description": "A page token as part of the response of a previous call.\nProvide this to retrieve the next page.\n\nWhen paginating, all other parameters must match the previous\nrequest to list resources.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "filter",
+            "description": "[AIP-160](https://google.aip.dev/160) format compliant filter. Supported protocols are 'ethereum', 'solana'.\nSupplying other protocols will return an error.\n* **Ethereum**:\n  - Fields:\n  - `address` - A ethereum validator public key.\n  - `evaluation_time` - A timestamp in RFC-3339 format. Supports multiple comparisons (ex: '2024-01-01T00:00:00Z' and '2024-01-15T00:00:00Z').\n  - Example(s):\n  - `\"address='0xac53512c39d0081ca4437c285305eb423f474e6153693c12fbba4a3df78bcaa3422b31d800c5bea71c1b017168a60474'\"`\n  - `\"address='0xac53512c39d0081ca4437c285305eb423f474e6153693c12fbba4a3df78bcaa3422b31d800c5bea71c1b017168a60474' AND evaluation_time \u003e= '2024-01-01T00:00:00Z' AND evaluation_time \u003c '2024-01-15T00:00:00Z'\"`\n\n* **Solana**:\n  - Fields:\n  - `address` - A solana staking address.\n  - `evaluation_time` - A timestamp in RFC-3339 format. Supports multiple comparisons (ex: '2024-01-01T00:00:00Z' and '2024-01-15T00:00:00Z').\n  - Example(s):\n  - `\"address='beefKGBWeSpHzYBHZXwp5So7wdQGX6mu4ZHCsH3uTar'\"`\n  - `\"address='beefKGBWeSpHzYBHZXwp5So7wdQGX6mu4ZHCsH3uTar' AND evaluation_time \u003e= '2024-01-01T00:00:00Z' AND evaluation_time \u003c '2024-01-15T00:00:00Z'\"`",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Stake"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "RewardRateCalculationMethods": {
+      "type": "string",
+      "enum": [
+        "CALCULATION_METHODS_UNSPECIFIED",
+        "SOLO_STAKER",
+        "POOLED_STAKER",
+        "EPOCH_AUTO_COMPOUNDING",
+        "NO_AUTO_COMPOUNDING"
+      ],
+      "default": "CALCULATION_METHODS_UNSPECIFIED",
+      "description": "Representing the different methods of calculating yield.\n\n - CALCULATION_METHODS_UNSPECIFIED: Calculation method is unknown or unspecified.\n - SOLO_STAKER: A single Ethereum validator acting in isolation is currently not able to compound earned rewards because\nEthereum only allows validators to stake 32 ETH precisely.\nThis percentage yield is assuming that the rewards never compound, mimicking the behavior of a solo staker.\n - POOLED_STAKER: A pool of Ethereum validators of sufficient size is able to compound rewards almost immediately.\nThis percentage yield is assuming rewards compound immediately, mimicking the behavior of a sufficiently large pool.\n - EPOCH_AUTO_COMPOUNDING: A Solana delegator's staking rewards are staked (and therefore auto-compound) when rewards are paid out between epochs.\nThis percentage yield is assuming the rewards are auto-compounded on that schedule, mimicking a Solana delegator.\n - NO_AUTO_COMPOUNDING: A Solana validator's rewards accumulate in a separate account from the validator's active stake.\nThis percentage yield is assuming the rewards are not auto-compounded at any point, mimicking a Solana validator who never staked their rewards."
+    },
+    "StakeDelegation": {
+      "type": "object",
+      "properties": {
+        "address": {
+          "type": "string",
+          "title": "Address associated to the delegation"
+        },
+        "amount": {
+          "$ref": "#/definitions/v1AssetAmount",
+          "title": "Amount of delegation received or given"
+        },
+        "commissionRate": {
+          "type": "string",
+          "title": "Commission rate for delegation"
+        }
+      },
+      "description": "A single delegation from one address to another."
+    },
+    "USDValueSource": {
+      "type": "string",
+      "enum": [
+        "SOURCE_UNSPECIFIED",
+        "COINBASE_EXCHANGE"
+      ],
+      "default": "SOURCE_UNSPECIFIED",
+      "description": "The source of the USD price conversion.\n\n - SOURCE_UNSPECIFIED: The USD value source is unknown or unspecified.\n - COINBASE_EXCHANGE: The USD value source is the Coinbase exchange."
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    },
+    "v1AggregationUnit": {
+      "type": "string",
+      "enum": [
+        "AGGREGATION_UNIT_UNSPECIFIED",
+        "EPOCH",
+        "DAY"
+      ],
+      "default": "AGGREGATION_UNIT_UNSPECIFIED",
+      "description": "The unit of time that the reward events were aggregated by.\n\n - AGGREGATION_UNIT_UNSPECIFIED: Aggregation unit is unknown or unspecified.\n - EPOCH: Indicates the rewards are aggregated by epoch. This means there will be a 'epoch' field displaying the epoch on this resource.\n - DAY: Indicates the rewards are aggregated by day. This means there will be a 'date' field displaying the date on this resource."
+    },
+    "v1AssetAmount": {
+      "type": "object",
+      "properties": {
+        "amount": {
+          "type": "string",
+          "title": "The amount of the asset in the most common denomination.\nEx: ETH (converted from gwei)\nEx: USD (converted from fractional pennies)",
+          "readOnly": true
+        },
+        "exp": {
+          "type": "string",
+          "format": "int64",
+          "description": "The number of decimals needed to convert from the raw numeric value to the most\ncommon denomination.",
+          "readOnly": true
+        },
+        "ticker": {
+          "type": "string",
+          "description": "The ticker of this asset (ex: USD, ETH, SOL).",
+          "readOnly": true
+        },
+        "rawNumeric": {
+          "type": "string",
+          "description": "The raw, unadulterated numeric value.\nEx: Wei (in Ethereum) and Lamports (in Solana).",
+          "readOnly": true
+        }
+      },
+      "description": "Amount encapsulation for a given asset."
+    },
+    "v1ListRewardsResponse": {
+      "type": "object",
+      "properties": {
+        "rewards": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1Reward"
+          },
+          "description": "The rewards returned in this response.",
+          "readOnly": true
+        },
+        "nextPageToken": {
+          "type": "string",
+          "description": "The page token the user must use in the next request if the next page is desired.",
+          "readOnly": true
+        }
+      },
+      "description": "The response message for ListRewards."
+    },
+    "v1ListStakesResponse": {
+      "type": "object",
+      "properties": {
+        "stakes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1Stake"
+          },
+          "description": "The staking balances returned in this response.",
+          "readOnly": true
+        },
+        "nextPageToken": {
+          "type": "string",
+          "description": "The page token the user must use in the next request if the next page is desired.",
+          "readOnly": true
+        }
+      },
+      "description": "The response message for ListStakes."
+    },
+    "v1ParticipantType": {
+      "type": "string",
+      "enum": [
+        "PARTICIPANT_TYPE_UNSPECIFIED",
+        "DELEGATOR",
+        "VALIDATOR"
+      ],
+      "default": "PARTICIPANT_TYPE_UNSPECIFIED",
+      "description": "The participant type of a staking-related address.\n\n - PARTICIPANT_TYPE_UNSPECIFIED: The participant type is unknown.\n - DELEGATOR: Used when the onchain participant type is a delegator\n(i.e. someone who delegates the responsibilities of validating blocks to another address in return for a share of the rewards).\n - VALIDATOR: Used when the onchain participant type is a validator\n(i.e. an address that is directly responsible for performing validation of blocks)."
+    },
+    "v1Reward": {
+      "type": "object",
+      "properties": {
+        "address": {
+          "type": "string",
+          "description": "The address that earned this reward.",
+          "readOnly": true
+        },
+        "epoch": {
+          "type": "string",
+          "format": "int64",
+          "description": "A unique identifier for the consensus-cycle of the blockchain.",
+          "readOnly": true
+        },
+        "date": {
+          "type": "string",
+          "description": "The date of the reward in format 'YYYY-MM-DD' in UTC.",
+          "readOnly": true
+        },
+        "aggregationUnit": {
+          "$ref": "#/definitions/v1AggregationUnit",
+          "description": "The unit of time that the reward events were rolled up by.\nCan be either \"epoch\" or \"daily\".",
+          "readOnly": true
+        },
+        "periodStartTime": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The starting time of this reward period. Returned when querying by epoch.\nTimestamps are in UTC, conforming to the RFC-3339 spec (e.g. 2024-11-13T19:38:36Z).\nField currently unavailable. Coming soon.",
+          "readOnly": true
+        },
+        "periodEndTime": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The ending time of this reward period. Returned when querying by epoch.\nTimestamps are in UTC, conforming to the RFC-3339 spec (e.g. 2024-11-13T19:38:36Z).",
+          "readOnly": true
+        },
+        "totalEarnedNativeUnit": {
+          "$ref": "#/definitions/v1AssetAmount",
+          "description": "The amount earned in this time period in the native unit of the protocol.",
+          "readOnly": true
+        },
+        "totalEarnedUsd": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1USDValue"
+          },
+          "description": "The amount earned in this time period in USD. Calculated by getting each individual reward of this\ntime period and summing the USD value of each individual component. USD value is calculate at\nthe time each component was earned.",
+          "readOnly": true
+        },
+        "endingBalance": {
+          "$ref": "#/definitions/v1Stake",
+          "description": "A snapshot of the staking balance the end of this period.\nField currently unavailable. Coming soon.",
+          "readOnly": true
+        },
+        "protocol": {
+          "type": "string",
+          "description": "The protocol on which this reward was earned.",
+          "readOnly": true
+        }
+      },
+      "description": "Rewards earned within a particular period of time."
+    },
+    "v1RewardRate": {
+      "type": "object",
+      "properties": {
+        "percentage": {
+          "type": "string",
+          "description": "The percentage rate of rewards calculation. Will include two digits after the decimal (ex: 3.05).",
+          "readOnly": true
+        },
+        "calculatedTime": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The time at which this yield calculation was calculated.\nTimestamps are in UTC, conforming to the RFC-3339 spec (e.g. 2023-11-13T19:38:36Z).",
+          "readOnly": true
+        },
+        "calculationMethod": {
+          "$ref": "#/definitions/RewardRateCalculationMethods",
+          "description": "The method used to calculate this yield. This could include information about which\nrewards we're including in the calculation, how we're estimating the compounding period, etc.",
+          "readOnly": true
+        }
+      },
+      "description": "Reward yield calculation at a given point in time."
+    },
+    "v1Stake": {
+      "type": "object",
+      "properties": {
+        "address": {
+          "type": "string",
+          "description": "The address of the staking balance.",
+          "readOnly": true
+        },
+        "evaluationTime": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The time at which this balance was evaluated.\nTimestamps are in UTC, conforming to the RFC-3339 spec (e.g. 2023-11-13T19:38:36Z).",
+          "readOnly": true
+        },
+        "bondedStake": {
+          "$ref": "#/definitions/v1AssetAmount",
+          "description": "The total amount of stake that is actively earning rewards to this address.\nIncludes any delegated stake and self-stake.\nFor delegators, this would be only the amount delegated to a validator in most cases.\nOnly includes stake that is *actively contributing to rewards and can't be reduced\nwithout affecting the rewards dynamics*.\n\nPending inactive stake is included.\nPending active stake is not included.",
+          "readOnly": true
+        },
+        "totalDelegationReceived": {
+          "$ref": "#/definitions/v1AssetAmount",
+          "description": "The amount of stake that this address receives from other addresses.\nFor most delegators, this will be 0.",
+          "readOnly": true
+        },
+        "delegationsReceived": {
+          "$ref": "#/definitions/StakeDelegation",
+          "title": "The list of individual delegations this address has received from other addresses",
+          "readOnly": true
+        },
+        "delegationsGiven": {
+          "$ref": "#/definitions/StakeDelegation",
+          "description": "The amount that this address stakes to another address.",
+          "readOnly": true
+        },
+        "rewardRateCalculations": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1RewardRate"
+          },
+          "description": "An estimated yield of this address.",
+          "readOnly": true
+        },
+        "participantType": {
+          "$ref": "#/definitions/v1ParticipantType",
+          "description": "The participant type at the time of evaluation (i.e. validator, delegator).",
+          "readOnly": true
+        },
+        "protocol": {
+          "type": "string",
+          "description": "The protocol on which this staking balance exists.",
+          "readOnly": true
+        },
+        "unbondedBalance": {
+          "$ref": "#/definitions/v1AssetAmount",
+          "description": "The amount of stake that is not actively earning rewards to this address.\nThis amount includes any native token balance that is under the domain and control of the address in question,\nbut is not actively staked.\n\nPending active stake would be included here.",
+          "readOnly": true
+        }
+      },
+      "description": "The representation of a staking activity at a particular point in time."
+    },
+    "v1USDValue": {
+      "type": "object",
+      "properties": {
+        "source": {
+          "$ref": "#/definitions/USDValueSource",
+          "description": "The source of the USD price conversion. Could be internal to Coinbase, and external source, or any other source.",
+          "readOnly": true
+        },
+        "conversionTime": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The timestamp at which the USD value was sourced to convert the value into USD.\nThis value is as close to the time the reward was earned as possible.\nTimestamps are in UTC, conforming to the RFC-3339 spec (e.g. 2024-11-13T19:38:36Z).",
+          "readOnly": true
+        },
+        "amount": {
+          "$ref": "#/definitions/v1AssetAmount",
+          "description": "The USD value of the reward at the conversion time.",
+          "readOnly": true
+        },
+        "conversionPrice": {
+          "type": "string",
+          "description": "The price of the native unit at the conversion time.",
+          "readOnly": true
+        }
+      },
+      "description": "Information regarding the USD value of a reward, with necessary context and metadata."
+    }
+  }
+}
