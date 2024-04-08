@@ -54,7 +54,6 @@ func main() {
 					},
 				},
 			},
-			SkipBroadcast: true,
 		},
 	}
 

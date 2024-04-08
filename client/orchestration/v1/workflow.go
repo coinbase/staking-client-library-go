@@ -128,10 +128,6 @@ func WorkflowFinished(workflow *stakingpb.Workflow) bool {
 		workflow.State == stakingpb.Workflow_STATE_FAILED
 }
 
-func WorkflowWaitingForSigning(workflow *stakingpb.Workflow) bool {
-	return workflow.State == stakingpb.Workflow_STATE_WAITING_FOR_SIGNING
-}
-
 func WorkflowWaitingForExternalBroadcast(workflow *stakingpb.Workflow) bool {
 	return workflow.State == stakingpb.Workflow_STATE_WAITING_FOR_EXT_BROADCAST
 }

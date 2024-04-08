@@ -24,8 +24,8 @@ message TxStepOutput {
 
   // State defines an enumeration of states for a staking transaction.
   enum State {
-    reserved 11 to 15;
-    reserved "STATE_CANCELING", "STATE_CANCELED", "STATE_CANCEL_FAILED", "STATE_FAILED_REFRESHABLE", "STATE_REFRESHING";
+    reserved 3, 11 to 15;
+    reserved "STATE_PENDING_SIGNING", "STATE_CANCELING", "STATE_CANCELED", "STATE_CANCEL_FAILED", "STATE_FAILED_REFRESHABLE", "STATE_REFRESHING";
 
     // Unspecified transaction state, this is for backwards compatibility.
     STATE_UNSPECIFIED = 0;
@@ -33,8 +33,8 @@ message TxStepOutput {
     STATE_NOT_CONSTRUCTED = 1;
     // Tx construction is over in the backend.
     STATE_CONSTRUCTED = 2;
-    // Tx is waiting to be signed.
-    STATE_PENDING_SIGNING = 3;
+    // Tx is waiting to be externally broadcasted by the customer.
+    STATE_PENDING_EXT_BROADCAST = 16;
     // Tx has been signed and returned to the backend.
     STATE_SIGNED = 4;
     // Tx is being broadcasted to the network.
@@ -49,8 +49,6 @@ message TxStepOutput {
     STATE_FAILED = 9;
     // Tx has been successfully executed.
     STATE_SUCCESS = 10;
-    // Tx is waiting to be externally broadcasted by the customer.
-    STATE_PENDING_EXT_BROADCAST = 16;
   }
 
   // The state of the transaction step.
@@ -154,28 +152,25 @@ message Workflow {
 
   // The state of a workflow
   enum State {
-    // Example flow: A workflow with skip_broadcast = true leading to a successful completion.
+    // Example flows:
+    // A workflow leading to a successful completion.
     // IN_PROGRESS -> WAITING_FOR_EXT_BROADCAST -> IN_PROGRESS -> COMPLETED
-    // Example flow: A workflow with skip_broadcast = false leading to a successful completion.
-    // IN_PROGRESS -> WAITING_FOR_SIGNING -> IN_PROGRESS -> COMPLETED
-    // Example flow: A workflow with skip_broadcast = false leading to a failure.
-    // IN_PROGRESS -> WAITING_FOR_SIGNING -> IN_PROGRESS -> FAILED
+    // A workflow leading to a failure.
+    // IN_PROGRESS -> WAITING_FOR_EXT_BROADCAST -> IN_PROGRESS -> FAILED
 
-    reserved 5 to 8;
-    reserved "STATE_CANCELING", "STATE_CANCELED", "STATE_CANCEL_FAILED", "STATE_FAILED_REFRESHABLE";
+    reserved 2, 5 to 8;
+    reserved "STATE_WAITING_FOR_SIGNING", "STATE_CANCELING", "STATE_CANCELED", "STATE_CANCEL_FAILED", "STATE_FAILED_REFRESHABLE";
 
     // Unspecified workflow state, this is for backwards compatibility.
     STATE_UNSPECIFIED = 0;
     // In Progress represents a workflow that is currently in progress.
     STATE_IN_PROGRESS = 1;
-    // Waiting for signing represents the workflow is waiting on the consumer to sign and return the corresponding signed tx.
-    STATE_WAITING_FOR_SIGNING = 2;
+    // Waiting for external broadcast represents the workflow is waiting for the customer to broadcast a tx and return its corresponding tx hash.
+    STATE_WAITING_FOR_EXT_BROADCAST = 9;
     // Completed represents the workflow has completed.
     STATE_COMPLETED = 3;
     // Failed represents the workflow has failed.
     STATE_FAILED = 4;
-    // Waiting for external broadcast represents the workflow is waiting for the customer to broadcast a tx and return its corresponding tx hash.
-    STATE_WAITING_FOR_EXT_BROADCAST = 9;
   }
 
   // The current state of the workflow.
@@ -193,8 +188,7 @@ message Workflow {
   // The timestamp the workflow was last updated.
   google.protobuf.Timestamp update_time = 8 [(google.api.field_behavior) = OUTPUT_ONLY];
 
-  // Flag to skip tx broadcast to network on behalf of the user. Use this flag if you instead prefer to broadcast signed txs on your own.
-  bool skip_broadcast = 11 [(google.api.field_behavior) = OPTIONAL];
+  reserved 11; // We no longer support broadcasting txs for customers via the skip_broadcast=false path.
 
   // The timestamp the workflow completed.
   google.protobuf.Timestamp complete_time = 12 [(google.api.field_behavior) = OUTPUT_ONLY];

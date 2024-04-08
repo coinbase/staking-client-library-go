@@ -7,6 +7,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"github.com/coinbase/staking-client-library-go/internal/signer"
 	"log"
 	"os"
 	"time"
@@ -20,8 +21,9 @@ import (
 )
 
 const (
-	// TODO: Replace with your project ID.
-	projectID = ""
+	// TODO: Replace with your project ID and private key.
+	projectID  = ""
+	privateKey = ""
 
 	// TODO: Replace with your wallet addresses and amount.
 	walletAddress    = ""
@@ -47,8 +49,8 @@ func main() {
 		log.Fatalf("error instantiating staking client: %s", err.Error())
 	}
 
-	if projectID == "" || walletAddress == "" {
-		log.Fatalf("projectID and walletAddress must be set")
+	if projectID == "" || privateKey == "" || walletAddress == "" {
+		log.Fatalf("projectID, privateKey, and walletAddress must be set")
 	}
 
 	req := &stakingpb.CreateWorkflowRequest{
@@ -69,7 +71,6 @@ func main() {
 					},
 				},
 			},
-			SkipBroadcast: true,
 		},
 	}
 
@@ -92,23 +93,27 @@ func main() {
 
 		printWorkflowProgressDetails(workflow)
 
-		// If workflow is in WAITING_FOR_SIGNING state, sign the transaction and update the workflow
-		if v1.WorkflowWaitingForSigning(workflow) {
+		// If workflow is in WAITING_FOR_EXT_BROADCAST state, sign, broadcast the transaction and update the workflow.
+		if v1.WorkflowWaitingForExternalBroadcast(workflow) {
 			unsignedTx := workflow.Steps[workflow.GetCurrentStepId()].GetTxStepOutput().GetUnsignedTx()
 
-			fmt.Printf("Please sign this unsigned tx and return back the signed tx via the PerformWorkflowStep API : %s\n", unsignedTx)
-			break
-		} else if v1.WorkflowWaitingForExternalBroadcast(workflow) {
-			unsignedTx := workflow.Steps[workflow.GetCurrentStepId()].GetTxStepOutput().GetUnsignedTx()
+			// Logic to sign the transaction. This can be substituted with any other signing mechanism.
+			log.Printf("Signing unsigned tx %s ...\n", unsignedTx)
 
-			fmt.Printf("Please sign and broadcast this unsigned tx externally and return back the tx hash via the PerformWorkflowStep API : %s\n", unsignedTx)
+			signedTx, err := signer.New("solana").SignTransaction([]string{privateKey}, &signer.UnsignedTx{Data: []byte(unsignedTx)})
+			if err != nil {
+				log.Fatalf(fmt.Errorf("error signing transaction: %w", err).Error())
+			}
+
+			// Add logic to broadcast the tx here.
+			fmt.Printf("Please broadcast this signed tx %s externally and return back the tx hash via the PerformWorkflowStep API ...\n", signedTx)
 			break
 		} else if v1.WorkflowFinished(workflow) {
 			break
 		}
 
-		// Sleep for 5 seconds before polling for workflow status again
-		time.Sleep(5 * time.Second)
+		// Sleep for 1 second before polling for workflow status again
+		time.Sleep(1 * time.Second)
 	}
 }
 

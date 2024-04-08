@@ -9,8 +9,8 @@ import (
 
 type EthereumWallet struct{}
 
-func (ew *EthereumWallet) SignTransaction(privateKey string, unsignedTx *UnsignedTx) (*SignedTx, error) {
-	privateKeyBytes, err := hex.DecodeString(privateKey)
+func (ew *EthereumWallet) SignTransaction(privateKeys []string, unsignedTx *UnsignedTx) (*SignedTx, error) {
+	privateKeyBytes, err := hex.DecodeString(privateKeys[0])
 	if err != nil {
 		return nil, err
 	}

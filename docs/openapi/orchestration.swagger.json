@@ -1283,18 +1283,17 @@
         "STATE_UNSPECIFIED",
         "STATE_NOT_CONSTRUCTED",
         "STATE_CONSTRUCTED",
-        "STATE_PENDING_SIGNING",
+        "STATE_PENDING_EXT_BROADCAST",
         "STATE_SIGNED",
         "STATE_BROADCASTING",
         "STATE_CONFIRMING",
         "STATE_CONFIRMED",
         "STATE_FINALIZED",
         "STATE_FAILED",
-        "STATE_SUCCESS",
-        "STATE_PENDING_EXT_BROADCAST"
+        "STATE_SUCCESS"
       ],
       "default": "STATE_UNSPECIFIED",
-      "description": "State defines an enumeration of states for a staking transaction.\n\n - STATE_UNSPECIFIED: Unspecified transaction state, this is for backwards compatibility.\n - STATE_NOT_CONSTRUCTED: Tx has not yet been constructed in the backend.\n - STATE_CONSTRUCTED: Tx construction is over in the backend.\n - STATE_PENDING_SIGNING: Tx is waiting to be signed.\n - STATE_SIGNED: Tx has been signed and returned to the backend.\n - STATE_BROADCASTING: Tx is being broadcasted to the network.\n - STATE_CONFIRMING: Tx is waiting for confirmation.\n - STATE_CONFIRMED: Tx has been confirmed to be included in a block.\n - STATE_FINALIZED: Tx has been finalized.\n - STATE_FAILED: Tx construction or broadcasting failed.\n - STATE_SUCCESS: Tx has been successfully executed.\n - STATE_PENDING_EXT_BROADCAST: Tx is waiting to be externally broadcasted by the customer."
+      "description": "State defines an enumeration of states for a staking transaction.\n\n - STATE_UNSPECIFIED: Unspecified transaction state, this is for backwards compatibility.\n - STATE_NOT_CONSTRUCTED: Tx has not yet been constructed in the backend.\n - STATE_CONSTRUCTED: Tx construction is over in the backend.\n - STATE_PENDING_EXT_BROADCAST: Tx is waiting to be externally broadcasted by the customer.\n - STATE_SIGNED: Tx has been signed and returned to the backend.\n - STATE_BROADCASTING: Tx is being broadcasted to the network.\n - STATE_CONFIRMING: Tx is waiting for confirmation.\n - STATE_CONFIRMED: Tx has been confirmed to be included in a block.\n - STATE_FINALIZED: Tx has been finalized.\n - STATE_FAILED: Tx construction or broadcasting failed.\n - STATE_SUCCESS: Tx has been successfully executed."
     },
     "v1Validator": {
       "type": "object",
@@ -1435,10 +1434,6 @@
           "description": "The timestamp the workflow was last updated.",
           "readOnly": true
         },
-        "skipBroadcast": {
-          "type": "boolean",
-          "description": "Flag to skip tx broadcast to network on behalf of the user. Use this flag if you instead prefer to broadcast signed txs on your own."
-        },
         "completeTime": {
           "type": "string",
           "format": "date-time",
@@ -1458,13 +1453,12 @@
       "enum": [
         "STATE_UNSPECIFIED",
         "STATE_IN_PROGRESS",
-        "STATE_WAITING_FOR_SIGNING",
+        "STATE_WAITING_FOR_EXT_BROADCAST",
         "STATE_COMPLETED",
-        "STATE_FAILED",
-        "STATE_WAITING_FOR_EXT_BROADCAST"
+        "STATE_FAILED"
       ],
       "default": "STATE_UNSPECIFIED",
-      "description": "Example flow: A workflow with skip_broadcast = true leading to a successful completion.\n IN_PROGRESS -\u003e WAITING_FOR_EXT_BROADCAST -\u003e IN_PROGRESS -\u003e COMPLETED\n Example flow: A workflow with skip_broadcast = false leading to a successful completion.\n IN_PROGRESS -\u003e WAITING_FOR_SIGNING -\u003e IN_PROGRESS -\u003e COMPLETED\n Example flow: A workflow with skip_broadcast = false leading to a failure.\n IN_PROGRESS -\u003e WAITING_FOR_SIGNING -\u003e IN_PROGRESS -\u003e FAILED\n\n - STATE_UNSPECIFIED: Unspecified workflow state, this is for backwards compatibility.\n - STATE_IN_PROGRESS: In Progress represents a workflow that is currently in progress.\n - STATE_WAITING_FOR_SIGNING: Waiting for signing represents the workflow is waiting on the consumer to sign and return the corresponding signed tx.\n - STATE_COMPLETED: Completed represents the workflow has completed.\n - STATE_FAILED: Failed represents the workflow has failed.\n - STATE_WAITING_FOR_EXT_BROADCAST: Waiting for external broadcast represents the workflow is waiting for the customer to broadcast a tx and return its corresponding tx hash.",
+      "description": "Example flows:\n A workflow leading to a successful completion.\n IN_PROGRESS -\u003e WAITING_FOR_EXT_BROADCAST -\u003e IN_PROGRESS -\u003e COMPLETED\n A workflow leading to a failure.\n IN_PROGRESS -\u003e WAITING_FOR_EXT_BROADCAST -\u003e IN_PROGRESS -\u003e FAILED\n\n - STATE_UNSPECIFIED: Unspecified workflow state, this is for backwards compatibility.\n - STATE_IN_PROGRESS: In Progress represents a workflow that is currently in progress.\n - STATE_WAITING_FOR_EXT_BROADCAST: Waiting for external broadcast represents the workflow is waiting for the customer to broadcast a tx and return its corresponding tx hash.\n - STATE_COMPLETED: Completed represents the workflow has completed.\n - STATE_FAILED: Failed represents the workflow has failed.",
       "title": "The state of a workflow"
     },
     "v1WorkflowStep": {

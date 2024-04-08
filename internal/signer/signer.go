@@ -19,12 +19,14 @@ type SignedTx struct {
 // Signer is an interface for signing unsigned transactions.
 type Signer interface {
 	// SignTransaction signs an unsigned transaction with the given private key and protocol.
-	SignTransaction(privateKey string, unsignedTx *UnsignedTx) (*SignedTx, error)
+	SignTransaction(privateKeys []string, unsignedTx *UnsignedTx) (*SignedTx, error)
 }
 
 func New(protocol string) Signer {
 	if protocol == "ethereum_kiln" {
 		return &EthereumWallet{}
+	} else if protocol == "solana" {
+		return &SolanaWallet{}
 	}
 
 	return nil

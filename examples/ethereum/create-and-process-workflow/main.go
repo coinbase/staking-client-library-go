@@ -71,7 +71,6 @@ func main() {
 					},
 				},
 			},
-			SkipBroadcast: true,
 		},
 	}
 
@@ -94,39 +93,27 @@ func main() {
 
 		printWorkflowProgressDetails(workflow)
 
-		// If workflow is in WAITING_FOR_SIGNING state, sign the transaction and update the workflow
-		if v1.WorkflowWaitingForSigning(workflow) {
+		// If workflow is in WAITING_FOR_EXT_BROADCAST state, sign, broadcast the transaction and update the workflow.
+		if v1.WorkflowWaitingForExternalBroadcast(workflow) {
 			unsignedTx := workflow.Steps[workflow.GetCurrentStepId()].GetTxStepOutput().GetUnsignedTx()
 
 			// Logic to sign the transaction. This can be substituted with any other signing mechanism.
 			log.Printf("Signing unsigned tx %s ...\n", unsignedTx)
 
-			signedTx, err := signer.New("ethereum_kiln").SignTransaction(privateKey, &signer.UnsignedTx{Data: []byte(unsignedTx)})
+			signedTx, err := signer.New("ethereum_kiln").SignTransaction([]string{privateKey}, &signer.UnsignedTx{Data: []byte(unsignedTx)})
 			if err != nil {
 				log.Fatalf(fmt.Errorf("error signing transaction: %w", err).Error())
 			}
 
-			log.Printf("Returning back signed tx %s ...\n", string(signedTx.Data))
-
-			workflow, err = stakingClient.Orchestration.PerformWorkflowStep(ctx, &stakingpb.PerformWorkflowStepRequest{
-				Name: workflow.Name,
-				Step: workflow.GetCurrentStepId(),
-				Data: string(signedTx.Data),
-			})
-			if err != nil {
-				log.Fatalf(fmt.Errorf("error updating workflow with signed tx: %w", err).Error())
-			}
-		} else if v1.WorkflowWaitingForExternalBroadcast(workflow) {
-			unsignedTx := workflow.Steps[workflow.GetCurrentStepId()].GetTxStepOutput().GetUnsignedTx()
-
-			fmt.Printf("Please sign and broadcast this unsigned tx %s externally and return back the tx hash via the PerformWorkflowStep API ...\n", unsignedTx)
+			// Add logic to broadcast the tx here.
+			fmt.Printf("Please broadcast this signed tx %s externally and return back the tx hash via the PerformWorkflowStep API ...\n", signedTx)
 			break
 		} else if v1.WorkflowFinished(workflow) {
 			break
 		}
 
-		// Sleep for 5 seconds before polling for workflow status again
-		time.Sleep(5 * time.Second)
+		// Sleep for 1 second before polling for workflow status again
+		time.Sleep(1 * time.Second)
 	}
 }
 

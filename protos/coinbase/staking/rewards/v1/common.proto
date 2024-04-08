@@ -15,7 +15,7 @@ message AssetAmount {
 
   // The number of decimals needed to convert from the raw numeric value to the most
   // common denomination.
-  string exp = 2 [(google.api.field_behavior) = OUTPUT_ONLY];
+  int64 exp = 2 [(google.api.field_behavior) = OUTPUT_ONLY];
 
   // The ticker of this asset (ex: USD, ETH, SOL).
   string ticker = 3 [(google.api.field_behavior) = OUTPUT_ONLY];
