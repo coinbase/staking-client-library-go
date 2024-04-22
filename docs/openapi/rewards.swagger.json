@@ -223,6 +223,13 @@
             "in": "query",
             "required": false,
             "type": "string"
+          },
+          {
+            "name": "orderBy",
+            "description": "The order in which to sort the results.\n[AIP-132](https://google.aip.dev/132) compliant order_by field.\nThe default behavior, if not supplied, is 'evaluation_time desc'.\nExample(s):\n* 'evaluation_time desc', which returns Stakes starting with the most recent.\n* 'evaluation_time asc', which returns Stakes starting with the oldest available.\n* 'evaluation_time', which returns Stakes starting with the oldest available.",
+            "in": "query",
+            "required": false,
+            "type": "string"
           }
         ],
         "tags": [
