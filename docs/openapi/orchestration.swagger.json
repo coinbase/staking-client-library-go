@@ -970,6 +970,39 @@
         "amount"
       ]
     },
+    "v1EthereumNativeStakeParameters": {
+      "type": "object",
+      "properties": {
+        "withdrawalAddress": {
+          "type": "string",
+          "title": "Ethereum address used to withdrawal funds"
+        },
+        "feeRecipient": {
+          "type": "string",
+          "title": "Ethereum address used to accumulate fees"
+        },
+        "amount": {
+          "$ref": "#/definitions/v1Amount",
+          "title": "Amount of ETH to stake in increments of 32"
+        }
+      },
+      "title": "Ethereum: Native Stake Parameters",
+      "required": [
+        "withdrawalAddress",
+        "feeRecipient",
+        "amount"
+      ]
+    },
+    "v1EthereumStakingParameters": {
+      "type": "object",
+      "properties": {
+        "nativeStakeParameters": {
+          "$ref": "#/definitions/v1EthereumNativeStakeParameters",
+          "title": "Native staking parameters"
+        }
+      },
+      "title": "Ethereum: Staking Parameters"
+    },
     "v1ListActionsResponse": {
       "type": "object",
       "properties": {
@@ -1083,6 +1116,28 @@
         }
       },
       "description": "A Protocol resource (e.g. ethereum_kiln, solana etc.)."
+    },
+    "v1ProvisionInfraStepOutput": {
+      "type": "object",
+      "properties": {
+        "state": {
+          "$ref": "#/definitions/v1ProvisionInfraStepOutputState",
+          "description": "The state of the provision infra step.",
+          "readOnly": true
+        }
+      },
+      "description": "The details for an infrastructure provision request."
+    },
+    "v1ProvisionInfraStepOutputState": {
+      "type": "string",
+      "enum": [
+        "STATE_UNSPECIFIED",
+        "STATE_IN_PROGRESS",
+        "STATE_COMPLETED",
+        "STATE_FAILED"
+      ],
+      "default": "STATE_UNSPECIFIED",
+      "description": "State defines an enumeration of states for provisioning infra.\n\n - STATE_UNSPECIFIED: Unspecified step state.\n - STATE_IN_PROGRESS: Provision step is in-progress.\n - STATE_COMPLETED: Provision step completed.\n - STATE_FAILED: Provision step failed."
     },
     "v1SolanaClaimStakeParameters": {
       "type": "object",
@@ -1402,6 +1457,10 @@
           "$ref": "#/definitions/v1EthereumKilnStakingParameters",
           "description": "EthereumKiln staking parameters."
         },
+        "ethereumStakingParameters": {
+          "$ref": "#/definitions/v1EthereumStakingParameters",
+          "description": "Ethereum staking parameters."
+        },
         "state": {
           "$ref": "#/definitions/v1WorkflowState",
           "description": "The current state of the workflow.",
@@ -1445,7 +1504,8 @@
       "required": [
         "action",
         "solanaStakingParameters",
-        "ethereumKilnStakingParameters"
+        "ethereumKilnStakingParameters",
+        "ethereumStakingParameters"
       ]
     },
     "v1WorkflowState": {
@@ -1477,6 +1537,11 @@
         "waitStepOutput": {
           "$ref": "#/definitions/v1WaitStepOutput",
           "description": "The waiting details for any kind like how many checkpoints away for unbonding etc.",
+          "readOnly": true
+        },
+        "provisionInfraStepOutput": {
+          "$ref": "#/definitions/v1ProvisionInfraStepOutput",
+          "description": "The details for provisioned infrastructure.",
           "readOnly": true
         }
       },
