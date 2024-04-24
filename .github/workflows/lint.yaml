@@ -1,20 +1,21 @@
 name: Go Lint
 on:
   push:
-    # branches:
-    #   - master
-    #   - main
+    branches:
+      - master
+    # We only run tests when we open PRs (and not for ex: on every commit)
+  # to avoid running workflows too frequently and incurring costs
   pull_request:
 
 permissions:
   contents: read
-  # Optional: allow read access to pull request. Use with `only-new-issues` option.
-  # pull-requests: read
 
 jobs:
-  golangci:
+  lint:
     name: lint
     runs-on: ubuntu-latest
+    # This prevents the workflow from running on PRs from forks
+    if: github.event.pull_request.head.repo.full_name == github.repository
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-go@v5
