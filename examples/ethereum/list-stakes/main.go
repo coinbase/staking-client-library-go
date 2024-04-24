@@ -65,7 +65,7 @@ func main() {
 			log.Fatalf("error listing stakes: %s", err.Error())
 		}
 
-		marshaled, err := protojson.Marshal(reward)
+		marshaled, err := protojson.Marshal(stake)
 		if err != nil {
 			log.Fatalf("error marshaling reward: %s", err.Error())
 		}

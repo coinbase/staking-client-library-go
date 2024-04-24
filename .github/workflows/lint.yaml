@@ -15,8 +15,6 @@ jobs:
   lint:
     name: lint
     runs-on: ubuntu-latest
-    # This prevents the workflow from running on PRs from forks
-    if: github.event.pull_request.head.repo.full_name == github.repository
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-go@v5
@@ -27,3 +25,4 @@ jobs:
         uses: golangci/golangci-lint-action@v4
         with:
           version: v1.54.2
+          args: --timeout=3m

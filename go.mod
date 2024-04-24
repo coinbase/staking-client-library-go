@@ -2,8 +2,6 @@ module github.com/coinbase/staking-client-library-go
 
 go 1.21
 
-toolchain go1.21.7
-
 require (
 	github.com/btcsuite/btcutil v1.0.3-0.20201208143702-a53e38424cce
 	github.com/ethereum/go-ethereum v1.12.0
