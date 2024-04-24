@@ -7,7 +7,6 @@ package main
 import (
 	"context"
 	"errors"
-	"fmt"
 	"log"
 
 	"google.golang.org/api/iterator"
@@ -16,11 +15,6 @@ import (
 	"github.com/coinbase/staking-client-library-go/client"
 	"github.com/coinbase/staking-client-library-go/client/options"
 	stakingpb "github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/orchestration/v1"
-)
-
-const (
-	// TODO: Replace with your project ID.
-	projectID = ""
 )
 
 // An example function to demonstrate how to use the staking client libraries.
@@ -40,14 +34,8 @@ func main() {
 		log.Fatalf("error instantiating staking client: %s", err.Error())
 	}
 
-	if projectID == "" {
-		log.Fatalf("projectID must be set")
-	}
-
 	// List all workflows for a given project.
-	workflowIter := stakingClient.Orchestration.ListWorkflows(ctx, &stakingpb.ListWorkflowsRequest{
-		Parent: fmt.Sprintf("projects/%s", projectID),
-	})
+	workflowIter := stakingClient.Orchestration.ListWorkflows(ctx, &stakingpb.ListWorkflowsRequest{})
 
 	for {
 		workflow, err := workflowIter.Next()

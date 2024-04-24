@@ -7,22 +7,21 @@ package main
 import (
 	"context"
 	"fmt"
-	"github.com/coinbase/staking-client-library-go/internal/signer"
 	"log"
 	"os"
 	"time"
+
+	"github.com/coinbase/staking-client-library-go/internal/signer"
 
 	"github.com/coinbase/staking-client-library-go/auth"
 	"github.com/coinbase/staking-client-library-go/client"
 	stakingerrors "github.com/coinbase/staking-client-library-go/client/errors"
 	"github.com/coinbase/staking-client-library-go/client/options"
-	"github.com/coinbase/staking-client-library-go/client/orchestration/v1"
 	stakingpb "github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/orchestration/v1"
 )
 
 const (
-	// TODO: Replace with your project ID and private key.
-	projectID  = ""
+	// TODO: Replace with your private key.
 	privateKey = ""
 
 	// TODO: Replace with your wallet addresses and amount.
@@ -49,12 +48,11 @@ func main() {
 		log.Fatalf("error instantiating staking client: %s", err.Error())
 	}
 
-	if projectID == "" || privateKey == "" || walletAddress == "" {
-		log.Fatalf("projectID, privateKey, and walletAddress must be set")
+	if privateKey == "" || walletAddress == "" {
+		log.Fatalf("privateKey and walletAddress must be set")
 	}
 
 	req := &stakingpb.CreateWorkflowRequest{
-		Parent: fmt.Sprintf("projects/%s", projectID),
 		Workflow: &stakingpb.Workflow{
 			Action: "protocols/solana/networks/testnet/actions/stake",
 			StakingParameters: &stakingpb.Workflow_SolanaStakingParameters{

@@ -18,7 +18,7 @@ import (
 	"github.com/coinbase/staking-client-library-go/auth"
 	"github.com/coinbase/staking-client-library-go/client"
 	"github.com/coinbase/staking-client-library-go/client/options"
-	reward "github.com/coinbase/staking-client-library-go/client/rewards/reward"
+	"github.com/coinbase/staking-client-library-go/client/rewards/reward"
 	api "github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/rewards/v1"
 )
 
