@@ -12,14 +12,24 @@ import (
 	"log"
 	"time"
 
+	"github.com/coinbase/staking-client-library-go/client/protocols"
 	"google.golang.org/api/iterator"
 
 	"github.com/coinbase/staking-client-library-go/auth"
 	"github.com/coinbase/staking-client-library-go/client"
-	"github.com/coinbase/staking-client-library-go/client/filter"
 	"github.com/coinbase/staking-client-library-go/client/options"
-	"github.com/coinbase/staking-client-library-go/client/rewards"
-	rewardspb "github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/rewards/v1"
+	reward "github.com/coinbase/staking-client-library-go/client/rewards/reward"
+	api "github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/rewards/v1"
+)
+
+/*
+ * Run the code with 'go run main.go' to view the rewards for the first validator on the Ethereum network.
+ * Or, to view rewards for any arbitrary validator, simply replace the public key below.
+ */
+
+const (
+	// https://beaconcha.in/validator/1
+	address = "0xa1d1ad0714035353258038e964ae9675dc0252ee22cea896825c01458e1807bfad2f9969338798548d9858a571f7425c"
 )
 
 func main() {
@@ -38,16 +48,12 @@ func main() {
 	}
 
 	// Lists the rewards for the given address for the previous last 2 days, aggregated by day.
-	rewardsIter := stakingClient.Rewards.ListRewards(ctx, &rewardspb.ListRewardsRequest{
-		Parent:   rewards.Ethereum,
+	rewardsIter := stakingClient.Rewards.ListRewards(ctx, &api.ListRewardsRequest{
+		Parent:   protocols.Ethereum,
 		PageSize: 200,
-		Filter: rewards.NewListRewardsFilter().
-			WithAddress(filter.Equal("0xac53512c39d0081ca4437c285305eb423f474e6153693c12fbba4a3df78bcaa3422b31d800c5bea71c1b017168a60474")).
-			And().
-			WithPeriodEndTime(filter.GreaterThanOrEqualTo(time.Now().AddDate(0, 0, -20))).
-			And().
-			WithPeriodEndTime(filter.LessThan(time.Now())).
-			Build(),
+		Filter: reward.WithAddress().Eq(address).
+			And(reward.WithPeriodEndTime().Gte(time.Now().AddDate(0, 0, -20))).
+			And(reward.WithPeriodEndTime().Lt(time.Now())).String(),
 	})
 
 	// Iterates through the rewards and print them.
@@ -66,6 +72,6 @@ func main() {
 			log.Fatalf("error marshaling reward: %s", err.Error())
 		}
 
-		fmt.Printf(string(marshaled))
+		fmt.Println(string(marshaled))
 	}
 }

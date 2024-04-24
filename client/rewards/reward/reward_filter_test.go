@@ -95,6 +95,9 @@ func (s *ListRewardsFilterSuite) TestListStakesFilter_WithPeriodEndTime() {
 
 	f = reward.WithAddress().Eq("abcd").And(reward.WithPeriodEndTime().Gte(fiveDaysAgo)).And(reward.WithPeriodEndTime().Lt(now)).String()
 	assert.Equal(s.T(), fmt.Sprintf("(address = 'abcd' AND period_end_time >= '%s' AND period_end_time < '%s')", fiveDaysAgoRFC3339, nowRFC3339), f)
+
+	f = reward.WithAddress().Eq("abcd").And(reward.WithPeriodEndTime().Gte(fiveDaysAgo).And(reward.WithPeriodEndTime().Lt(now))).String()
+	assert.Equal(s.T(), fmt.Sprintf("(address = 'abcd' AND (period_end_time >= '%s' AND period_end_time < '%s'))", fiveDaysAgoRFC3339, nowRFC3339), f)
 }
 
 func (s *ListRewardsFilterSuite) TestListStakesFilter_MultipleDifferentComparisons() {

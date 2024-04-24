@@ -1,4 +1,4 @@
-package rewards
+package protocols
 
 import (
 	rewardspb "github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/rewards/v1"
