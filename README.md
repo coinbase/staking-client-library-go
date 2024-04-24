@@ -166,18 +166,13 @@ func main() {
             log.Fatalf("error listing rewards: %s", err.Error())
         }
 
-        marshaled, err := protojson.Marshal(reward)
+        marshaler := protojson.MarshalOptions{Indent: "\t"}
+        marshaled, err := marshaler.Marshal(reward)
         if err != nil {
             log.Fatalf("error marshaling reward: %s", err.Error())
         }
 
-        var prettyJSON bytes.Buffer
-        if err := json.Indent(&prettyJSON, marshaled, "", "\t"); err != nil {
-            log.Fatalf("JSON parse error: %s", err)
-            return
-        }
-
-        fmt.Println(prettyJSON.String())
+        fmt.Println(string(marshaled))
     }
 }
 ```

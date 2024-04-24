@@ -1,11 +1,11 @@
-package rewards_filter_test
+package rewardsfilter_test
 
 import (
 	"fmt"
 	"testing"
 	"time"
 
-	filter "github.com/coinbase/staking-client-library-go/client/rewards/rewards_filter"
+	filter "github.com/coinbase/staking-client-library-go/client/rewards/rewardsfilter"
 	"github.com/stretchr/testify/assert"
 	"github.com/test-go/testify/suite"
 )

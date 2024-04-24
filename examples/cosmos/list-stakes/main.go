@@ -1,9 +1,7 @@
 package main
 
 import (
-	"bytes"
 	"context"
-	"encoding/json"
 	"errors"
 	"fmt"
 	"log"
@@ -12,7 +10,7 @@ import (
 	"github.com/coinbase/staking-client-library-go/client"
 	"github.com/coinbase/staking-client-library-go/client/options"
 	"github.com/coinbase/staking-client-library-go/client/rewards"
-	filter "github.com/coinbase/staking-client-library-go/client/rewards/stakes_filter"
+	filter "github.com/coinbase/staking-client-library-go/client/rewards/stakesfilter"
 	api "github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/rewards/v1"
 	"google.golang.org/api/iterator"
 	"google.golang.org/protobuf/encoding/protojson"
@@ -62,17 +60,12 @@ func main() {
 			log.Fatalf("error listing stakes: %s", err.Error())
 		}
 
-		marshaled, err := protojson.Marshal(stake)
+		marshaler := protojson.MarshalOptions{Indent: "\t"}
+		marshaled, err := marshaler.Marshal(stake)
 		if err != nil {
 			log.Fatalf("error marshaling reward: %s", err.Error())
 		}
 
-		var prettyJSON bytes.Buffer
-		if err := json.Indent(&prettyJSON, marshaled, "", "\t"); err != nil {
-			log.Fatalf("JSON parse error: %s", err)
-			return
-		}
-
-		fmt.Println(prettyJSON.String())
+		fmt.Println(string(marshaled))
 	}
 }

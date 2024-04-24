@@ -1,10 +1,10 @@
-package stakes_filter_test
+package stakesfilter_test
 
 import (
 	"testing"
 	"time"
 
-	filter "github.com/coinbase/staking-client-library-go/client/rewards/stakes_filter"
+	filter "github.com/coinbase/staking-client-library-go/client/rewards/stakesfilter"
 	"github.com/stretchr/testify/assert"
 	"github.com/test-go/testify/suite"
 )
