@@ -5,13 +5,13 @@ import (
 	"fmt"
 
 	"github.com/coinbase/staking-client-library-go/client/options"
-	orchestrationClient "github.com/coinbase/staking-client-library-go/client/orchestration/v1"
-	rewardsClient "github.com/coinbase/staking-client-library-go/client/rewards/v1"
+	"github.com/coinbase/staking-client-library-go/client/orchestration"
+	"github.com/coinbase/staking-client-library-go/client/rewards"
 )
 
 type StakingClient struct {
-	Orchestration *orchestrationClient.OrchestrationServiceClient
-	Rewards       *rewardsClient.RewardsServiceClient
+	Orchestration *orchestration.Client
+	Rewards       *rewards.Client
 }
 
 // New returns a StakingClient based on the given inputs.
@@ -19,12 +19,12 @@ func New(
 	ctx context.Context,
 	stakingOpts ...options.StakingClientOption,
 ) (*StakingClient, error) {
-	orchestrationClient, err := orchestrationClient.NewOrchestrationServiceClient(ctx, stakingOpts...)
+	orchestrationClient, err := orchestration.NewOrchestrationServiceClient(ctx, stakingOpts...)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create orchestration client: %w", err)
 	}
 
-	rewardsClient, err := rewardsClient.NewRewardsServiceClient(ctx, stakingOpts...)
+	rewardsClient, err := rewards.NewRewardsServiceClient(ctx, stakingOpts...)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create rewards client: %w", err)
 	}

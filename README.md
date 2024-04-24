@@ -33,19 +33,15 @@ package main
 
 import (
     "context"
-    "fmt"
     "log"
 
     "github.com/coinbase/staking-client-library-go/auth"
     "github.com/coinbase/staking-client-library-go/client"
     "github.com/coinbase/staking-client-library-go/client/options"
-    stakingpb "github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/orchestration/v1"
+    api "github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/orchestration/v1"
 )
 
 func main() {
-    // TODO: Add your project ID found at cloud.coinbase.com or in your API key.
-    projectID := ""
-
     ctx := context.Background()
 
     // Loads the API key from the default location.
@@ -60,18 +56,16 @@ func main() {
         log.Fatalf("error instantiating staking client: %s", err.Error())
     }
 
-    // Constructs the API request
-    req := &stakingpb.CreateWorkflowRequest{
-        Parent: fmt.Sprintf("projects/%s", projectID),
-        Workflow: &stakingpb.Workflow{
+    req := &api.CreateWorkflowRequest{
+        Workflow: &api.Workflow{
             Action: "protocols/ethereum_kiln/networks/holesky/actions/stake",
-            StakingParameters: &stakingpb.Workflow_EthereumKilnStakingParameters{
-                EthereumKilnStakingParameters: &stakingpb.EthereumKilnStakingParameters{
-                    Parameters: &stakingpb.EthereumKilnStakingParameters_StakeParameters{
-                        StakeParameters: &stakingpb.EthereumKilnStakeParameters{
+            StakingParameters: &api.Workflow_EthereumKilnStakingParameters{
+                EthereumKilnStakingParameters: &api.EthereumKilnStakingParameters{
+                    Parameters: &api.EthereumKilnStakingParameters_StakeParameters{
+                        StakeParameters: &api.EthereumKilnStakeParameters{
                             StakerAddress:             "0xdb816889F2a7362EF242E5a717dfD5B38Ae849FE",
                             IntegratorContractAddress: "0xA55416de5DE61A0AC1aa8970a280E04388B1dE4b",
-                            Amount: &stakingpb.Amount{
+                            Amount: &api.Amount{
                                 Value:    "20",
                                 Currency: "ETH",
                             },
@@ -79,7 +73,6 @@ func main() {
                     },
                 },
             },
-            SkipBroadcast: true,
         },
     }
 
@@ -115,6 +108,7 @@ This code sample returns rewards for an Ethereum validator address. View the ful
 package main
 
 import (
+    "bytes"
     "context"
     "encoding/json"
     "errors"
@@ -122,13 +116,19 @@ import (
     "log"
     "time"
 
-    "google.golang.org/api/iterator"
-
     "github.com/coinbase/staking-client-library-go/auth"
     "github.com/coinbase/staking-client-library-go/client"
     "github.com/coinbase/staking-client-library-go/client/options"
-    rewardsV1 "github.com/coinbase/staking-client-library-go/client/rewards/v1"
-    rewardspb "github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/rewards/v1"
+    "github.com/coinbase/staking-client-library-go/client/rewards"
+    filter "github.com/coinbase/staking-client-library-go/client/rewards/rewards_filter"
+    api "github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/rewards/v1"
+    "google.golang.org/api/iterator"
+    "google.golang.org/protobuf/encoding/protojson"
+)
+
+const (
+    // https://beaconcha.in/validator/1
+    address = "0xa1d1ad0714035353258038e964ae9675dc0252ee22cea896825c01458e1807bfad2f9969338798548d9858a571f7425c"
 )
 
 func main() {
@@ -140,22 +140,22 @@ func main() {
         log.Fatalf("error loading API key: %s", err.Error())
     }
 
-    // Creates the Coinbase Staking API client.
+    // Creates the Coinbase Staking API client
     stakingClient, err := client.New(ctx, options.WithAPIKey(apiKey))
     if err != nil {
         log.Fatalf("error instantiating staking client: %s", err.Error())
     }
 
-    // Lists the rewards for the given address for the previous last 2 days, aggregated by day.
-    rewardsIter := stakingClient.Rewards.ListRewards(ctx, &rewardspb.ListRewardsRequest{
-        Parent:   rewardspb.ProtocolResourceName{Protocol: "ethereum"}.String(),
+    // Lists the rewards for the given address for the previous last 20 days, aggregated by day.
+    rewardsIter := stakingClient.Rewards.ListRewards(ctx, &api.ListRewardsRequest{
+        Parent:   rewards.Ethereum,
         PageSize: 200,
-        Filter: rewardsV1.WithAddress().Eq("0xac53512c39d0081ca4437c285305eb423f474e6153693c12fbba4a3df78bcaa3422b31d800c5bea71c1b017168a60474").
-            And(rewardsV1.WithPeriodEndTime().Gte(time.Now().AddDate(0, 0, -2))).
-            And(rewardsV1.WithPeriodEndTime().Lt(time.Now())).String(),
+        Filter: filter.WithAddress().Eq(address).
+            And(filter.WithPeriodEndTime().Gte(time.Now().AddDate(0, 0, -20))).
+            And(filter.WithPeriodEndTime().Lt(time.Now())).String(),
     })
 
-    // Iterates through the rewards and print them.
+    // Iterates through the rewards and pretty print them.
     for {
         reward, err := rewardsIter.Next()
         if errors.Is(err, iterator.Done) {
@@ -166,12 +166,13 @@ func main() {
             log.Fatalf("error listing rewards: %s", err.Error())
         }
 
-        marshaled, err := json.MarshalIndent(reward, "", "   ")
+        marshaler := protojson.MarshalOptions{Indent: "\t"}
+        marshaled, err := marshaler.Marshal(reward)
         if err != nil {
             log.Fatalf("error marshaling reward: %s", err.Error())
         }
 
-        fmt.Printf(string(marshaled))
+        fmt.Println(string(marshaled))
     }
 }
 ```
@@ -183,75 +184,59 @@ func main() {
 
    ```json
    {
-      "address": "0xac53512c39d0081ca4437c285305eb423f474e6153693c12fbba4a3df78bcaa3422b31d800c5bea71c1b017168a60474",
-      "period_identifier": {
-         "date": "2024-03-26"
-      },
-      "aggregation_unit": 2,
-      "period_start_time": {
-         "seconds": 1711411200
-      },
-      "period_end_time": {
-         "seconds": 1711497599
-      },
-      "total_earned_native_unit": {
-         "amount": "0.00211503",
-         "exp": "18",
-         "ticker": "ETH",
-         "raw_numeric": "2115030000000000"
-      },
-      "total_earned_usd": [
-         {
-            "source": 1,
-            "conversion_time": {
-               "seconds": 1711498140
-            },
-            "amount": {
-               "amount": "7.58",
-               "exp": "2",
-               "ticker": "USD",
-               "raw_numeric": "758"
-            },
-            "conversion_price": "3582.979980"
-         }
-      ],
-      "protocol": "ethereum"
-   }
-   {
-      "address": "0xac53512c39d0081ca4437c285305eb423f474e6153693c12fbba4a3df78bcaa3422b31d800c5bea71c1b017168a60474",
-      "period_identifier": {
-         "date": "2024-03-27"
-      },
-      "aggregation_unit": 2,
-      "period_start_time": {
-         "seconds": 1711497600
-      },
-      "period_end_time": {
-         "seconds": 1711583999
-      },
-      "total_earned_native_unit": {
-         "amount": "0.002034193",
-         "exp": "18",
-         "ticker": "ETH",
-         "raw_numeric": "2034193000000000"
-      },
-      "total_earned_usd": [
-         {
-            "source": 1,
-            "conversion_time": {
-               "seconds": 1711584540
-            },
-            "amount": {
-               "amount": "7.13",
-               "exp": "2",
-               "ticker": "USD",
-               "raw_numeric": "713"
-            },
-            "conversion_price": "3504.580078"
-         }
-      ],
-      "protocol": "ethereum"
-   }
+        "address": "0xa1d1ad0714035353258038e964ae9675dc0252ee22cea896825c01458e1807bfad2f9969338798548d9858a571f7425c",
+        "date": "2024-04-20",
+        "aggregationUnit": "DAY",
+        "periodStartTime": "2024-04-20T00:00:00Z",
+        "periodEndTime": "2024-04-20T23:59:59Z",
+        "totalEarnedNativeUnit": {
+            "amount": "0.002118354",
+            "exp": "18",
+            "ticker": "ETH",
+            "rawNumeric": "2118354000000000"
+        },
+        "totalEarnedUsd": [
+            {
+                "source": "COINBASE_EXCHANGE",
+                "conversionTime": "2024-04-21T00:09:00Z",
+                "amount": {
+                    "amount": "6.67",
+                    "exp": "2",
+                    "ticker": "USD",
+                    "rawNumeric": "667"
+                },
+                "conversionPrice": "3145.550049"
+            }
+        ],
+        "protocol": "ethereum"
+    }
+    {
+        "address": "0xa1d1ad0714035353258038e964ae9675dc0252ee22cea896825c01458e1807bfad2f9969338798548d9858a571f7425c",
+        "date": "2024-04-21",
+        "aggregationUnit": "DAY",
+        "periodStartTime": "2024-04-21T00:00:00Z",
+        "periodEndTime": "2024-04-21T23:59:59Z",
+        "totalEarnedNativeUnit": {
+            "amount": "0.00211564",
+            "exp": "18",
+            "ticker": "ETH",
+            "rawNumeric": "2115640000000000"
+        },
+        "totalEarnedUsd": [
+            {
+                "source": "COINBASE_EXCHANGE",
+                "conversionTime": "2024-04-22T00:09:00Z",
+                "amount": {
+                    "amount": "6.68",
+                    "exp": "2",
+                    "ticker": "USD",
+                    "rawNumeric": "668"
+                },
+                "conversionPrice": "3155.449951"
+            }
+        ],
+        "protocol": "ethereum"
+    }
    ```
 
    </details>

@@ -235,23 +235,6 @@ func request_StakingService_CreateWorkflow_0(ctx context.Context, marshaler runt
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
-	var (
-		val string
-		ok  bool
-		err error
-		_   = err
-	)
-
-	val, ok = pathParams["parent"]
-	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "parent")
-	}
-
-	protoReq.Parent, err = runtime.String(val)
-	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "parent", err)
-	}
-
 	msg, err := client.CreateWorkflow(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
 
@@ -267,23 +250,6 @@ func local_request_StakingService_CreateWorkflow_0(ctx context.Context, marshale
 	}
 	if err := marshaler.NewDecoder(newReader()).Decode(&protoReq.Workflow); err != nil && err != io.EOF {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
-	}
-
-	var (
-		val string
-		ok  bool
-		err error
-		_   = err
-	)
-
-	val, ok = pathParams["parent"]
-	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "parent")
-	}
-
-	protoReq.Parent, err = runtime.String(val)
-	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "parent", err)
 	}
 
 	msg, err := server.CreateWorkflow(ctx, &protoReq)
@@ -344,29 +310,12 @@ func local_request_StakingService_GetWorkflow_0(ctx context.Context, marshaler r
 }
 
 var (
-	filter_StakingService_ListWorkflows_0 = &utilities.DoubleArray{Encoding: map[string]int{"parent": 0}, Base: []int{1, 2, 0, 0}, Check: []int{0, 1, 2, 2}}
+	filter_StakingService_ListWorkflows_0 = &utilities.DoubleArray{Encoding: map[string]int{}, Base: []int(nil), Check: []int(nil)}
 )
 
 func request_StakingService_ListWorkflows_0(ctx context.Context, marshaler runtime.Marshaler, client StakingServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq ListWorkflowsRequest
 	var metadata runtime.ServerMetadata
-
-	var (
-		val string
-		ok  bool
-		err error
-		_   = err
-	)
-
-	val, ok = pathParams["parent"]
-	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "parent")
-	}
-
-	protoReq.Parent, err = runtime.String(val)
-	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "parent", err)
-	}
 
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
@@ -383,23 +332,6 @@ func request_StakingService_ListWorkflows_0(ctx context.Context, marshaler runti
 func local_request_StakingService_ListWorkflows_0(ctx context.Context, marshaler runtime.Marshaler, server StakingServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq ListWorkflowsRequest
 	var metadata runtime.ServerMetadata
-
-	var (
-		val string
-		ok  bool
-		err error
-		_   = err
-	)
-
-	val, ok = pathParams["parent"]
-	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "parent")
-	}
-
-	protoReq.Parent, err = runtime.String(val)
-	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "parent", err)
-	}
 
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
@@ -631,7 +563,7 @@ func RegisterStakingServiceHandlerServer(ctx context.Context, mux *runtime.Serve
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/coinbase.staking.orchestration.v1.StakingService/CreateWorkflow", runtime.WithHTTPPathPattern("/v1/{parent=projects/*}/workflows"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/coinbase.staking.orchestration.v1.StakingService/CreateWorkflow", runtime.WithHTTPPathPattern("/v1/workflows"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -656,7 +588,7 @@ func RegisterStakingServiceHandlerServer(ctx context.Context, mux *runtime.Serve
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/coinbase.staking.orchestration.v1.StakingService/GetWorkflow", runtime.WithHTTPPathPattern("/v1/{name=projects/*/workflows/*}"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/coinbase.staking.orchestration.v1.StakingService/GetWorkflow", runtime.WithHTTPPathPattern("/v1/{name=workflows/*}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -681,7 +613,7 @@ func RegisterStakingServiceHandlerServer(ctx context.Context, mux *runtime.Serve
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/coinbase.staking.orchestration.v1.StakingService/ListWorkflows", runtime.WithHTTPPathPattern("/v1/{parent=projects/*}/workflows"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/coinbase.staking.orchestration.v1.StakingService/ListWorkflows", runtime.WithHTTPPathPattern("/v1/workflows"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -706,7 +638,7 @@ func RegisterStakingServiceHandlerServer(ctx context.Context, mux *runtime.Serve
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/coinbase.staking.orchestration.v1.StakingService/PerformWorkflowStep", runtime.WithHTTPPathPattern("/v1/{name=projects/*/workflows/*}/step"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/coinbase.staking.orchestration.v1.StakingService/PerformWorkflowStep", runtime.WithHTTPPathPattern("/v1/{name=workflows/*}/step"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -883,7 +815,7 @@ func RegisterStakingServiceHandlerClient(ctx context.Context, mux *runtime.Serve
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/coinbase.staking.orchestration.v1.StakingService/CreateWorkflow", runtime.WithHTTPPathPattern("/v1/{parent=projects/*}/workflows"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/coinbase.staking.orchestration.v1.StakingService/CreateWorkflow", runtime.WithHTTPPathPattern("/v1/workflows"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -905,7 +837,7 @@ func RegisterStakingServiceHandlerClient(ctx context.Context, mux *runtime.Serve
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/coinbase.staking.orchestration.v1.StakingService/GetWorkflow", runtime.WithHTTPPathPattern("/v1/{name=projects/*/workflows/*}"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/coinbase.staking.orchestration.v1.StakingService/GetWorkflow", runtime.WithHTTPPathPattern("/v1/{name=workflows/*}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -927,7 +859,7 @@ func RegisterStakingServiceHandlerClient(ctx context.Context, mux *runtime.Serve
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/coinbase.staking.orchestration.v1.StakingService/ListWorkflows", runtime.WithHTTPPathPattern("/v1/{parent=projects/*}/workflows"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/coinbase.staking.orchestration.v1.StakingService/ListWorkflows", runtime.WithHTTPPathPattern("/v1/workflows"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -949,7 +881,7 @@ func RegisterStakingServiceHandlerClient(ctx context.Context, mux *runtime.Serve
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/coinbase.staking.orchestration.v1.StakingService/PerformWorkflowStep", runtime.WithHTTPPathPattern("/v1/{name=projects/*/workflows/*}/step"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/coinbase.staking.orchestration.v1.StakingService/PerformWorkflowStep", runtime.WithHTTPPathPattern("/v1/{name=workflows/*}/step"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -999,13 +931,13 @@ var (
 
 	pattern_StakingService_ListActions_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 2, 2, 1, 0, 4, 4, 5, 3, 2, 4}, []string{"v1", "protocols", "networks", "parent", "actions"}, ""))
 
-	pattern_StakingService_CreateWorkflow_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 2, 5, 2, 2, 3}, []string{"v1", "projects", "parent", "workflows"}, ""))
+	pattern_StakingService_CreateWorkflow_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"v1", "workflows"}, ""))
 
-	pattern_StakingService_GetWorkflow_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 2, 2, 1, 0, 4, 4, 5, 3}, []string{"v1", "projects", "workflows", "name"}, ""))
+	pattern_StakingService_GetWorkflow_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 2, 5, 2}, []string{"v1", "workflows", "name"}, ""))
 
-	pattern_StakingService_ListWorkflows_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 2, 5, 2, 2, 3}, []string{"v1", "projects", "parent", "workflows"}, ""))
+	pattern_StakingService_ListWorkflows_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"v1", "workflows"}, ""))
 
-	pattern_StakingService_PerformWorkflowStep_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 2, 2, 1, 0, 4, 4, 5, 3, 2, 4}, []string{"v1", "projects", "workflows", "name", "step"}, ""))
+	pattern_StakingService_PerformWorkflowStep_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 2, 5, 2, 2, 3}, []string{"v1", "workflows", "name", "step"}, ""))
 
 	pattern_StakingService_ViewStakingContext_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"v1", "viewStakingContext"}, "view"))
 )

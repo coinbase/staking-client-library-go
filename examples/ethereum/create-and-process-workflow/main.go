@@ -15,14 +15,13 @@ import (
 	"github.com/coinbase/staking-client-library-go/client"
 	stakingerrors "github.com/coinbase/staking-client-library-go/client/errors"
 	"github.com/coinbase/staking-client-library-go/client/options"
-	v1 "github.com/coinbase/staking-client-library-go/client/orchestration/v1"
-	stakingpb "github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/orchestration/v1"
+	"github.com/coinbase/staking-client-library-go/client/orchestration"
+	api "github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/orchestration/v1"
 	"github.com/coinbase/staking-client-library-go/internal/signer"
 )
 
 const (
-	// TODO: Replace with your project ID and private key.
-	projectID  = ""
+	// TODO: Replace with your private key.
 	privateKey = ""
 
 	// TODO: Replace with your staker addresses and amount.
@@ -49,21 +48,20 @@ func main() {
 		log.Fatalf("error instantiating staking client: %s", err.Error())
 	}
 
-	if projectID == "" || privateKey == "" || stakerAddress == "" {
-		log.Fatalf("projectID, privateKey and stakerAddress must be set")
+	if privateKey == "" || stakerAddress == "" {
+		log.Fatalf("privateKey stakerAddress must be set")
 	}
 
-	req := &stakingpb.CreateWorkflowRequest{
-		Parent: fmt.Sprintf("projects/%s", projectID),
-		Workflow: &stakingpb.Workflow{
+	req := &api.CreateWorkflowRequest{
+		Workflow: &api.Workflow{
 			Action: "protocols/ethereum_kiln/networks/holesky/actions/stake",
-			StakingParameters: &stakingpb.Workflow_EthereumKilnStakingParameters{
-				EthereumKilnStakingParameters: &stakingpb.EthereumKilnStakingParameters{
-					Parameters: &stakingpb.EthereumKilnStakingParameters_StakeParameters{
-						StakeParameters: &stakingpb.EthereumKilnStakeParameters{
+			StakingParameters: &api.Workflow_EthereumKilnStakingParameters{
+				EthereumKilnStakingParameters: &api.EthereumKilnStakingParameters{
+					Parameters: &api.EthereumKilnStakingParameters_StakeParameters{
+						StakeParameters: &api.EthereumKilnStakeParameters{
 							StakerAddress:             stakerAddress,
 							IntegratorContractAddress: integratorContractAddress,
-							Amount: &stakingpb.Amount{
+							Amount: &api.Amount{
 								Value:    amount,
 								Currency: currency,
 							},
@@ -86,7 +84,7 @@ func main() {
 	// Run loop until workflow reaches a terminal state
 	for {
 		// Get the latest workflow state
-		workflow, err = stakingClient.Orchestration.GetWorkflow(ctx, &stakingpb.GetWorkflowRequest{Name: workflow.Name})
+		workflow, err = stakingClient.Orchestration.GetWorkflow(ctx, &api.GetWorkflowRequest{Name: workflow.Name})
 		if err != nil {
 			log.Fatalf(fmt.Errorf("error getting workflow: %w", err).Error())
 		}
@@ -94,7 +92,7 @@ func main() {
 		printWorkflowProgressDetails(workflow)
 
 		// If workflow is in WAITING_FOR_EXT_BROADCAST state, sign, broadcast the transaction and update the workflow.
-		if v1.WorkflowWaitingForExternalBroadcast(workflow) {
+		if orchestration.WorkflowWaitingForExternalBroadcast(workflow) {
 			unsignedTx := workflow.Steps[workflow.GetCurrentStepId()].GetTxStepOutput().GetUnsignedTx()
 
 			// Logic to sign the transaction. This can be substituted with any other signing mechanism.
@@ -108,7 +106,7 @@ func main() {
 			// Add logic to broadcast the tx here.
 			fmt.Printf("Please broadcast this signed tx %s externally and return back the tx hash via the PerformWorkflowStep API ...\n", signedTx)
 			break
-		} else if v1.WorkflowFinished(workflow) {
+		} else if orchestration.WorkflowFinished(workflow) {
 			break
 		}
 
@@ -117,7 +115,7 @@ func main() {
 	}
 }
 
-func printWorkflowProgressDetails(workflow *stakingpb.Workflow) {
+func printWorkflowProgressDetails(workflow *api.Workflow) {
 	if len(workflow.GetSteps()) <= 0 {
 		fmt.Println("Waiting for steps to be created ...")
 		time.Sleep(2 * time.Second)
@@ -132,12 +130,12 @@ func printWorkflowProgressDetails(workflow *stakingpb.Workflow) {
 	var stepDetails string
 
 	switch step.GetOutput().(type) {
-	case *stakingpb.WorkflowStep_TxStepOutput:
+	case *api.WorkflowStep_TxStepOutput:
 		stepDetails = fmt.Sprintf("state: %s tx hash: %s",
 			step.GetTxStepOutput().GetState().String(),
 			step.GetTxStepOutput().GetTxHash(),
 		)
-	case *stakingpb.WorkflowStep_WaitStepOutput:
+	case *api.WorkflowStep_WaitStepOutput:
 		stepDetails = fmt.Sprintf("state: %s current: %d target: %d",
 			step.GetWaitStepOutput().GetState().String(),
 			step.GetWaitStepOutput().GetCurrent(),
@@ -145,7 +143,7 @@ func printWorkflowProgressDetails(workflow *stakingpb.Workflow) {
 		)
 	}
 
-	if v1.WorkflowFinished(workflow) {
+	if orchestration.WorkflowFinished(workflow) {
 		log.Printf("Workflow reached end state - step name: %s %s workflow state: %s runtime: %v\n",
 			step.GetName(),
 			stepDetails,

@@ -14,17 +14,10 @@ import (
 )
 
 type WorkflowResourceName struct {
-	Project  string
 	Workflow string
 }
 
 func (n WorkflowResourceName) Validate() error {
-	if n.Project == "" {
-		return fmt.Errorf("project: empty")
-	}
-	if strings.IndexByte(n.Project, '/') != -1 {
-		return fmt.Errorf("project: contains illegal character '/'")
-	}
 	if n.Workflow == "" {
 		return fmt.Errorf("workflow: empty")
 	}
@@ -35,13 +28,12 @@ func (n WorkflowResourceName) Validate() error {
 }
 
 func (n WorkflowResourceName) ContainsWildcard() bool {
-	return false || n.Project == "-" || n.Workflow == "-"
+	return false || n.Workflow == "-"
 }
 
 func (n WorkflowResourceName) String() string {
 	return resourcename.Sprint(
-		"projects/{project}/workflows/{workflow}",
-		n.Project,
+		"workflows/{workflow}",
 		n.Workflow,
 	)
 }
@@ -56,8 +48,7 @@ func (n WorkflowResourceName) MarshalString() (string, error) {
 func (n *WorkflowResourceName) UnmarshalString(name string) error {
 	return resourcename.Sscan(
 		name,
-		"projects/{project}/workflows/{workflow}",
-		&n.Project,
+		"workflows/{workflow}",
 		&n.Workflow,
 	)
 }

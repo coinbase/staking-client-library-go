@@ -1,5 +1,6 @@
 /*
- * This example code, demonstrates rewards client library usage for listing rewards
+ * This example code list historical staking rewards of a validator on the Solana blockchain
+ * A user can view historical staking rewards for any validator on the Solana blockchain by replacing the address below
  */
 
 package main
@@ -7,25 +8,30 @@ package main
 import (
 	"context"
 	"errors"
+	"fmt"
 	"log"
 	"time"
-
-	"google.golang.org/api/iterator"
-	"google.golang.org/protobuf/encoding/protojson"
 
 	"github.com/coinbase/staking-client-library-go/auth"
 	"github.com/coinbase/staking-client-library-go/client"
 	"github.com/coinbase/staking-client-library-go/client/options"
-	rewardsV1 "github.com/coinbase/staking-client-library-go/client/rewards/v1"
-	rewardspb "github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/rewards/v1"
+	"github.com/coinbase/staking-client-library-go/client/rewards"
+	filter "github.com/coinbase/staking-client-library-go/client/rewards/rewardsfilter"
+	api "github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/rewards/v1"
+	"google.golang.org/api/iterator"
+	"google.golang.org/protobuf/encoding/protojson"
 )
+
+/*
+ * Run the code with 'go run examples/solana/list-rewards/main.go' to view the rewards for Coinbase Cloud's public validator.
+ * Or, to view rewards for any arbitrary validator, simply replace the address below with any validator on the Solana blockchain.
+ */
 
 const (
-	// TODO: Replace address as per your requirement.
-	address = "beefKGBWeSpHzYBHZXwp5So7wdQGX6mu4ZHCsH3uTar"
+	// https://solanabeach.io/validator/6D2jqw9hyVCpppZexquxa74Fn33rJzzBx38T58VucHx9
+	address = "6D2jqw9hyVCpppZexquxa74Fn33rJzzBx38T58VucHx9"
 )
 
-// An example function to demonstrate how to use the staking client libraries.
 func main() {
 	ctx := context.Background()
 
@@ -43,18 +49,15 @@ func main() {
 	}
 
 	// List all rewards for the given address, aggregated by epoch, for epochs that ended in the last 30 days.
-	now := time.Now()
-	thirtyDaysAgo := now.AddDate(0, 0, -30)
-
-	rewardsIter := stakingClient.Rewards.ListRewards(ctx, &rewardspb.ListRewardsRequest{
-		Parent:   rewardspb.ProtocolResourceName{Protocol: "solana"}.String(),
+	rewardsIter := stakingClient.Rewards.ListRewards(ctx, &api.ListRewardsRequest{
+		Parent:   rewards.Solana,
 		PageSize: 20,
-		Filter: rewardsV1.WithAddress().Eq(address).
-			And(rewardsV1.WithPeriodEndTime().Gte(thirtyDaysAgo)).
-			And(rewardsV1.WithPeriodEndTime().Lt(now)).String(),
+		Filter: filter.WithAddress().Eq(address).
+			And(filter.WithPeriodEndTime().Gte(time.Now().AddDate(0, 0, -30))).
+			And(filter.WithPeriodEndTime().Lt(time.Now())).String(),
 	})
 
-	count := 0
+	// Iterates through the rewards and print them.
 	for {
 		reward, err := rewardsIter.Next()
 		if errors.Is(err, iterator.Done) {
@@ -65,12 +68,12 @@ func main() {
 			log.Fatalf("error listing rewards: %s", err.Error())
 		}
 
-		d, err := protojson.Marshal(reward)
+		marshaler := protojson.MarshalOptions{Indent: "\t"}
+		marshaled, err := marshaler.Marshal(reward)
 		if err != nil {
-			log.Fatalf("error marshalling reward object: %s", err.Error())
+			log.Fatalf("error marshaling reward: %s", err.Error())
 		}
 
-		log.Printf("[%d] Reward details: %s", count, d)
-		count += 1
+		fmt.Println(string(marshaled))
 	}
 }

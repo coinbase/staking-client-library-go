@@ -1,20 +1,19 @@
-package v1
+package orchestration
 
 import (
 	"context"
 
-	"github.com/googleapis/gax-go/v2"
-
 	stakingerrors "github.com/coinbase/staking-client-library-go/client/errors"
-	stakingpb "github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/orchestration/v1"
+	api "github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/orchestration/v1"
+	"github.com/googleapis/gax-go/v2"
 )
 
 // ListProtocols lists the Protocols supported by Staking API.
-func (s *OrchestrationServiceClient) ListProtocols(
+func (s *Client) ListProtocols(
 	ctx context.Context,
-	req *stakingpb.ListProtocolsRequest,
+	req *api.ListProtocolsRequest,
 	opts ...gax.CallOption,
-) (*stakingpb.ListProtocolsResponse, error) {
+) (*api.ListProtocolsResponse, error) {
 	protocols, err := s.client.ListProtocols(ctx, req, opts...)
 	if err != nil {
 		err := stakingerrors.FromError(err)

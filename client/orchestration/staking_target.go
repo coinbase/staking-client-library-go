@@ -1,16 +1,14 @@
-package v1
+package orchestration
 
 import (
 	"context"
 	"errors"
 
-	"github.com/googleapis/gax-go/v2"
-
-	"google.golang.org/api/iterator"
-
 	stakingerrors "github.com/coinbase/staking-client-library-go/client/errors"
 	innerClient "github.com/coinbase/staking-client-library-go/gen/client/coinbase/staking/orchestration/v1"
-	stakingpb "github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/orchestration/v1"
+	api "github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/orchestration/v1"
+	"github.com/googleapis/gax-go/v2"
+	"google.golang.org/api/iterator"
 )
 
 // StakingTargetIterator is an interface for iterating through the response to ListStakingTargets.
@@ -20,11 +18,11 @@ type StakingTargetIterator interface {
 
 	// Next returns the next result. Its second return value is iterator.Done if there are no more
 	// results. Once Next returns Done, all subsequent calls will return Done.
-	Next() (*stakingpb.StakingTarget, error)
+	Next() (*api.StakingTarget, error)
 
 	// Response is the raw response for the current page.
 	// Calling Next() or InternalFetch() updates this value.
-	Response() *stakingpb.ListStakingTargetsResponse
+	Response() *api.ListStakingTargetsResponse
 }
 
 // StakingTargetIteratorImpl is an implementation of StakingTargetIterator that unwraps correctly.
@@ -39,7 +37,7 @@ func (n *StakingTargetIteratorImpl) PageInfo() *iterator.PageInfo {
 
 // Next returns the next result. Its second return value is iterator.Done if there are no more
 // results. Once Next returns Done, all subsequent calls will return Done.
-func (n *StakingTargetIteratorImpl) Next() (*stakingpb.StakingTarget, error) {
+func (n *StakingTargetIteratorImpl) Next() (*api.StakingTarget, error) {
 	stakingTarget, err := n.iter.Next()
 	if errors.Is(err, iterator.Done) || err == nil {
 		return stakingTarget, err
@@ -50,12 +48,12 @@ func (n *StakingTargetIteratorImpl) Next() (*stakingpb.StakingTarget, error) {
 
 // Response is the raw response for the current page.
 // Calling Next() or InternalFetch() updates this value.
-func (n *StakingTargetIteratorImpl) Response() *stakingpb.ListStakingTargetsResponse {
+func (n *StakingTargetIteratorImpl) Response() *api.ListStakingTargetsResponse {
 	if n.iter.Response == nil {
 		return nil
 	}
 
-	response, ok := n.iter.Response.(*stakingpb.ListStakingTargetsResponse)
+	response, ok := n.iter.Response.(*api.ListStakingTargetsResponse)
 	if !ok {
 		return nil
 	}
@@ -64,9 +62,9 @@ func (n *StakingTargetIteratorImpl) Response() *stakingpb.ListStakingTargetsResp
 }
 
 // ListStakingTargets lists the StakingTargets supported by Staking API.
-func (s *OrchestrationServiceClient) ListStakingTargets(
+func (s *Client) ListStakingTargets(
 	ctx context.Context,
-	req *stakingpb.ListStakingTargetsRequest,
+	req *api.ListStakingTargetsRequest,
 	opts ...gax.CallOption,
 ) StakingTargetIterator {
 	return &StakingTargetIteratorImpl{iter: s.client.ListStakingTargets(ctx, req, opts...)}

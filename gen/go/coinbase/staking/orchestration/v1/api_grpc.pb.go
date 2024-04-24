@@ -46,7 +46,7 @@ type StakingServiceClient interface {
 	CreateWorkflow(ctx context.Context, in *CreateWorkflowRequest, opts ...grpc.CallOption) (*Workflow, error)
 	// Get the current state of an active workflow.
 	GetWorkflow(ctx context.Context, in *GetWorkflowRequest, opts ...grpc.CallOption) (*Workflow, error)
-	// List all workflows in a project.
+	// List all workflows
 	ListWorkflows(ctx context.Context, in *ListWorkflowsRequest, opts ...grpc.CallOption) (*ListWorkflowsResponse, error)
 	// Perform the next step in a workflow.
 	PerformWorkflowStep(ctx context.Context, in *PerformWorkflowStepRequest, opts ...grpc.CallOption) (*Workflow, error)
@@ -159,7 +159,7 @@ type StakingServiceServer interface {
 	CreateWorkflow(context.Context, *CreateWorkflowRequest) (*Workflow, error)
 	// Get the current state of an active workflow.
 	GetWorkflow(context.Context, *GetWorkflowRequest) (*Workflow, error)
-	// List all workflows in a project.
+	// List all workflows
 	ListWorkflows(context.Context, *ListWorkflowsRequest) (*ListWorkflowsResponse, error)
 	// Perform the next step in a workflow.
 	PerformWorkflowStep(context.Context, *PerformWorkflowStepRequest) (*Workflow, error)

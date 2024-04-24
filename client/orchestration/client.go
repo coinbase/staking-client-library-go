@@ -1,12 +1,11 @@
-package v1
+package orchestration
 
 import (
 	"context"
 
-	"google.golang.org/grpc"
-
 	clients "github.com/coinbase/staking-client-library-go/client/options"
 	innerClient "github.com/coinbase/staking-client-library-go/gen/client/coinbase/staking/orchestration/v1"
+	"google.golang.org/grpc"
 )
 
 const (
@@ -17,8 +16,8 @@ const (
 	serviceEndpoint = "https://api.developer.coinbase.com/staking/orchestration"
 )
 
-// OrchestrationServiceClient is the client to use to access StakingService APIs.
-type OrchestrationServiceClient struct {
+// Client is the client to use to access StakingService APIs.
+type Client struct {
 	client *innerClient.StakingClient
 }
 
@@ -26,7 +25,7 @@ type OrchestrationServiceClient struct {
 func NewOrchestrationServiceClient(
 	ctx context.Context,
 	stakingOpts ...clients.StakingClientOption,
-) (*OrchestrationServiceClient, error) {
+) (*Client, error) {
 	config, err := clients.GetConfig(serviceName, serviceEndpoint, stakingOpts...)
 	if err != nil {
 		return nil, err
@@ -42,14 +41,14 @@ func NewOrchestrationServiceClient(
 		return nil, err
 	}
 
-	return &OrchestrationServiceClient{
+	return &Client{
 		client: innerClient,
 	}, nil
 }
 
 // Close closes the connection to the API service. The user should invoke this when
 // the client is no longer required.
-func (s *OrchestrationServiceClient) Close() error {
+func (s *Client) Close() error {
 	return s.client.Close()
 }
 
@@ -57,6 +56,6 @@ func (s *OrchestrationServiceClient) Close() error {
 //
 // Deprecated: Connections are now pooled so this method does not always
 // return the same resource.
-func (s *OrchestrationServiceClient) Connection() *grpc.ClientConn {
+func (s *Client) Connection() *grpc.ClientConn {
 	return s.client.Connection()
 }

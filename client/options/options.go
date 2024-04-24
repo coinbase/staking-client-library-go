@@ -5,12 +5,10 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/googleapis/gax-go/v2"
-
-	"google.golang.org/api/option"
-
 	"github.com/coinbase/staking-client-library-go/auth"
 	"github.com/coinbase/staking-client-library-go/client/transport"
+	"github.com/googleapis/gax-go/v2"
+	"google.golang.org/api/option"
 )
 
 // StakingClientConfig stores configuration information about a Staking client.

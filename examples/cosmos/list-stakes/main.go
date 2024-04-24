@@ -5,21 +5,20 @@ import (
 	"errors"
 	"fmt"
 	"log"
-	"time"
 
 	"github.com/coinbase/staking-client-library-go/auth"
 	"github.com/coinbase/staking-client-library-go/client"
 	"github.com/coinbase/staking-client-library-go/client/options"
 	"github.com/coinbase/staking-client-library-go/client/rewards"
-	filter "github.com/coinbase/staking-client-library-go/client/rewards/rewardsfilter"
+	filter "github.com/coinbase/staking-client-library-go/client/rewards/stakesfilter"
 	api "github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/rewards/v1"
 	"google.golang.org/api/iterator"
 	"google.golang.org/protobuf/encoding/protojson"
 )
 
 /*
- * Run the code with 'go run examples/cosmos/list-rewards/main.go' to view the rewards for Coinbase Cloud's public validator.
- * Or, to view rewards for any arbitrary validator, simply replace the address below with any validator on the Cosmos blockchain.
+ * Run the code with 'go run examples/cosmos/list-stakes/main.go' to view the balances for Coinbase Cloud's public validator.
+ * Or, to view balances for any arbitrary validator, simply replace the address below with any validator on the Cosmos blockchain.
  */
 
 const (
@@ -43,28 +42,26 @@ func main() {
 		log.Fatalf("error instantiating staking client: %s", err.Error())
 	}
 
-	// List all rewards for the given address, aggregated by day, for epochs that ended in the last 30 days.
-	rewardsIter := stakingClient.Rewards.ListRewards(ctx, &api.ListRewardsRequest{
+	// List historical staking balances for the given address starting from the most recent after the given timestamp.
+	stakesIter := stakingClient.Rewards.ListStakes(ctx, &api.ListStakesRequest{
 		Parent:   rewards.Cosmos,
 		PageSize: 20,
-		Filter: filter.WithAddress().Eq(address).
-			And(filter.WithPeriodEndTime().Gte(time.Now().AddDate(0, 0, -20))).
-			And(filter.WithPeriodEndTime().Lt(time.Now())).String(),
+		Filter:   filter.WithAddress().Eq(address).String(),
 	})
 
-	// Iterates through the rewards and print them.
+	// Iterates through the stakes and print them.
 	for {
-		reward, err := rewardsIter.Next()
+		stake, err := stakesIter.Next()
 		if errors.Is(err, iterator.Done) {
 			break
 		}
 
 		if err != nil {
-			log.Fatalf("error listing rewards: %s", err.Error())
+			log.Fatalf("error listing stakes: %s", err.Error())
 		}
 
 		marshaler := protojson.MarshalOptions{Indent: "\t"}
-		marshaled, err := marshaler.Marshal(reward)
+		marshaled, err := marshaler.Marshal(stake)
 		if err != nil {
 			log.Fatalf("error marshaling reward: %s", err.Error())
 		}

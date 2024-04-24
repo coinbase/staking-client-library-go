@@ -1,12 +1,11 @@
-package v1
+package rewards
 
 import (
 	"context"
 
-	"google.golang.org/grpc"
-
-	clients "github.com/coinbase/staking-client-library-go/client/options"
+	"github.com/coinbase/staking-client-library-go/client/options"
 	innerClient "github.com/coinbase/staking-client-library-go/gen/client/coinbase/staking/rewards/v1"
+	"google.golang.org/grpc"
 )
 
 const (
@@ -14,22 +13,22 @@ const (
 	serviceEndpoint = "https://api.developer.coinbase.com/staking/rewards"
 )
 
-// RewardsServiceClient is the client to use to access StakingService APIs.
-type RewardsServiceClient struct {
+// Client is the client to use to access StakingService APIs.
+type Client struct {
 	client *innerClient.RewardClient
 }
 
 // NewRewardsServiceClient returns a RewardsServiceClient based on the given inputs.
 func NewRewardsServiceClient(
 	ctx context.Context,
-	stakingOpts ...clients.StakingClientOption,
-) (*RewardsServiceClient, error) {
-	config, err := clients.GetConfig("rewards-reporting", serviceEndpoint, stakingOpts...)
+	stakingOpts ...options.StakingClientOption,
+) (*Client, error) {
+	config, err := options.GetConfig("rewards-reporting", serviceEndpoint, stakingOpts...)
 	if err != nil {
 		return nil, err
 	}
 
-	clientOptions, err := clients.GetClientOptions(config)
+	clientOptions, err := options.GetClientOptions(config)
 	if err != nil {
 		return nil, err
 	}
@@ -39,14 +38,14 @@ func NewRewardsServiceClient(
 		return nil, err
 	}
 
-	return &RewardsServiceClient{
+	return &Client{
 		client: innerClient,
 	}, nil
 }
 
 // Close closes the connection to the API service. The user should invoke this when
 // the client is no longer required.
-func (s *RewardsServiceClient) Close() error {
+func (s *Client) Close() error {
 	return s.client.Close()
 }
 
@@ -54,6 +53,6 @@ func (s *RewardsServiceClient) Close() error {
 //
 // Deprecated: Connections are now pooled so this method does not always
 // return the same resource.
-func (s *RewardsServiceClient) Connection() *grpc.ClientConn {
+func (s *Client) Connection() *grpc.ClientConn {
 	return s.client.Connection()
 }

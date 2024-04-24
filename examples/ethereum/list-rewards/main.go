@@ -6,19 +6,29 @@ package main
 
 import (
 	"context"
-	"encoding/json"
 	"errors"
 	"fmt"
 	"log"
 	"time"
 
-	"google.golang.org/api/iterator"
-
 	"github.com/coinbase/staking-client-library-go/auth"
 	"github.com/coinbase/staking-client-library-go/client"
 	"github.com/coinbase/staking-client-library-go/client/options"
-	rewardsV1 "github.com/coinbase/staking-client-library-go/client/rewards/v1"
-	rewardspb "github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/rewards/v1"
+	"github.com/coinbase/staking-client-library-go/client/rewards"
+	filter "github.com/coinbase/staking-client-library-go/client/rewards/rewardsfilter"
+	api "github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/rewards/v1"
+	"google.golang.org/api/iterator"
+	"google.golang.org/protobuf/encoding/protojson"
+)
+
+/*
+ * Run the code with 'go run examples/ethereum/list-rewards/main.go' to view the rewards for the first validator on the Ethereum network.
+ * Or, to view rewards for any arbitrary validator, simply replace the public key below.
+ */
+
+const (
+	// https://beaconcha.in/validator/1
+	address = "0xa1d1ad0714035353258038e964ae9675dc0252ee22cea896825c01458e1807bfad2f9969338798548d9858a571f7425c"
 )
 
 func main() {
@@ -36,16 +46,16 @@ func main() {
 		log.Fatalf("error instantiating staking client: %s", err.Error())
 	}
 
-	// Lists the rewards for the given address for the previous last 2 days, aggregated by day.
-	rewardsIter := stakingClient.Rewards.ListRewards(ctx, &rewardspb.ListRewardsRequest{
-		Parent:   rewardspb.ProtocolResourceName{Protocol: "ethereum"}.String(),
+	// Lists the rewards for the given address for the previous last 20 days, aggregated by day.
+	rewardsIter := stakingClient.Rewards.ListRewards(ctx, &api.ListRewardsRequest{
+		Parent:   rewards.Ethereum,
 		PageSize: 200,
-		Filter: rewardsV1.WithAddress().Eq("0xac53512c39d0081ca4437c285305eb423f474e6153693c12fbba4a3df78bcaa3422b31d800c5bea71c1b017168a60474").
-			And(rewardsV1.WithPeriodEndTime().Gte(time.Now().AddDate(0, 0, -2))).
-			And(rewardsV1.WithPeriodEndTime().Lt(time.Now())).String(),
+		Filter: filter.WithAddress().Eq(address).
+			And(filter.WithPeriodEndTime().Gte(time.Now().AddDate(0, 0, -20))).
+			And(filter.WithPeriodEndTime().Lt(time.Now())).String(),
 	})
 
-	// Iterates through the rewards and print them.
+	// Iterates through the rewards and pretty print them.
 	for {
 		reward, err := rewardsIter.Next()
 		if errors.Is(err, iterator.Done) {
@@ -56,11 +66,12 @@ func main() {
 			log.Fatalf("error listing rewards: %s", err.Error())
 		}
 
-		marshaled, err := json.MarshalIndent(reward, "", "   ")
+		marshaler := protojson.MarshalOptions{Indent: "\t"}
+		marshaled, err := marshaler.Marshal(reward)
 		if err != nil {
 			log.Fatalf("error marshaling reward: %s", err.Error())
 		}
 
-		fmt.Printf(string(marshaled))
+		fmt.Println(string(marshaled))
 	}
 }

@@ -7,18 +7,29 @@ package main
 import (
 	"context"
 	"errors"
+	"fmt"
 	"log"
-
-	"google.golang.org/api/iterator"
-	"google.golang.org/protobuf/encoding/protojson"
 
 	"github.com/coinbase/staking-client-library-go/auth"
 	"github.com/coinbase/staking-client-library-go/client"
 	"github.com/coinbase/staking-client-library-go/client/options"
-	rewardspb "github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/rewards/v1"
+	"github.com/coinbase/staking-client-library-go/client/rewards"
+	filter "github.com/coinbase/staking-client-library-go/client/rewards/stakesfilter"
+	api "github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/rewards/v1"
+	"google.golang.org/api/iterator"
+	"google.golang.org/protobuf/encoding/protojson"
 )
 
-// An example function to demonstrate how to use the staking client libraries.
+/*
+ * Run the code with 'go run examples/ethereum/list-stakes/main.go' to view the balances for the first validator on the Ethereum network.
+ * Or, to view balances for any arbitrary validator, simply replace the public key below.
+ */
+
+const (
+	// https://beaconcha.in/validator/1
+	address = "0xa1d1ad0714035353258038e964ae9675dc0252ee22cea896825c01458e1807bfad2f9969338798548d9858a571f7425c"
+)
+
 func main() {
 	ctx := context.Background()
 
@@ -35,14 +46,13 @@ func main() {
 		log.Fatalf("error instantiating staking client: %s", err.Error())
 	}
 
-	// List staking activities for a given protocol.
-	stakesIter := stakingClient.Rewards.ListStakes(ctx, &rewardspb.ListStakesRequest{
-		Parent:   rewardspb.ProtocolResourceName{Protocol: "ethereum"}.String(),
+	// List historical staking balances for the given address starting from the most recent after the given timestamp.
+	stakesIter := stakingClient.Rewards.ListStakes(ctx, &api.ListStakesRequest{
+		Parent:   rewards.Ethereum,
 		PageSize: 200,
-		Filter:   `address='0xac53512c39d0081ca4437c285305eb423f474e6153693c12fbba4a3df78bcaa3422b31d800c5bea71c1b017168a60474' AND evaluation_time>='2023-12-12T07:25:11-04:00' AND evaluation_time<='2023-12-12T08:20:50-04:00'`,
+		Filter:   filter.WithAddress().Eq(address).String(),
 	})
 
-	count := 0
 	for {
 		stake, err := stakesIter.Next()
 		if errors.Is(err, iterator.Done) {
@@ -53,12 +63,12 @@ func main() {
 			log.Fatalf("error listing stakes: %s", err.Error())
 		}
 
-		d, err := protojson.Marshal(stake)
+		marshaler := protojson.MarshalOptions{Indent: "\t"}
+		marshaled, err := marshaler.Marshal(stake)
 		if err != nil {
-			log.Fatalf("error marshalling stake object: %s", err.Error())
+			log.Fatalf("error marshaling reward: %s", err.Error())
 		}
 
-		log.Printf("[%d] Stake details: %s", count, d)
-		count += 1
+		fmt.Println(string(marshaled))
 	}
 }

@@ -1,20 +1,19 @@
-package v1
+package orchestration
 
 import (
 	"context"
 
-	"github.com/googleapis/gax-go/v2"
-
 	stakingerrors "github.com/coinbase/staking-client-library-go/client/errors"
-	stakingpb "github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/orchestration/v1"
+	api "github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/orchestration/v1"
+	"github.com/googleapis/gax-go/v2"
 )
 
 // ListNetworks lists the Networks supported by Staking API.
-func (s *OrchestrationServiceClient) ListNetworks(
+func (s *Client) ListNetworks(
 	ctx context.Context,
-	req *stakingpb.ListNetworksRequest,
+	req *api.ListNetworksRequest,
 	opts ...gax.CallOption,
-) (*stakingpb.ListNetworksResponse, error) {
+) (*api.ListNetworksResponse, error) {
 	networks, err := s.client.ListNetworks(ctx, req, opts...)
 	if err != nil {
 		err := stakingerrors.FromError(err)
