@@ -15,6 +15,7 @@ import (
 	"github.com/coinbase/staking-client-library-go/client"
 	stakingerrors "github.com/coinbase/staking-client-library-go/client/errors"
 	"github.com/coinbase/staking-client-library-go/client/options"
+	"github.com/coinbase/staking-client-library-go/client/orchestration"
 	stakingpb "github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/orchestration/v1"
 	"github.com/coinbase/staking-client-library-go/internal/signer"
 )
@@ -91,7 +92,7 @@ func main() {
 		printWorkflowProgressDetails(workflow)
 
 		// If workflow is in WAITING_FOR_EXT_BROADCAST state, sign, broadcast the transaction and update the workflow.
-		if v1.WorkflowWaitingForExternalBroadcast(workflow) {
+		if orchestration.WorkflowWaitingForExternalBroadcast(workflow) {
 			unsignedTx := workflow.Steps[workflow.GetCurrentStepId()].GetTxStepOutput().GetUnsignedTx()
 
 			// Logic to sign the transaction. This can be substituted with any other signing mechanism.
@@ -105,7 +106,7 @@ func main() {
 			// Add logic to broadcast the tx here.
 			fmt.Printf("Please broadcast this signed tx %s externally and return back the tx hash via the PerformWorkflowStep API ...\n", signedTx)
 			break
-		} else if v1.WorkflowFinished(workflow) {
+		} else if orchestration.WorkflowFinished(workflow) {
 			break
 		}
 
@@ -142,7 +143,7 @@ func printWorkflowProgressDetails(workflow *stakingpb.Workflow) {
 		)
 	}
 
-	if v1.WorkflowFinished(workflow) {
+	if orchestration.WorkflowFinished(workflow) {
 		log.Printf("Workflow reached end state - step name: %s %s workflow state: %s runtime: %v\n",
 			step.GetName(),
 			stepDetails,
