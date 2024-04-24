@@ -10,9 +10,9 @@ import (
 	"errors"
 	"fmt"
 	"log"
-	"time"
 
 	"github.com/coinbase/staking-client-library-go/client/protocols"
+	"github.com/coinbase/staking-client-library-go/client/rewards/stakes"
 	"google.golang.org/api/iterator"
 
 	"github.com/coinbase/staking-client-library-go/auth"
@@ -51,7 +51,7 @@ func main() {
 	stakesIter := stakingClient.Rewards.ListStakes(ctx, &api.ListStakesRequest{
 		Parent:   protocols.Ethereum,
 		PageSize: 200,
-		Filter:   fmt.Sprintf(`address='%s' AND evaluation_time<='%s'`, address, time.Now().AddDate(0, 0, -20).Format(time.RFC3339)),
+		Filter:   stakes.WithAddress().Eq(address).String(),
 	})
 
 	for {

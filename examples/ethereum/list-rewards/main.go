@@ -47,7 +47,7 @@ func main() {
 		log.Fatalf("error instantiating staking client: %s", err.Error())
 	}
 
-	// Lists the rewards for the given address for the previous last 2 days, aggregated by day.
+	// Lists the rewards for the given address for the previous last 20 days, aggregated by day.
 	rewardsIter := stakingClient.Rewards.ListRewards(ctx, &api.ListRewardsRequest{
 		Parent:   protocols.Ethereum,
 		PageSize: 200,

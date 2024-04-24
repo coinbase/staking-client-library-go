@@ -6,21 +6,20 @@ import (
 	"errors"
 	"fmt"
 	"log"
-	"time"
 
-	"github.com/coinbase/staking-client-library-go/client/protocols"
-	"github.com/coinbase/staking-client-library-go/client/rewards/reward"
 	"google.golang.org/api/iterator"
 
 	"github.com/coinbase/staking-client-library-go/auth"
 	"github.com/coinbase/staking-client-library-go/client"
 	"github.com/coinbase/staking-client-library-go/client/options"
+	"github.com/coinbase/staking-client-library-go/client/protocols"
+	"github.com/coinbase/staking-client-library-go/client/rewards/stakes"
 	api "github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/rewards/v1"
 )
 
 /*
- * Run the code with 'go run main.go' to view the rewards for Coinbase Cloud's public validator.
- * Or, to view rewards for any arbitrary validator, simply replace the address below with any validator on the Cosmos blockchain.
+ * Run the code with 'go run main.go' to view the balances for Coinbase Cloud's public validator.
+ * Or, to view balances for any arbitrary validator, simply replace the address below with any validator on the Cosmos blockchain.
  */
 
 const (
@@ -44,24 +43,22 @@ func main() {
 		log.Fatalf("error instantiating staking client: %s", err.Error())
 	}
 
-	// List all rewards for the given address, aggregated by day, for epochs that ended in the last 30 days.
-	rewardsIter := stakingClient.Rewards.ListRewards(ctx, &api.ListRewardsRequest{
+	// List historical staking balances for the given address starting from the most recent after the given timestamp.
+	stakesIter := stakingClient.Rewards.ListStakes(ctx, &api.ListStakesRequest{
 		Parent:   protocols.Cosmos,
 		PageSize: 20,
-		Filter: reward.WithAddress().Eq(address).
-			And(reward.WithPeriodEndTime().Gte(time.Now().AddDate(0, 0, -20))).
-			And(reward.WithPeriodEndTime().Lt(time.Now())).String(),
+		Filter:   stakes.WithAddress().Eq(address).String(),
 	})
 
-	// Iterates through the rewards and print them.
+	// Iterates through the stakes and print them.
 	for {
-		reward, err := rewardsIter.Next()
+		reward, err := stakesIter.Next()
 		if errors.Is(err, iterator.Done) {
 			break
 		}
 
 		if err != nil {
-			log.Fatalf("error listing rewards: %s", err.Error())
+			log.Fatalf("error listing stakes: %s", err.Error())
 		}
 
 		marshaled, err := json.MarshalIndent(reward, "", "   ")
