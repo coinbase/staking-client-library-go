@@ -21,7 +21,7 @@ import (
 )
 
 /*
- * Run the code with 'go run main.go' to view the balances for the first validator on the Ethereum network.
+ * Run the code with 'go run examples/ethereum/list-stakes/main.go' to view the balances for the first validator on the Ethereum network.
  * Or, to view balances for any arbitrary validator, simply replace the public key below.
  */
 

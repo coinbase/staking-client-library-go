@@ -23,7 +23,7 @@ import (
 )
 
 /*
- * Run the code with 'go run main.go' to view the rewards for Coinbase Cloud's public validator.
+ * Run the code with 'go run examples/solana/list-rewards/main.go' to view the rewards for Coinbase Cloud's public validator.
  * Or, to view rewards for any arbitrary validator, simply replace the address below with any validator on the Solana blockchain.
  */
 

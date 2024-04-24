@@ -22,7 +22,7 @@ import (
 )
 
 /*
- * Run the code with 'go run main.go' to view the rewards for the first validator on the Ethereum network.
+ * Run the code with 'go run examples/ethereum/list-rewards/main.go' to view the rewards for the first validator on the Ethereum network.
  * Or, to view rewards for any arbitrary validator, simply replace the public key below.
  */
 

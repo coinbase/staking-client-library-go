@@ -17,7 +17,7 @@ import (
 )
 
 /*
- * Run the code with 'go run main.go' to view the balances for Coinbase Cloud's public validator.
+ * Run the code with 'go run examples/cosmos/list-stakes/main.go' to view the balances for Coinbase Cloud's public validator.
  * Or, to view balances for any arbitrary validator, simply replace the address below with any validator on the Cosmos blockchain.
  */
 
