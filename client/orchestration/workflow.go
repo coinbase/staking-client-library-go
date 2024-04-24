@@ -4,13 +4,11 @@ import (
 	"context"
 	"errors"
 
-	"github.com/googleapis/gax-go/v2"
-
-	"google.golang.org/api/iterator"
-
 	stakingerrors "github.com/coinbase/staking-client-library-go/client/errors"
 	innerClient "github.com/coinbase/staking-client-library-go/gen/client/coinbase/staking/orchestration/v1"
 	stakingpb "github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/orchestration/v1"
+	"github.com/googleapis/gax-go/v2"
+	"google.golang.org/api/iterator"
 )
 
 // CreateWorkflow starts a workflow with the given protocol specific parameters.

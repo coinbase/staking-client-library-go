@@ -8,14 +8,13 @@ import (
 	"log"
 	"time"
 
-	"github.com/coinbase/staking-client-library-go/client/protocols"
-	"github.com/coinbase/staking-client-library-go/client/rewards/reward"
-	"google.golang.org/api/iterator"
-
 	"github.com/coinbase/staking-client-library-go/auth"
 	"github.com/coinbase/staking-client-library-go/client"
 	"github.com/coinbase/staking-client-library-go/client/options"
+	"github.com/coinbase/staking-client-library-go/client/protocols"
+	"github.com/coinbase/staking-client-library-go/client/rewards/reward"
 	api "github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/rewards/v1"
+	"google.golang.org/api/iterator"
 )
 
 /*

@@ -9,12 +9,11 @@ import (
 	"errors"
 	"log"
 
-	"google.golang.org/api/iterator"
-
 	"github.com/coinbase/staking-client-library-go/auth"
 	"github.com/coinbase/staking-client-library-go/client"
 	"github.com/coinbase/staking-client-library-go/client/options"
 	stakingpb "github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/orchestration/v1"
+	"google.golang.org/api/iterator"
 )
 
 // An example function to demonstrate how to use the staking client libraries.

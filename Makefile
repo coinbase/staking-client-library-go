@@ -58,7 +58,7 @@ buf_gen:
 	@ rm -rf gen/client/coinbase/staking/rewards/v1/*test.go
 
 .PHONY: gen
-gen: install_prerequisites build_deps clean buf_gen
+gen: install_prerequisites build_deps clean buf_gen format
 
 .PHONY: build
 build:
@@ -81,3 +81,9 @@ lint:  validation_deps
 lintfix: validation_deps
 	@ printf "\nFixing Lint Issues\n"
 	@ golangci-lint run --timeout 3m --fix ./...
+
+.PHONY: format
+format:
+	@ echo "Formatting app..."
+	@ docker run --rm -v "${PWD}:/app" -w /app golang:1.20 bash -c "go install mvdan.cc/gofumpt@v0.6.0 && go install github.com/daixiang0/gci@v0.13.4 && gofumpt -l -w . && gci write --skip-generated ."
+	@ echo "Done formatting app"

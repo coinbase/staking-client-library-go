@@ -4,13 +4,11 @@ import (
 	"context"
 	"errors"
 
-	"github.com/googleapis/gax-go/v2"
-
-	"google.golang.org/api/iterator"
-
 	stakingerrors "github.com/coinbase/staking-client-library-go/client/errors"
 	innerClient "github.com/coinbase/staking-client-library-go/gen/client/coinbase/staking/rewards/v1"
 	stakingpb "github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/rewards/v1"
+	"github.com/googleapis/gax-go/v2"
+	"google.golang.org/api/iterator"
 )
 
 // RewardIterator is an interface for iterating through the response to ListRewards.

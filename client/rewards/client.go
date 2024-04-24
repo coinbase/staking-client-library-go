@@ -3,10 +3,9 @@ package rewards
 import (
 	"context"
 
-	"google.golang.org/grpc"
-
 	"github.com/coinbase/staking-client-library-go/client/options"
 	innerClient "github.com/coinbase/staking-client-library-go/gen/client/coinbase/staking/rewards/v1"
+	"google.golang.org/grpc"
 )
 
 const (

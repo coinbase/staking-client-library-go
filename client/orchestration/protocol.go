@@ -3,10 +3,9 @@ package orchestration
 import (
 	"context"
 
-	"github.com/googleapis/gax-go/v2"
-
 	stakingerrors "github.com/coinbase/staking-client-library-go/client/errors"
 	stakingpb "github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/orchestration/v1"
+	"github.com/googleapis/gax-go/v2"
 )
 
 // ListProtocols lists the Protocols supported by Staking API.
