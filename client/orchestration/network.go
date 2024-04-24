@@ -9,7 +9,7 @@ import (
 )
 
 // ListNetworks lists the Networks supported by Staking API.
-func (s *OrchestrationServiceClient) ListNetworks(
+func (s *Client) ListNetworks(
 	ctx context.Context,
 	req *stakingpb.ListNetworksRequest,
 	opts ...gax.CallOption,

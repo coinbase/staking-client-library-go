@@ -62,7 +62,7 @@ func (n *StakeIteratorImpl) Response() *stakingpb.ListStakesResponse {
 }
 
 // ListStakes list staking activities for a given protocol.
-func (s *RewardsServiceClient) ListStakes(
+func (s *Client) ListStakes(
 	ctx context.Context,
 	req *stakingpb.ListStakesRequest,
 	opts ...gax.CallOption,

@@ -10,8 +10,8 @@ import (
 )
 
 type StakingClient struct {
-	Orchestration *orchestration.OrchestrationServiceClient
-	Rewards       *rewards.RewardsServiceClient
+	Orchestration *orchestration.Client
+	Rewards       *rewards.Client
 }
 
 // New returns a StakingClient based on the given inputs.

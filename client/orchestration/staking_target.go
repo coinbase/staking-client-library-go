@@ -62,7 +62,7 @@ func (n *StakingTargetIteratorImpl) Response() *stakingpb.ListStakingTargetsResp
 }
 
 // ListStakingTargets lists the StakingTargets supported by Staking API.
-func (s *OrchestrationServiceClient) ListStakingTargets(
+func (s *Client) ListStakingTargets(
 	ctx context.Context,
 	req *stakingpb.ListStakingTargetsRequest,
 	opts ...gax.CallOption,

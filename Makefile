@@ -4,7 +4,6 @@
 #
 
 BUILD_PREREQUISITES = git go buf protoc-gen-go protoc-gen-go-grpc protoc-gen-csf protoc-gen-grpc-gateway protoc-gen-go-aip mockery
-VALIDATION_PREREQUISITES = golangci-lint
 
 #
 # Informational Targets
@@ -35,12 +34,6 @@ build_deps:
 	@ printf $(foreach exec,$(BUILD_PREREQUISITES), \
         $(if $(shell which $(exec)),"", \
         $(error "No $(exec) in PATH. Prerequisites are: $(BUILD_PREREQUISITES)")))
-
-.PHONY: validation_deps
-validation_deps:
-	@ printf $(foreach exec,$(VALIDATION_PREREQUISITES), \
-        $(if $(shell which $(exec)),"", \
-        $(error "No $(exec) in PATH. Prerequisites are: $(VALIDATION_PREREQUISITES)")))
 
 .PHONY: buf_gen
 buf_gen: 
@@ -73,14 +66,16 @@ build:
 	@ go build -o bin/solana/solana_create_workflow examples/solana/create-workflow/main.go
 
 .PHONY: lint
-lint:  validation_deps
-	@ printf "\nLint App\n"
-	@ golangci-lint run --timeout 3m ./...
+lint:
+	@ echo "Linting app..."
+	@ docker run --rm -v "${PWD}:/app" -w /app golangci/golangci-lint:v1.52.2 golangci-lint run --timeout 3m ./...
+	@ echo "Done linting app"
 
 .PHONY: lintfix
-lintfix: validation_deps
-	@ printf "\nFixing Lint Issues\n"
-	@ golangci-lint run --timeout 3m --fix ./...
+lintfix:
+	@ echo "Linting app and fixing issues..."
+	@ docker run --rm -v "${PWD}:/app" -w /app golangci/golangci-lint:v1.52.2 golangci-lint run --timeout 3m --fix ./...
+	@ echo "Done linting app and fixing issues"
 
 .PHONY: format
 format:

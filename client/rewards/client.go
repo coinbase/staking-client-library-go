@@ -13,8 +13,8 @@ const (
 	serviceEndpoint = "https://api.developer.coinbase.com/staking/rewards"
 )
 
-// RewardsServiceClient is the client to use to access StakingService APIs.
-type RewardsServiceClient struct {
+// Client is the client to use to access StakingService APIs.
+type Client struct {
 	client *innerClient.RewardClient
 }
 
@@ -22,7 +22,7 @@ type RewardsServiceClient struct {
 func NewRewardsServiceClient(
 	ctx context.Context,
 	stakingOpts ...options.StakingClientOption,
-) (*RewardsServiceClient, error) {
+) (*Client, error) {
 	config, err := options.GetConfig("rewards-reporting", serviceEndpoint, stakingOpts...)
 	if err != nil {
 		return nil, err
@@ -38,14 +38,14 @@ func NewRewardsServiceClient(
 		return nil, err
 	}
 
-	return &RewardsServiceClient{
+	return &Client{
 		client: innerClient,
 	}, nil
 }
 
 // Close closes the connection to the API service. The user should invoke this when
 // the client is no longer required.
-func (s *RewardsServiceClient) Close() error {
+func (s *Client) Close() error {
 	return s.client.Close()
 }
 
@@ -53,6 +53,6 @@ func (s *RewardsServiceClient) Close() error {
 //
 // Deprecated: Connections are now pooled so this method does not always
 // return the same resource.
-func (s *RewardsServiceClient) Connection() *grpc.ClientConn {
+func (s *Client) Connection() *grpc.ClientConn {
 	return s.client.Connection()
 }

@@ -175,7 +175,7 @@ func (c *StakingClient) GetWorkflow(ctx context.Context, req *stakingpb.GetWorkf
 	return c.internalClient.GetWorkflow(ctx, req, opts...)
 }
 
-// ListWorkflows list all workflows in a project.
+// ListWorkflows list all workflows
 func (c *StakingClient) ListWorkflows(ctx context.Context, req *stakingpb.ListWorkflowsRequest, opts ...gax.CallOption) *WorkflowIterator {
 	return c.internalClient.ListWorkflows(ctx, req, opts...)
 }
@@ -425,9 +425,7 @@ func (c *stakingGRPCClient) ListActions(ctx context.Context, req *stakingpb.List
 }
 
 func (c *stakingGRPCClient) CreateWorkflow(ctx context.Context, req *stakingpb.CreateWorkflowRequest, opts ...gax.CallOption) (*stakingpb.Workflow, error) {
-	md := metadata.Pairs("x-goog-request-params", fmt.Sprintf("%s=%v", "parent", url.QueryEscape(req.GetParent())))
-
-	ctx = insertMetadata(ctx, c.xGoogMetadata, md)
+	ctx = insertMetadata(ctx, c.xGoogMetadata)
 	opts = append((*c.CallOptions).CreateWorkflow[0:len((*c.CallOptions).CreateWorkflow):len((*c.CallOptions).CreateWorkflow)], opts...)
 	var resp *stakingpb.Workflow
 	err := gax.Invoke(ctx, func(ctx context.Context, settings gax.CallSettings) error {
@@ -459,9 +457,7 @@ func (c *stakingGRPCClient) GetWorkflow(ctx context.Context, req *stakingpb.GetW
 }
 
 func (c *stakingGRPCClient) ListWorkflows(ctx context.Context, req *stakingpb.ListWorkflowsRequest, opts ...gax.CallOption) *WorkflowIterator {
-	md := metadata.Pairs("x-goog-request-params", fmt.Sprintf("%s=%v", "parent", url.QueryEscape(req.GetParent())))
-
-	ctx = insertMetadata(ctx, c.xGoogMetadata, md)
+	ctx = insertMetadata(ctx, c.xGoogMetadata)
 	opts = append((*c.CallOptions).ListWorkflows[0:len((*c.CallOptions).ListWorkflows):len((*c.CallOptions).ListWorkflows)], opts...)
 	it := &WorkflowIterator{}
 	req = proto.Clone(req).(*stakingpb.ListWorkflowsRequest)
@@ -792,12 +788,10 @@ func (c *stakingRESTClient) CreateWorkflow(ctx context.Context, req *stakingpb.C
 	if err != nil {
 		return nil, err
 	}
-	baseUrl.Path += fmt.Sprintf("/v1/%v/workflows", req.GetParent())
+	baseUrl.Path += fmt.Sprintf("/v1/workflows")
 
 	// Build HTTP headers from client and context metadata.
-	md := metadata.Pairs("x-goog-request-params", fmt.Sprintf("%s=%v", "parent", url.QueryEscape(req.GetParent())))
-
-	headers := buildHeaders(ctx, c.xGoogMetadata, md, metadata.Pairs("Content-Type", "application/json"))
+	headers := buildHeaders(ctx, c.xGoogMetadata, metadata.Pairs("Content-Type", "application/json"))
 	opts = append((*c.CallOptions).CreateWorkflow[0:len((*c.CallOptions).CreateWorkflow):len((*c.CallOptions).CreateWorkflow)], opts...)
 	unm := protojson.UnmarshalOptions{AllowPartial: true, DiscardUnknown: true}
 	resp := &stakingpb.Workflow{}
@@ -892,7 +886,7 @@ func (c *stakingRESTClient) GetWorkflow(ctx context.Context, req *stakingpb.GetW
 	return resp, nil
 }
 
-// ListWorkflows list all workflows in a project.
+// ListWorkflows list all workflows
 func (c *stakingRESTClient) ListWorkflows(ctx context.Context, req *stakingpb.ListWorkflowsRequest, opts ...gax.CallOption) *WorkflowIterator {
 	it := &WorkflowIterator{}
 	req = proto.Clone(req).(*stakingpb.ListWorkflowsRequest)
@@ -911,7 +905,7 @@ func (c *stakingRESTClient) ListWorkflows(ctx context.Context, req *stakingpb.Li
 		if err != nil {
 			return nil, "", err
 		}
-		baseUrl.Path += fmt.Sprintf("/v1/%v/workflows", req.GetParent())
+		baseUrl.Path += fmt.Sprintf("/v1/workflows")
 
 		params := url.Values{}
 		if req.GetFilter() != "" {

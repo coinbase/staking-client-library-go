@@ -62,7 +62,7 @@ func (n *RewardIteratorImpl) Response() *stakingpb.ListRewardsResponse {
 }
 
 // ListRewards helps list onchain rewards of an address for a specific protocol, with optional filters for time range, aggregation period, and more.
-func (s *RewardsServiceClient) ListRewards(
+func (s *Client) ListRewards(
 	ctx context.Context,
 	req *stakingpb.ListRewardsRequest,
 	opts ...gax.CallOption,

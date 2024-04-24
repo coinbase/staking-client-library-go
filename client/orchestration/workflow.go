@@ -12,7 +12,7 @@ import (
 )
 
 // CreateWorkflow starts a workflow with the given protocol specific parameters.
-func (s *OrchestrationServiceClient) CreateWorkflow(
+func (s *Client) CreateWorkflow(
 	ctx context.Context,
 	req *stakingpb.CreateWorkflowRequest,
 	opts ...gax.CallOption,
@@ -29,7 +29,7 @@ func (s *OrchestrationServiceClient) CreateWorkflow(
 }
 
 // GetWorkflow get the current state of a workflow.
-func (s *OrchestrationServiceClient) GetWorkflow(
+func (s *Client) GetWorkflow(
 	ctx context.Context,
 	req *stakingpb.GetWorkflowRequest,
 	opts ...gax.CallOption,
@@ -96,7 +96,7 @@ func (n *WorkflowIteratorImpl) Response() *stakingpb.ListWorkflowsResponse {
 }
 
 // ListWorkflows lists the Workflows supported by Staking API.
-func (s *OrchestrationServiceClient) ListWorkflows(
+func (s *Client) ListWorkflows(
 	ctx context.Context,
 	req *stakingpb.ListWorkflowsRequest,
 	opts ...gax.CallOption,
@@ -105,7 +105,7 @@ func (s *OrchestrationServiceClient) ListWorkflows(
 }
 
 // PerformWorkflowStep helps update workflow move to the next state by returning the signed tx back.
-func (s *OrchestrationServiceClient) PerformWorkflowStep(
+func (s *Client) PerformWorkflowStep(
 	ctx context.Context,
 	req *stakingpb.PerformWorkflowStepRequest,
 	opts ...gax.CallOption,

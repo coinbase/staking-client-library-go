@@ -9,7 +9,7 @@ import (
 )
 
 // ListProtocols lists the Protocols supported by Staking API.
-func (s *OrchestrationServiceClient) ListProtocols(
+func (s *Client) ListProtocols(
 	ctx context.Context,
 	req *stakingpb.ListProtocolsRequest,
 	opts ...gax.CallOption,

@@ -9,7 +9,7 @@ import (
 )
 
 // ListActions lists the Actions supported by Staking API.
-func (s *OrchestrationServiceClient) ListActions(
+func (s *Client) ListActions(
 	ctx context.Context,
 	req *stakingpb.ListActionsRequest,
 	opts ...gax.CallOption,

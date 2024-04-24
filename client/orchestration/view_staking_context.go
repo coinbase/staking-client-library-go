@@ -9,7 +9,7 @@ import (
 )
 
 // ViewStakingContext helps view staking context information given a specific network address.
-func (s *OrchestrationServiceClient) ViewStakingContext(
+func (s *Client) ViewStakingContext(
 	ctx context.Context,
 	req *stakingpb.ViewStakingContextRequest,
 	opts ...gax.CallOption,
