@@ -15,8 +15,8 @@ import (
 	"github.com/coinbase/staking-client-library-go/auth"
 	"github.com/coinbase/staking-client-library-go/client"
 	"github.com/coinbase/staking-client-library-go/client/options"
-	"github.com/coinbase/staking-client-library-go/client/protocols"
-	"github.com/coinbase/staking-client-library-go/client/rewards/reward"
+	"github.com/coinbase/staking-client-library-go/client/rewards"
+	filter "github.com/coinbase/staking-client-library-go/client/rewards/rewards_filter"
 	api "github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/rewards/v1"
 	"google.golang.org/api/iterator"
 )
@@ -48,11 +48,11 @@ func main() {
 
 	// Lists the rewards for the given address for the previous last 20 days, aggregated by day.
 	rewardsIter := stakingClient.Rewards.ListRewards(ctx, &api.ListRewardsRequest{
-		Parent:   protocols.Ethereum,
+		Parent:   rewards.Ethereum,
 		PageSize: 200,
-		Filter: reward.WithAddress().Eq(address).
-			And(reward.WithPeriodEndTime().Gte(time.Now().AddDate(0, 0, -20))).
-			And(reward.WithPeriodEndTime().Lt(time.Now())).String(),
+		Filter: filter.WithAddress().Eq(address).
+			And(filter.WithPeriodEndTime().Gte(time.Now().AddDate(0, 0, -20))).
+			And(filter.WithPeriodEndTime().Lt(time.Now())).String(),
 	})
 
 	// Iterates through the rewards and print them.

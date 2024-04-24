@@ -1,9 +1,10 @@
 name: Go Lint
+
 on:
   push:
     branches:
       - master
-    # We only run tests when we open PRs (and not for ex: on every commit)
+  # We only run tests when we open PRs (and not for ex: on every commit)
   # to avoid running workflows too frequently and incurring costs
   pull_request:
 

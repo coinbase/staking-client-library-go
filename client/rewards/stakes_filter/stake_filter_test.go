@@ -1,10 +1,10 @@
-package stakes_test
+package stakes_filter_test
 
 import (
 	"testing"
 	"time"
 
-	"github.com/coinbase/staking-client-library-go/client/rewards/stakes"
+	filter "github.com/coinbase/staking-client-library-go/client/rewards/stakes_filter"
 	"github.com/stretchr/testify/assert"
 	"github.com/test-go/testify/suite"
 )
@@ -18,7 +18,7 @@ type ListStakesFilterSuite struct {
 }
 
 func (s *ListStakesFilterSuite) TestListStakesFilter_WithAddress() {
-	f := stakes.WithAddress().Eq("abcd").String()
+	f := filter.WithAddress().Eq("abcd").String()
 	assert.Equal(s.T(), "address = 'abcd'", f)
 }
 
@@ -27,22 +27,22 @@ func (s *ListStakesFilterSuite) TestListStakesFilter_EvaluationTime() {
 
 	specificTime := time.Date(2024, time.February, 1, 0, 0, 1, 0, time.UTC)
 
-	f = stakes.WithEvaluationTime().Eq(specificTime).String()
+	f = filter.WithEvaluationTime().Eq(specificTime).String()
 	assert.Equal(s.T(), "evaluation_time = '2024-02-01T00:00:01Z'", f)
 
-	f = stakes.WithAddress().Eq("abcd").And(stakes.WithEvaluationTime().Lt(specificTime)).String()
+	f = filter.WithAddress().Eq("abcd").And(filter.WithEvaluationTime().Lt(specificTime)).String()
 	assert.Equal(s.T(), "(address = 'abcd' AND evaluation_time < '2024-02-01T00:00:01Z')", f)
 
-	f = stakes.WithAddress().Eq("abcd").And(stakes.WithEvaluationTime().Lte(specificTime)).String()
+	f = filter.WithAddress().Eq("abcd").And(filter.WithEvaluationTime().Lte(specificTime)).String()
 	assert.Equal(s.T(), "(address = 'abcd' AND evaluation_time <= '2024-02-01T00:00:01Z')", f)
 
-	f = stakes.WithAddress().Eq("abcd").And(stakes.WithEvaluationTime().Gt(specificTime)).String()
+	f = filter.WithAddress().Eq("abcd").And(filter.WithEvaluationTime().Gt(specificTime)).String()
 	assert.Equal(s.T(), "(address = 'abcd' AND evaluation_time > '2024-02-01T00:00:01Z')", f)
 
-	f = stakes.WithAddress().Eq("abcd").And(stakes.WithEvaluationTime().Gte(specificTime)).String()
+	f = filter.WithAddress().Eq("abcd").And(filter.WithEvaluationTime().Gte(specificTime)).String()
 	assert.Equal(s.T(), "(address = 'abcd' AND evaluation_time >= '2024-02-01T00:00:01Z')", f)
 
-	f = stakes.WithAddress().Eq("abcd").And(stakes.WithEvaluationTime().Neq(specificTime)).String()
+	f = filter.WithAddress().Eq("abcd").And(filter.WithEvaluationTime().Neq(specificTime)).String()
 	assert.Equal(s.T(), "(address = 'abcd' AND evaluation_time != '2024-02-01T00:00:01Z')", f)
 }
 
@@ -52,12 +52,12 @@ func (s *ListStakesFilterSuite) TestListStakesFilter_EvaluationTime_Double() {
 	specificTime1 := time.Date(2024, time.February, 1, 0, 0, 1, 0, time.UTC)
 	specificTime2 := time.Date(2024, time.March, 1, 0, 0, 1, 0, time.UTC)
 
-	f = stakes.WithEvaluationTime().Eq(specificTime1).And(stakes.WithEvaluationTime().Neq(specificTime2)).String()
+	f = filter.WithEvaluationTime().Eq(specificTime1).And(filter.WithEvaluationTime().Neq(specificTime2)).String()
 	assert.Equal(s.T(), "(evaluation_time = '2024-02-01T00:00:01Z' AND evaluation_time != '2024-03-01T00:00:01Z')", f)
 
-	f = stakes.WithAddress().Eq("abcd").And(stakes.WithEvaluationTime().Gt(specificTime1)).And(stakes.WithEvaluationTime().Lt(specificTime2)).String()
+	f = filter.WithAddress().Eq("abcd").And(filter.WithEvaluationTime().Gt(specificTime1)).And(filter.WithEvaluationTime().Lt(specificTime2)).String()
 	assert.Equal(s.T(), "(address = 'abcd' AND evaluation_time > '2024-02-01T00:00:01Z' AND evaluation_time < '2024-03-01T00:00:01Z')", f)
 
-	f = stakes.WithAddress().Eq("abcd").And(stakes.WithEvaluationTime().Gte(specificTime1)).And(stakes.WithEvaluationTime().Lte(specificTime2)).String()
+	f = filter.WithAddress().Eq("abcd").And(filter.WithEvaluationTime().Gte(specificTime1)).And(filter.WithEvaluationTime().Lte(specificTime2)).String()
 	assert.Equal(s.T(), "(address = 'abcd' AND evaluation_time >= '2024-02-01T00:00:01Z' AND evaluation_time <= '2024-03-01T00:00:01Z')", f)
 }

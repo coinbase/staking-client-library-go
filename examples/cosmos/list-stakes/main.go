@@ -10,8 +10,8 @@ import (
 	"github.com/coinbase/staking-client-library-go/auth"
 	"github.com/coinbase/staking-client-library-go/client"
 	"github.com/coinbase/staking-client-library-go/client/options"
-	"github.com/coinbase/staking-client-library-go/client/protocols"
-	"github.com/coinbase/staking-client-library-go/client/rewards/stakes"
+	"github.com/coinbase/staking-client-library-go/client/rewards"
+	filter "github.com/coinbase/staking-client-library-go/client/rewards/stakes_filter"
 	api "github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/rewards/v1"
 	"google.golang.org/api/iterator"
 )
@@ -44,9 +44,9 @@ func main() {
 
 	// List historical staking balances for the given address starting from the most recent after the given timestamp.
 	stakesIter := stakingClient.Rewards.ListStakes(ctx, &api.ListStakesRequest{
-		Parent:   protocols.Cosmos,
+		Parent:   rewards.Cosmos,
 		PageSize: 20,
-		Filter:   stakes.WithAddress().Eq(address).String(),
+		Filter:   filter.WithAddress().Eq(address).String(),
 	})
 
 	// Iterates through the stakes and print them.

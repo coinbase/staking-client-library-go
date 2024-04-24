@@ -1,4 +1,4 @@
-package stakes
+package stakes_filter
 
 import (
 	"time"

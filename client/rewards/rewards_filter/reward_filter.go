@@ -1,4 +1,4 @@
-package reward
+package rewards_filter
 
 import (
 	"time"

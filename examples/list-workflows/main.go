@@ -12,7 +12,7 @@ import (
 	"github.com/coinbase/staking-client-library-go/auth"
 	"github.com/coinbase/staking-client-library-go/client"
 	"github.com/coinbase/staking-client-library-go/client/options"
-	stakingpb "github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/orchestration/v1"
+	api "github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/orchestration/v1"
 	"google.golang.org/api/iterator"
 )
 
@@ -34,7 +34,7 @@ func main() {
 	}
 
 	// List all workflows for a given project.
-	workflowIter := stakingClient.Orchestration.ListWorkflows(ctx, &stakingpb.ListWorkflowsRequest{})
+	workflowIter := stakingClient.Orchestration.ListWorkflows(ctx, &api.ListWorkflowsRequest{})
 
 	for {
 		workflow, err := workflowIter.Next()

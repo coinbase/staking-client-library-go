@@ -16,7 +16,7 @@ import (
 	stakingerrors "github.com/coinbase/staking-client-library-go/client/errors"
 	"github.com/coinbase/staking-client-library-go/client/options"
 	"github.com/coinbase/staking-client-library-go/client/orchestration"
-	stakingpb "github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/orchestration/v1"
+	api "github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/orchestration/v1"
 	"github.com/coinbase/staking-client-library-go/internal/signer"
 )
 
@@ -52,16 +52,16 @@ func main() {
 		log.Fatalf("privateKey and walletAddress must be set")
 	}
 
-	req := &stakingpb.CreateWorkflowRequest{
-		Workflow: &stakingpb.Workflow{
+	req := &api.CreateWorkflowRequest{
+		Workflow: &api.Workflow{
 			Action: "protocols/solana/networks/testnet/actions/stake",
-			StakingParameters: &stakingpb.Workflow_SolanaStakingParameters{
-				SolanaStakingParameters: &stakingpb.SolanaStakingParameters{
-					Parameters: &stakingpb.SolanaStakingParameters_StakeParameters{
-						StakeParameters: &stakingpb.SolanaStakeParameters{
+			StakingParameters: &api.Workflow_SolanaStakingParameters{
+				SolanaStakingParameters: &api.SolanaStakingParameters{
+					Parameters: &api.SolanaStakingParameters_StakeParameters{
+						StakeParameters: &api.SolanaStakeParameters{
 							WalletAddress:    walletAddress,
 							ValidatorAddress: validatorAddress,
-							Amount: &stakingpb.Amount{
+							Amount: &api.Amount{
 								Value:    amount,
 								Currency: currency,
 							},
@@ -84,7 +84,7 @@ func main() {
 	// Run loop until workflow reaches a terminal state
 	for {
 		// Get the latest workflow state
-		workflow, err = stakingClient.Orchestration.GetWorkflow(ctx, &stakingpb.GetWorkflowRequest{Name: workflow.Name})
+		workflow, err = stakingClient.Orchestration.GetWorkflow(ctx, &api.GetWorkflowRequest{Name: workflow.Name})
 		if err != nil {
 			log.Fatalf(fmt.Errorf("error getting workflow: %w", err).Error())
 		}
@@ -115,7 +115,7 @@ func main() {
 	}
 }
 
-func printWorkflowProgressDetails(workflow *stakingpb.Workflow) {
+func printWorkflowProgressDetails(workflow *api.Workflow) {
 	if len(workflow.GetSteps()) <= 0 {
 		fmt.Println("Waiting for steps to be created ...")
 		time.Sleep(2 * time.Second)
@@ -130,12 +130,12 @@ func printWorkflowProgressDetails(workflow *stakingpb.Workflow) {
 	var stepDetails string
 
 	switch step.GetOutput().(type) {
-	case *stakingpb.WorkflowStep_TxStepOutput:
+	case *api.WorkflowStep_TxStepOutput:
 		stepDetails = fmt.Sprintf("state: %s tx hash: %s",
 			step.GetTxStepOutput().GetState().String(),
 			step.GetTxStepOutput().GetTxHash(),
 		)
-	case *stakingpb.WorkflowStep_WaitStepOutput:
+	case *api.WorkflowStep_WaitStepOutput:
 		stepDetails = fmt.Sprintf("state: %s current: %d target: %d",
 			step.GetWaitStepOutput().GetState().String(),
 			step.GetWaitStepOutput().GetCurrent(),

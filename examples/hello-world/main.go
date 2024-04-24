@@ -12,7 +12,7 @@ import (
 	"github.com/coinbase/staking-client-library-go/auth"
 	"github.com/coinbase/staking-client-library-go/client"
 	"github.com/coinbase/staking-client-library-go/client/options"
-	stakingpb "github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/orchestration/v1"
+	api "github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/orchestration/v1"
 	"google.golang.org/api/iterator"
 )
 
@@ -34,7 +34,7 @@ func main() {
 	}
 
 	// List all protocols.
-	protocols, err := stakingClient.Orchestration.ListProtocols(ctx, &stakingpb.ListProtocolsRequest{})
+	protocols, err := stakingClient.Orchestration.ListProtocols(ctx, &api.ListProtocolsRequest{})
 	if err != nil {
 		log.Fatalf("error listing protocols: %s", err.Error())
 	}
@@ -46,7 +46,7 @@ func main() {
 	protocol := "protocols/ethereum_kiln"
 
 	// List all networks for a supported protocol.
-	networks, err := stakingClient.Orchestration.ListNetworks(ctx, &stakingpb.ListNetworksRequest{
+	networks, err := stakingClient.Orchestration.ListNetworks(ctx, &api.ListNetworksRequest{
 		Parent: protocol,
 	})
 	if err != nil {
@@ -60,7 +60,7 @@ func main() {
 	network := "protocols/ethereum_kiln/networks/holesky"
 
 	// List all actions for a supported network.
-	actions, err := stakingClient.Orchestration.ListActions(ctx, &stakingpb.ListActionsRequest{
+	actions, err := stakingClient.Orchestration.ListActions(ctx, &api.ListActionsRequest{
 		Parent: network,
 	})
 	if err != nil {
@@ -72,7 +72,7 @@ func main() {
 	}
 
 	// List all staking targets for a supported network.
-	iter := stakingClient.Orchestration.ListStakingTargets(ctx, &stakingpb.ListStakingTargetsRequest{
+	iter := stakingClient.Orchestration.ListStakingTargets(ctx, &api.ListStakingTargetsRequest{
 		Parent: network,
 	})
 
@@ -87,9 +87,9 @@ func main() {
 		}
 
 		switch stakingTarget.GetStakingTargets().(type) {
-		case *stakingpb.StakingTarget_Validator:
+		case *api.StakingTarget_Validator:
 			log.Printf("got validator: %s", stakingTarget.GetValidator().String())
-		case *stakingpb.StakingTarget_Contract:
+		case *api.StakingTarget_Contract:
 			log.Printf("got contract: %s", stakingTarget.GetContract().String())
 		}
 

@@ -6,7 +6,7 @@ import (
 
 	stakingerrors "github.com/coinbase/staking-client-library-go/client/errors"
 	innerClient "github.com/coinbase/staking-client-library-go/gen/client/coinbase/staking/rewards/v1"
-	stakingpb "github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/rewards/v1"
+	api "github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/rewards/v1"
 	"github.com/googleapis/gax-go/v2"
 	"google.golang.org/api/iterator"
 )
@@ -18,11 +18,11 @@ type StakeIterator interface {
 
 	// Next returns the next result. Its second return value is iterator.Done if there are no more
 	// results. Once Next returns Done, all subsequent calls will return Done.
-	Next() (*stakingpb.Stake, error)
+	Next() (*api.Stake, error)
 
 	// Response is the raw response for the current page.
 	// Calling Next() or InternalFetch() updates this value.
-	Response() *stakingpb.ListStakesResponse
+	Response() *api.ListStakesResponse
 }
 
 // StakeIteratorImpl is an implementation of StakeIterator that unwraps correctly.
@@ -37,7 +37,7 @@ func (n *StakeIteratorImpl) PageInfo() *iterator.PageInfo {
 
 // Next returns the next result. Its second return value is iterator.Done if there are no more
 // results. Once Next returns Done, all subsequent calls will return Done.
-func (n *StakeIteratorImpl) Next() (*stakingpb.Stake, error) {
+func (n *StakeIteratorImpl) Next() (*api.Stake, error) {
 	reward, err := n.iter.Next()
 	if errors.Is(err, iterator.Done) || err == nil {
 		return reward, err
@@ -48,12 +48,12 @@ func (n *StakeIteratorImpl) Next() (*stakingpb.Stake, error) {
 
 // Response is the raw response for the current page.
 // Calling Next() or InternalFetch() updates this value.
-func (n *StakeIteratorImpl) Response() *stakingpb.ListStakesResponse {
+func (n *StakeIteratorImpl) Response() *api.ListStakesResponse {
 	if n.iter.Response == nil {
 		return nil
 	}
 
-	response, ok := n.iter.Response.(*stakingpb.ListStakesResponse)
+	response, ok := n.iter.Response.(*api.ListStakesResponse)
 	if !ok {
 		return nil
 	}
@@ -64,7 +64,7 @@ func (n *StakeIteratorImpl) Response() *stakingpb.ListStakesResponse {
 // ListStakes list staking activities for a given protocol.
 func (s *Client) ListStakes(
 	ctx context.Context,
-	req *stakingpb.ListStakesRequest,
+	req *api.ListStakesRequest,
 	opts ...gax.CallOption,
 ) StakeIterator {
 	return &StakeIteratorImpl{iter: s.client.ListStakes(ctx, req, opts...)}
