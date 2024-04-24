@@ -49,12 +49,11 @@ func main() {
 		log.Fatalf("error instantiating staking client: %s", err.Error())
 	}
 
-	if projectID == "" || privateKey == "" || stakerAddress == "" {
-		log.Fatalf("projectID, privateKey and stakerAddress must be set")
+	if privateKey == "" || stakerAddress == "" {
+		log.Fatalf("privateKey stakerAddress must be set")
 	}
 
 	req := &stakingpb.CreateWorkflowRequest{
-		Parent: fmt.Sprintf("projects/%s", projectID),
 		Workflow: &stakingpb.Workflow{
 			Action: "protocols/ethereum_kiln/networks/holesky/actions/stake",
 			StakingParameters: &stakingpb.Workflow_EthereumKilnStakingParameters{

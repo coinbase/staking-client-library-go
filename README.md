@@ -33,7 +33,6 @@ package main
 
 import (
     "context"
-    "fmt"
     "log"
 
     "github.com/coinbase/staking-client-library-go/auth"
@@ -43,9 +42,6 @@ import (
 )
 
 func main() {
-    // TODO: Add your project ID found at cloud.coinbase.com or in your API key.
-    projectID := ""
-
     ctx := context.Background()
 
     // Loads the API key from the default location.
@@ -60,9 +56,7 @@ func main() {
         log.Fatalf("error instantiating staking client: %s", err.Error())
     }
 
-    // Constructs the API request
     req := &stakingpb.CreateWorkflowRequest{
-        Parent: fmt.Sprintf("projects/%s", projectID),
         Workflow: &stakingpb.Workflow{
             Action: "protocols/ethereum_kiln/networks/holesky/actions/stake",
             StakingParameters: &stakingpb.Workflow_EthereumKilnStakingParameters{
@@ -79,7 +73,6 @@ func main() {
                     },
                 },
             },
-            SkipBroadcast: true,
         },
     }
 
@@ -122,13 +115,14 @@ import (
     "log"
     "time"
 
+    "github.com/coinbase/staking-client-library-go/client/protocols"
     "google.golang.org/api/iterator"
 
     "github.com/coinbase/staking-client-library-go/auth"
     "github.com/coinbase/staking-client-library-go/client"
     "github.com/coinbase/staking-client-library-go/client/options"
-    "github.com/coinbase/staking-client-library-go/client/rewards"
-    rewardspb "github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/rewards/v1"
+    reward "github.com/coinbase/staking-client-library-go/client/rewards/reward"
+    api "github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/rewards/v1"
 )
 
 func main() {
@@ -146,13 +140,13 @@ func main() {
         log.Fatalf("error instantiating staking client: %s", err.Error())
     }
 
-    // Lists the rewards for the given address for the previous last 2 days, aggregated by day.
-    rewardsIter := stakingClient.Rewards.ListRewards(ctx, &rewardspb.ListRewardsRequest{
-        Parent:   rewardspb.ProtocolResourceName{Protocol: "ethereum"}.String(),
+    // Lists the rewards for the given address for the previous last 20 days, aggregated by day.
+    rewardsIter := stakingClient.Rewards.ListRewards(ctx, &api.ListRewardsRequest{
+        Parent:   protocols.Ethereum,
         PageSize: 200,
-        Filter: rewards.WithAddress().Eq("0xac53512c39d0081ca4437c285305eb423f474e6153693c12fbba4a3df78bcaa3422b31d800c5bea71c1b017168a60474").
-            And(rewards.WithPeriodEndTime().Gte(time.Now().AddDate(0, 0, -2))).
-            And(rewards.WithPeriodEndTime().Lt(time.Now())).String(),
+        Filter: reward.WithAddress().Eq("0xac53512c39d0081ca4437c285305eb423f474e6153693c12fbba4a3df78bcaa3422b31d800c5bea71c1b017168a60474").
+            And(reward.WithPeriodEndTime().Gte(time.Now().AddDate(0, 0, -20))).
+            And(reward.WithPeriodEndTime().Lt(time.Now())).String(),
     })
 
     // Iterates through the rewards and print them.
