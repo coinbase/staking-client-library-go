@@ -1,11 +1,11 @@
-package v1
+package rewards
 
 import (
 	"context"
 
 	"google.golang.org/grpc"
 
-	clients "github.com/coinbase/staking-client-library-go/client/options"
+	"github.com/coinbase/staking-client-library-go/client/options"
 	innerClient "github.com/coinbase/staking-client-library-go/gen/client/coinbase/staking/rewards/v1"
 )
 
@@ -22,14 +22,14 @@ type RewardsServiceClient struct {
 // NewRewardsServiceClient returns a RewardsServiceClient based on the given inputs.
 func NewRewardsServiceClient(
 	ctx context.Context,
-	stakingOpts ...clients.StakingClientOption,
+	stakingOpts ...options.StakingClientOption,
 ) (*RewardsServiceClient, error) {
-	config, err := clients.GetConfig("rewards-reporting", serviceEndpoint, stakingOpts...)
+	config, err := options.GetConfig("rewards-reporting", serviceEndpoint, stakingOpts...)
 	if err != nil {
 		return nil, err
 	}
 
-	clientOptions, err := clients.GetClientOptions(config)
+	clientOptions, err := options.GetClientOptions(config)
 	if err != nil {
 		return nil, err
 	}

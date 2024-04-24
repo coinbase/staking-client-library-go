@@ -16,7 +16,7 @@ import (
 	"github.com/coinbase/staking-client-library-go/auth"
 	"github.com/coinbase/staking-client-library-go/client"
 	"github.com/coinbase/staking-client-library-go/client/options"
-	rewardsV1 "github.com/coinbase/staking-client-library-go/client/rewards/v1"
+	"github.com/coinbase/staking-client-library-go/client/rewards"
 	rewardspb "github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/rewards/v1"
 )
 
@@ -53,9 +53,9 @@ func main() {
 	rewardsIter := stakingClient.Rewards.ListRewards(ctx, &rewardspb.ListRewardsRequest{
 		Parent:   rewardspb.ProtocolResourceName{Protocol: "cosmos"}.String(),
 		PageSize: 20,
-		Filter: rewardsV1.WithAddress().Eq(address).
-			And(rewardsV1.WithDate().Gte(thirtyDaysAgoDateOnly.Format("2006-01-02"))).
-			And(rewardsV1.WithDate().Lt(nowDateOnly.Format("2006-01-02"))).String(),
+		Filter: rewards.WithAddress().Eq(address).
+			And(rewards.WithDate().Gte(thirtyDaysAgoDateOnly.Format("2006-01-02"))).
+			And(rewards.WithDate().Lt(nowDateOnly.Format("2006-01-02"))).String(),
 	})
 
 	count := 0

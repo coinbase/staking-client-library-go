@@ -16,8 +16,9 @@ import (
 
 	"github.com/coinbase/staking-client-library-go/auth"
 	"github.com/coinbase/staking-client-library-go/client"
+	"github.com/coinbase/staking-client-library-go/client/filter"
 	"github.com/coinbase/staking-client-library-go/client/options"
-	rewardsV1 "github.com/coinbase/staking-client-library-go/client/rewards/v1"
+	"github.com/coinbase/staking-client-library-go/client/rewards"
 	rewardspb "github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/rewards/v1"
 )
 
@@ -38,11 +39,15 @@ func main() {
 
 	// Lists the rewards for the given address for the previous last 2 days, aggregated by day.
 	rewardsIter := stakingClient.Rewards.ListRewards(ctx, &rewardspb.ListRewardsRequest{
-		Parent:   rewardspb.ProtocolResourceName{Protocol: "ethereum"}.String(),
+		Parent:   rewards.Ethereum,
 		PageSize: 200,
-		Filter: rewardsV1.WithAddress().Eq("0xac53512c39d0081ca4437c285305eb423f474e6153693c12fbba4a3df78bcaa3422b31d800c5bea71c1b017168a60474").
-			And(rewardsV1.WithPeriodEndTime().Gte(time.Now().AddDate(0, 0, -2))).
-			And(rewardsV1.WithPeriodEndTime().Lt(time.Now())).String(),
+		Filter: rewards.NewListRewardsFilter().
+			WithAddress(filter.Equal("0xac53512c39d0081ca4437c285305eb423f474e6153693c12fbba4a3df78bcaa3422b31d800c5bea71c1b017168a60474")).
+			And().
+			WithPeriodEndTime(filter.GreaterThanOrEqualTo(time.Now().AddDate(0, 0, -20))).
+			And().
+			WithPeriodEndTime(filter.LessThan(time.Now())).
+			Build(),
 	})
 
 	// Iterates through the rewards and print them.

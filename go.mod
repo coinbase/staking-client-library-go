@@ -10,6 +10,7 @@ require (
 	github.com/googleapis/gax-go/v2 v2.11.0
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.15.2
 	github.com/stretchr/testify v1.8.1
+	github.com/test-go/testify v1.1.4
 	go.einride.tech/aip v0.60.0
 	google.golang.org/api v0.126.0
 	google.golang.org/genproto/googleapis/api v0.0.0-20230530153820-e85fd2cbaebc

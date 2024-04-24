@@ -8,6 +8,7 @@ import (
 	"context"
 	"errors"
 	"log"
+	"time"
 
 	"google.golang.org/api/iterator"
 	"google.golang.org/protobuf/encoding/protojson"
@@ -15,6 +16,8 @@ import (
 	"github.com/coinbase/staking-client-library-go/auth"
 	"github.com/coinbase/staking-client-library-go/client"
 	"github.com/coinbase/staking-client-library-go/client/options"
+	"github.com/coinbase/staking-client-library-go/client/rewards"
+	"github.com/coinbase/staking-client-library-go/client/rewards/stakes"
 	rewardspb "github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/rewards/v1"
 )
 
@@ -37,9 +40,11 @@ func main() {
 
 	// List staking activities for a given protocol.
 	stakesIter := stakingClient.Rewards.ListStakes(ctx, &rewardspb.ListStakesRequest{
-		Parent:   rewardspb.ProtocolResourceName{Protocol: "ethereum"}.String(),
+		Parent:   rewards.Ethereum,
 		PageSize: 200,
-		Filter:   `address='0xac53512c39d0081ca4437c285305eb423f474e6153693c12fbba4a3df78bcaa3422b31d800c5bea71c1b017168a60474' AND evaluation_time>='2023-12-12T07:25:11-04:00' AND evaluation_time<='2023-12-12T08:20:50-04:00'`,
+		Filter: stakes.WithAddress().Eq("0xac53512c39d0081ca4437c285305eb423f474e6153693c12fbba4a3df78bcaa3422b31d800c5bea71c1b017168a60474").
+			And(stakes.WithEvaluationTime().Lte(time.Now())).
+			String(),
 	})
 
 	count := 0

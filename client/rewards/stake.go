@@ -1,4 +1,4 @@
-package v1
+package rewards
 
 import (
 	"context"
@@ -13,33 +13,33 @@ import (
 	stakingpb "github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/rewards/v1"
 )
 
-// RewardIterator is an interface for iterating through the response to ListRewards.
-type RewardIterator interface {
+// StakeIterator is an interface for iterating through the response to ListStakes.
+type StakeIterator interface {
 	// PageInfo supports pagination. See the google.golang.org/api/iterator package for details.
 	PageInfo() *iterator.PageInfo
 
 	// Next returns the next result. Its second return value is iterator.Done if there are no more
 	// results. Once Next returns Done, all subsequent calls will return Done.
-	Next() (*stakingpb.Reward, error)
+	Next() (*stakingpb.Stake, error)
 
 	// Response is the raw response for the current page.
 	// Calling Next() or InternalFetch() updates this value.
-	Response() *stakingpb.ListRewardsResponse
+	Response() *stakingpb.ListStakesResponse
 }
 
-// RewardIteratorImpl is an implementation of RewardIterator that unwraps correctly.
-type RewardIteratorImpl struct {
-	iter *innerClient.RewardIterator
+// StakeIteratorImpl is an implementation of StakeIterator that unwraps correctly.
+type StakeIteratorImpl struct {
+	iter *innerClient.StakeIterator
 }
 
 // PageInfo supports pagination. See the google.golang.org/api/iterator package for details.
-func (n *RewardIteratorImpl) PageInfo() *iterator.PageInfo {
+func (n *StakeIteratorImpl) PageInfo() *iterator.PageInfo {
 	return n.iter.PageInfo()
 }
 
 // Next returns the next result. Its second return value is iterator.Done if there are no more
 // results. Once Next returns Done, all subsequent calls will return Done.
-func (n *RewardIteratorImpl) Next() (*stakingpb.Reward, error) {
+func (n *StakeIteratorImpl) Next() (*stakingpb.Stake, error) {
 	reward, err := n.iter.Next()
 	if errors.Is(err, iterator.Done) || err == nil {
 		return reward, err
@@ -50,12 +50,12 @@ func (n *RewardIteratorImpl) Next() (*stakingpb.Reward, error) {
 
 // Response is the raw response for the current page.
 // Calling Next() or InternalFetch() updates this value.
-func (n *RewardIteratorImpl) Response() *stakingpb.ListRewardsResponse {
+func (n *StakeIteratorImpl) Response() *stakingpb.ListStakesResponse {
 	if n.iter.Response == nil {
 		return nil
 	}
 
-	response, ok := n.iter.Response.(*stakingpb.ListRewardsResponse)
+	response, ok := n.iter.Response.(*stakingpb.ListStakesResponse)
 	if !ok {
 		return nil
 	}
@@ -63,11 +63,11 @@ func (n *RewardIteratorImpl) Response() *stakingpb.ListRewardsResponse {
 	return response
 }
 
-// ListRewards helps list onchain rewards of an address for a specific protocol, with optional filters for time range, aggregation period, and more.
-func (s *RewardsServiceClient) ListRewards(
+// ListStakes list staking activities for a given protocol.
+func (s *RewardsServiceClient) ListStakes(
 	ctx context.Context,
-	req *stakingpb.ListRewardsRequest,
+	req *stakingpb.ListStakesRequest,
 	opts ...gax.CallOption,
-) RewardIterator {
-	return &RewardIteratorImpl{iter: s.client.ListRewards(ctx, req, opts...)}
+) StakeIterator {
+	return &StakeIteratorImpl{iter: s.client.ListStakes(ctx, req, opts...)}
 }
