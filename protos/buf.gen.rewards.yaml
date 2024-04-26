@@ -4,26 +4,51 @@ plugins:
     out: ./gen/go
     opt:
       - paths=source_relative
+      - Mcoinbase/staking/rewards/v1/reward_service.proto=github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/rewards/v1;v1
+      - Mcoinbase/staking/rewards/v1/reward.proto=github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/rewards/v1;v1
+      - Mcoinbase/staking/rewards/v1/stake.proto=github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/rewards/v1;v1
+      - Mcoinbase/staking/rewards/v1/common.proto=github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/rewards/v1;v1
+      - Mcoinbase/staking/rewards/v1/protocol.proto=github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/rewards/v1;v1
   # NOTE: This generates gRPC boilerplate in golang
   - name: go-grpc
     out: ./gen/go
     opt:
       - paths=source_relative
+      - Mcoinbase/staking/rewards/v1/reward_service.proto=github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/rewards/v1;v1
+      - Mcoinbase/staking/rewards/v1/reward.proto=github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/rewards/v1;v1
+      - Mcoinbase/staking/rewards/v1/stake.proto=github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/rewards/v1;v1
+      - Mcoinbase/staking/rewards/v1/common.proto=github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/rewards/v1;v1
+      - Mcoinbase/staking/rewards/v1/protocol.proto=github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/rewards/v1;v1
   # NOTE: This generates a REST reverse proxy from protobuf definitions
   - name: grpc-gateway
     out: ./gen/go
     opt:
       - paths=source_relative
+      - Mcoinbase/staking/rewards/v1/reward_service.proto=github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/rewards/v1;v1
+      - Mcoinbase/staking/rewards/v1/reward.proto=github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/rewards/v1;v1
+      - Mcoinbase/staking/rewards/v1/stake.proto=github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/rewards/v1;v1
+      - Mcoinbase/staking/rewards/v1/common.proto=github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/rewards/v1;v1
+      - Mcoinbase/staking/rewards/v1/protocol.proto=github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/rewards/v1;v1
   - name: go-aip
     out: ./gen/go
     opt:
       - paths=source_relative
+      - Mcoinbase/staking/rewards/v1/reward_service.proto=github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/rewards/v1;v1
+      - Mcoinbase/staking/rewards/v1/reward.proto=github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/rewards/v1;v1
+      - Mcoinbase/staking/rewards/v1/stake.proto=github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/rewards/v1;v1
+      - Mcoinbase/staking/rewards/v1/common.proto=github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/rewards/v1;v1
+      - Mcoinbase/staking/rewards/v1/protocol.proto=github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/rewards/v1;v1
   # NOTE: This generates the OpenAPI v2 spec (aka Swagger spec) based on protobuf definitions
   - name: openapiv2
     out: ./docs/openapi
     opt:
       - allow_merge=true
       - merge_file_name=rewards
+      - Mcoinbase/staking/rewards/v1/reward_service.proto=github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/rewards/v1;v1
+      - Mcoinbase/staking/rewards/v1/reward.proto=github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/rewards/v1;v1
+      - Mcoinbase/staking/rewards/v1/stake.proto=github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/rewards/v1;v1
+      - Mcoinbase/staking/rewards/v1/common.proto=github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/rewards/v1;v1
+      - Mcoinbase/staking/rewards/v1/protocol.proto=github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/rewards/v1;v1
   - name: go_gapic
     out: ./gen/client
     opt:
