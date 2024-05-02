@@ -1,5 +1,5 @@
 /*
- * This example code, demonstrates staking client library usage for performing e2e staking on Ethereum Kiln.
+ * This example code, demonstrates staking client library usage for performing e2e staking on Solana.
  */
 
 package main
@@ -24,10 +24,10 @@ const (
 	// TODO: Replace with your private key.
 	privateKey = ""
 
-	// TODO: Replace with your staker addresses and amount.
-	stakerAddress = ""
-	amount        = "11"
-	currency      = "ETH"
+	// TODO: Replace with your wallet addresses and amount.
+	walletAddress = ""
+	amount        = "100000000"
+	currency      = "SOL"
 )
 
 // An example function to demonstrate how to use the staking client libraries.
@@ -47,18 +47,18 @@ func main() {
 		log.Fatalf("error instantiating staking client: %s", err.Error())
 	}
 
-	if privateKey == "" || stakerAddress == "" {
-		log.Fatalf("privateKey stakerAddress must be set")
+	if privateKey == "" || walletAddress == "" {
+		log.Fatalf("privateKey and walletAddress must be set")
 	}
 
 	req := &api.CreateWorkflowRequest{
 		Workflow: &api.Workflow{
-			Action: "protocols/ethereum_kiln/networks/holesky/actions/stake",
-			StakingParameters: &api.Workflow_EthereumKilnStakingParameters{
-				EthereumKilnStakingParameters: &api.EthereumKilnStakingParameters{
-					Parameters: &api.EthereumKilnStakingParameters_StakeParameters{
-						StakeParameters: &api.EthereumKilnStakeParameters{
-							StakerAddress: stakerAddress,
+			Action: "protocols/solana/networks/devnet/actions/stake",
+			StakingParameters: &api.Workflow_SolanaStakingParameters{
+				SolanaStakingParameters: &api.SolanaStakingParameters{
+					Parameters: &api.SolanaStakingParameters_StakeParameters{
+						StakeParameters: &api.SolanaStakeParameters{
+							WalletAddress: walletAddress,
 							Amount: &api.Amount{
 								Value:    amount,
 								Currency: currency,
@@ -96,7 +96,7 @@ func main() {
 			// Logic to sign the transaction. This can be substituted with any other signing mechanism.
 			log.Printf("Signing unsigned tx %s ...\n", unsignedTx)
 
-			signedTx, err := signer.New("ethereum_kiln").SignTransaction([]string{privateKey}, &signer.UnsignedTx{Data: []byte(unsignedTx)})
+			signedTx, err := signer.New("solana").SignTransaction([]string{privateKey}, &signer.UnsignedTx{Data: []byte(unsignedTx)})
 			if err != nil {
 				log.Fatalf(fmt.Errorf("error signing transaction: %w", err).Error())
 			}

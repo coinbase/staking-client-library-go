@@ -64,7 +64,6 @@ func main() {
                     Parameters: &api.EthereumKilnStakingParameters_StakeParameters{
                         StakeParameters: &api.EthereumKilnStakeParameters{
                             StakerAddress:             "0xdb816889F2a7362EF242E5a717dfD5B38Ae849FE",
-                            IntegratorContractAddress: "0xA55416de5DE61A0AC1aa8970a280E04388B1dE4b",
                             Amount: &api.Amount{
                                 Value:    "20",
                                 Currency: "ETH",
@@ -91,7 +90,82 @@ func main() {
      <summary>Output</summary>
 
    ```text
-   2024/03/28 11:43:49 Workflow created: projects/62376b2f-3f24-42c9-9025-d576a3c06d6f/workflows/ffbf9b45-c57b-49cb-a4d5-fdab66d8cb25
+   2024/03/28 11:43:49 Workflow created: workflows/ffbf9b45-c57b-49cb-a4d5-fdab66d8cb25
+   ```
+
+   </details>
+
+### Stake SOL :diamond_shape_with_a_dot_inside:
+
+This code sample creates an SOL staking workflow. View the full code sample [here](examples/solana/create-workflow/main.go)
+
+<details open>
+  <summary>Code Sample</summary>
+
+```golang
+// examples/solana/create-workflow/main.go
+package main
+
+import (
+    "context"
+    "log"
+
+    "github.com/coinbase/staking-client-library-go/auth"
+    "github.com/coinbase/staking-client-library-go/client"
+    "github.com/coinbase/staking-client-library-go/client/options"
+    api "github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/orchestration/v1"
+)
+
+func main() {
+    ctx := context.Background()
+
+    // Loads the API key from the default location.
+    apiKey, err := auth.NewAPIKey(auth.WithLoadAPIKeyFromFile(true))
+    if err != nil {
+        log.Fatalf("error loading API key: %s", err.Error())
+    }
+
+    // Creates the Coinbase Staking API client.
+    stakingClient, err := client.New(ctx, options.WithAPIKey(apiKey))
+    if err != nil {
+        log.Fatalf("error instantiating staking client: %s", err.Error())
+    }
+
+	req := &api.CreateWorkflowRequest{
+		Workflow: &api.Workflow{
+			Action: "protocols/solana/networks/devnet/actions/stake",
+			StakingParameters: &api.Workflow_SolanaStakingParameters{
+				SolanaStakingParameters: &api.SolanaStakingParameters{
+					Parameters: &api.SolanaStakingParameters_StakeParameters{
+						StakeParameters: &api.SolanaStakeParameters{
+							WalletAddress: walletAddress,
+							Amount: &api.Amount{
+								Value:    amount,
+								Currency: currency,
+							},
+						},
+					},
+				},
+			},
+		},
+	}
+
+    workflow, err := stakingClient.Orchestration.CreateWorkflow(ctx, req)
+    if err != nil {
+        log.Fatalf("couldn't create workflow: %s", err.Error())
+    }
+
+    log.Printf("Workflow created: %s", workflow.Name)
+}
+```
+
+</details>
+
+   <details>
+     <summary>Output</summary>
+
+   ```text
+   2024/03/28 11:43:49 Workflow created: workflows/6bd9fd82-8b9d-4a49-9039-f95bb850a7a2
    ```
 
    </details>
