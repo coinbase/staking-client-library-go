@@ -1,4 +1,4 @@
-name: Go Test
+name: CI
 
 on:
   push:
@@ -12,7 +12,8 @@ permissions:
   contents: read
 
 jobs:
-  test:
+  ci:
+    name: ci
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -24,6 +25,12 @@ jobs:
 
       - name: Build
         run: go build -v ./...
+
+      - name: Lint
+        uses: golangci/golangci-lint-action@v4
+        with:
+          version: v1.54.2
+          args: --timeout=3m
 
       - name: Test
         uses: robherley/go-test-action@v0

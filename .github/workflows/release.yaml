@@ -1,0 +1,47 @@
+name: Version 🔖
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '.version'
+
+concurrency: ${{ github.workflow }}-${{ github.ref }}
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    environment: release
+    permissions:
+      contents: write
+      id-token: write
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Get version from .version file
+      id: release_version
+      run: echo "VERSION=$(cat .version")" >> $GITHUB_OUTPUT
+
+    - name: Check if tag exists
+      id: check_tag
+      run: |
+        git fetch --tags
+        if git rev-parse "v${{ steps.release_version.outputs.VERSION }}" >/dev/null 2>&1; then
+          echo "::set-output name=EXISTS::true"
+        fi
+
+    - name: Create Release
+      if: steps.check_tag.outputs.EXISTS != 'true'
+      uses: softprops/action-gh-release@v2
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: v${{ steps.release_version.outputs.VERSION }}
+        name: Release v${{ steps.release_version.outputs.VERSION }}
+        draft: false
+        prerelease: false
+        generate_release_notes: true
+        make_latest: true

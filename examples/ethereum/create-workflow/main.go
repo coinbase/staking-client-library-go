@@ -8,6 +8,8 @@ import (
 	"context"
 	"log"
 
+	"google.golang.org/protobuf/encoding/protojson"
+
 	"github.com/coinbase/staking-client-library-go/auth"
 	"github.com/coinbase/staking-client-library-go/client"
 	"github.com/coinbase/staking-client-library-go/client/options"
@@ -36,8 +38,7 @@ func main() {
 				EthereumKilnStakingParameters: &api.EthereumKilnStakingParameters{
 					Parameters: &api.EthereumKilnStakingParameters_StakeParameters{
 						StakeParameters: &api.EthereumKilnStakeParameters{
-							StakerAddress:             "0xdb816889F2a7362EF242E5a717dfD5B38Ae849FE",
-							IntegratorContractAddress: "0xA55416de5DE61A0AC1aa8970a280E04388B1dE4b",
+							StakerAddress: "0xdb816889F2a7362EF242E5a717dfD5B38Ae849FE",
 							Amount: &api.Amount{
 								Value:    "20",
 								Currency: "ETH",
@@ -54,5 +55,10 @@ func main() {
 		log.Fatalf("couldn't create workflow: %s", err.Error())
 	}
 
-	log.Printf("Workflow created: %s", workflow.Name)
+	marshaled, err := protojson.MarshalOptions{Indent: "  ", Multiline: true}.Marshal(workflow)
+	if err != nil {
+		log.Fatalf("error marshaling reward: %s", err.Error())
+	}
+
+	log.Printf("Workflow created: \n%s", marshaled)
 }
