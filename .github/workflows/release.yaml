@@ -23,7 +23,7 @@ jobs:
 
     - name: Get version from .version file
       id: release_version
-      run: echo "VERSION=$(cat .version")" >> $GITHUB_OUTPUT
+      run: echo "VERSION=$(cat .version)" >> $GITHUB_OUTPUT
 
     - name: Check if tag exists
       id: check_tag
