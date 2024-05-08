@@ -16,9 +16,15 @@ A traditional infrastructure-heavy staking integration can take months. Coinbase
 
 ## Quick Start
 
-1. Create and download an API key from the [Cloud Platform](https://portal.cloud.coinbase.com/access/api).
-2. Place the key named `.coinbase_cloud_api_key.json` at the root of your repository.
-3. Run one of the code samples [below](#stake-partial-eth-💠) or any of our [provided examples](./examples/) :rocket:.
+Prerequisite: [Go 1.21+](https://go.dev/doc/install)
+
+1. In a fresh directory, copy and paste one of the code samples below or any of our [provided examples](./examples/) into an `example.go` file.
+2. Create and download an API key from the [Cloud Platform](https://portal.cloud.coinbase.com/access/api).
+3. Place the key named `.coinbase_cloud_api_key.json` at the root of your repository.
+4. Setup a Go project and run the example :rocket:
+
+   ```shell
+   go mod init example && go mod tidy && go run example.go
 
 ### Stake Partial ETH :diamond_shape_with_a_dot_inside:
 
@@ -32,8 +38,119 @@ This code sample creates an ETH staking workflow. View the full code sample [her
 package main
 
 import (
+   "context"
+   "fmt"
+   "log"
+
+   "google.golang.org/protobuf/encoding/protojson"
+
+   "github.com/coinbase/staking-client-library-go/auth"
+   "github.com/coinbase/staking-client-library-go/client"
+   "github.com/coinbase/staking-client-library-go/client/options"
+   api "github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/orchestration/v1"
+)
+
+func main() {
+   ctx := context.Background()
+
+   // Loads the API key from the default location.
+   apiKey, err := auth.NewAPIKey(auth.WithLoadAPIKeyFromFile(true))
+   if err != nil {
+      log.Fatalf("error loading API key: %s", err.Error())
+   }
+
+   // Creates the Coinbase Staking API client.
+   stakingClient, err := client.New(ctx, options.WithAPIKey(apiKey))
+   if err != nil {
+      log.Fatalf("error instantiating staking client: %s", err.Error())
+   }
+
+   req := &api.CreateWorkflowRequest{
+      Workflow: &api.Workflow{
+         Action: "protocols/ethereum_kiln/networks/holesky/actions/stake",
+         StakingParameters: &api.Workflow_EthereumKilnStakingParameters{
+            EthereumKilnStakingParameters: &api.EthereumKilnStakingParameters{
+               Parameters: &api.EthereumKilnStakingParameters_StakeParameters{
+                  StakeParameters: &api.EthereumKilnStakeParameters{
+                     StakerAddress: "0xdb816889F2a7362EF242E5a717dfD5B38Ae849FE",
+                     Amount: &api.Amount{
+                        Value:    "20",
+                        Currency: "ETH",
+                     },
+                  },
+               },
+            },
+         },
+      },
+   }
+
+   workflow, err := stakingClient.Orchestration.CreateWorkflow(ctx, req)
+   if err != nil {
+      log.Fatalf("couldn't create workflow: %s", err.Error())
+   }
+
+   marshaled, err := protojson.MarshalOptions{Indent: "  ", Multiline: true}.Marshal(workflow)
+   if err != nil {
+      log.Fatalf("error marshaling reward: %s", err.Error())
+   }
+
+   fmt.Println(string(marshaled))
+}
+```
+
+</details>
+
+   <details>
+     <summary>Output</summary>
+
+   ```text
+   {
+     "name":  "workflows/357673b5-c3b7-4149-a887-a6119d32fbdd",
+     "action":  "protocols/ethereum_kiln/networks/holesky/actions/stake",
+     "ethereumKilnStakingParameters":  {
+       "stakeParameters":  {
+         "stakerAddress":  "0xdb816889F2a7362EF242E5a717dfD5B38Ae849FE",
+         "integratorContractAddress":  "0xA55416de5DE61A0AC1aa8970a280E04388B1dE4b",
+         "amount":  {
+           "value":  "20",
+           "currency":  "ETH"
+         }
+       }
+     },
+     "state":  "STATE_WAITING_FOR_EXT_BROADCAST",
+     "steps":  [
+       {
+         "name":  "stake tx",
+         "txStepOutput":  {
+           "unsignedTx":  "02f3824268068502540be4008503743b80ba83061a8094a55416de5de61a0ac1aa8970a280e04388b1de4b14843a4b66f1c0808080",
+           "state":  "STATE_PENDING_EXT_BROADCAST"
+         }
+       }
+     ],
+     "createTime":  "2024-05-08T17:30:56.633391257Z",
+     "updateTime":  "2024-05-08T17:30:56.633391257Z"
+   }
+   ```
+
+   </details>
+
+### Stake SOL :diamond_shape_with_a_dot_inside:
+
+This code sample creates an SOL staking workflow. View the full code sample [here](examples/solana/create-workflow/main.go)
+
+<details open>
+  <summary>Code Sample</summary>
+
+```golang
+// examples/solana/create-workflow/main.go
+package main
+
+import (
     "context"
+    "fmt"
     "log"
+
+    "google.golang.org/protobuf/encoding/protojson"
 
     "github.com/coinbase/staking-client-library-go/auth"
     "github.com/coinbase/staking-client-library-go/client"
@@ -58,15 +175,15 @@ func main() {
 
     req := &api.CreateWorkflowRequest{
         Workflow: &api.Workflow{
-            Action: "protocols/ethereum_kiln/networks/holesky/actions/stake",
-            StakingParameters: &api.Workflow_EthereumKilnStakingParameters{
-                EthereumKilnStakingParameters: &api.EthereumKilnStakingParameters{
-                    Parameters: &api.EthereumKilnStakingParameters_StakeParameters{
-                        StakeParameters: &api.EthereumKilnStakeParameters{
-                            StakerAddress:             "0xdb816889F2a7362EF242E5a717dfD5B38Ae849FE",
+            Action: "protocols/solana/networks/devnet/actions/stake",
+            StakingParameters: &api.Workflow_SolanaStakingParameters{
+                SolanaStakingParameters: &api.SolanaStakingParameters{
+                    Parameters: &api.SolanaStakingParameters_StakeParameters{
+                        StakeParameters: &api.SolanaStakeParameters{
+                            WalletAddress: "8rMGARtkJY5QygP1mgvBFLsE9JrvXByARJiyNfcSE5Z",
                             Amount: &api.Amount{
-                                Value:    "20",
-                                Currency: "ETH",
+                                Value:    "100000000",
+                                Currency: "SOL",
                             },
                         },
                     },
@@ -77,10 +194,15 @@ func main() {
 
     workflow, err := stakingClient.Orchestration.CreateWorkflow(ctx, req)
     if err != nil {
-        log.Fatalf("couldn't create workflow: %s", err.Error())
+       log.Fatalf("couldn't create workflow: %s", err.Error())
     }
 
-    log.Printf("Workflow created: %s", workflow.Name)
+    marshaled, err := protojson.MarshalOptions{Indent: "  ", Multiline: true}.Marshal(workflow)
+    if err != nil {
+       log.Fatalf("error marshaling reward: %s", err.Error())
+    }
+
+    fmt.Println(string(marshaled))
 }
 ```
 
@@ -90,82 +212,33 @@ func main() {
      <summary>Output</summary>
 
    ```text
-   2024/03/28 11:43:49 Workflow created: workflows/ffbf9b45-c57b-49cb-a4d5-fdab66d8cb25
-   ```
-
-   </details>
-
-### Stake SOL :diamond_shape_with_a_dot_inside:
-
-This code sample creates an SOL staking workflow. View the full code sample [here](examples/solana/create-workflow/main.go)
-
-<details open>
-  <summary>Code Sample</summary>
-
-```golang
-// examples/solana/create-workflow/main.go
-package main
-
-import (
-    "context"
-    "log"
-
-    "github.com/coinbase/staking-client-library-go/auth"
-    "github.com/coinbase/staking-client-library-go/client"
-    "github.com/coinbase/staking-client-library-go/client/options"
-    api "github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/orchestration/v1"
-)
-
-func main() {
-    ctx := context.Background()
-
-    // Loads the API key from the default location.
-    apiKey, err := auth.NewAPIKey(auth.WithLoadAPIKeyFromFile(true))
-    if err != nil {
-        log.Fatalf("error loading API key: %s", err.Error())
-    }
-
-    // Creates the Coinbase Staking API client.
-    stakingClient, err := client.New(ctx, options.WithAPIKey(apiKey))
-    if err != nil {
-        log.Fatalf("error instantiating staking client: %s", err.Error())
-    }
-
-	req := &api.CreateWorkflowRequest{
-		Workflow: &api.Workflow{
-			Action: "protocols/solana/networks/devnet/actions/stake",
-			StakingParameters: &api.Workflow_SolanaStakingParameters{
-				SolanaStakingParameters: &api.SolanaStakingParameters{
-					Parameters: &api.SolanaStakingParameters_StakeParameters{
-						StakeParameters: &api.SolanaStakeParameters{
-							WalletAddress: walletAddress,
-							Amount: &api.Amount{
-								Value:    amount,
-								Currency: currency,
-							},
-						},
-					},
-				},
-			},
-		},
-	}
-
-    workflow, err := stakingClient.Orchestration.CreateWorkflow(ctx, req)
-    if err != nil {
-        log.Fatalf("couldn't create workflow: %s", err.Error())
-    }
-
-    log.Printf("Workflow created: %s", workflow.Name)
-}
-```
-
-</details>
-
-   <details>
-     <summary>Output</summary>
-
-   ```text
-   2024/03/28 11:43:49 Workflow created: workflows/6bd9fd82-8b9d-4a49-9039-f95bb850a7a2
+   {
+     "name":  "workflows/f68fc083-18bd-48a0-a10a-7c673e9ec5b7",
+     "action":  "protocols/solana/networks/devnet/actions/stake",
+     "solanaStakingParameters":  {
+       "stakeParameters":  {
+         "walletAddress":  "8rMGARtkJY5QygP1mgvBFLsE9JrvXByARJiyNfcSE5Z",
+         "validatorAddress":  "GkqYQysEGmuL6V2AJoNnWZUz2ZBGWhzQXsJiXm2CLKAN",
+         "amount":  {
+           "value":  "100000000",
+           "currency":  "SOL"
+         },
+         "priorityFee":  {}
+       }
+     },
+     "state":  "STATE_WAITING_FOR_EXT_BROADCAST",
+     "steps":  [
+       {
+         "name":  "stake tx",
+         "txStepOutput":  {
+           "unsignedTx":  "66hEYYWnwGWkGpMKF2H2sCzxnmoAfY8LPnYMgWdY6rC7hX2H6DEE2YdPxECFx8FeeNmea8N87L4KuZ6dirYXZi9XNr5uPJdf8W1jdShcSwzSmmqz4SA7dmFjdTM19hNEu7hMMF7C2RtjZj4qCRvArcnyjj76r5hJrm1o1RozjjZCyvgNqDGHYoeej9MPwoMUEaY6h2iKBh1hnkYFCA1tyXEP8xX3f1jbnae8jzW2Zkc62GDw2gKWusQ3KtRz3wRLdqWT9tbhEk6Hekqbw4sPXSPevsiYHPVX9mQJRdNkoYovBRXv3KQaQ7dv6isgyax7S53yoMRgCvfuhYxk9WhzR4fkAxYB26qeqpdUJrgvSpaw4T3iNBYsG7KZzvGUg4NWG1BaBDuvnG1x7YL3gyJd5QMWQ6jq6yuGgupjNn7zP7EcxtbvpP2EVfrFnzmX4LEgQh4MxshMFpNas2tQXQd12Vv9vq4nZt2BEr2Jh67Q9vnKF22td1XaAL1MvsTmvWWSKviyZkZQzTXsqUGFtox1f8Unwj75sNCQWYUh4PHmiUjWGmQVhyQKbEqG6PeqDyy9YTopamSD2ajDrhak5fsnczdXo166cjnzQAJZW7tN2T6jHJy2KNmDdL16qPR4HqKKXpWquf1NuTPuJ7ikfmJxWBp7gHrMF3z5P84hp4xT4V2D4eHGLMTWDhs4cQghVXRvynPUeUDSf3TWzHfYwVEDFNpFNhX62FP7aJBVp28R8nHTt7riymgkw9LdjhPMxQPoRW3hCG4UcQ9kJ7Aywcij9SVcbfaESoEz7anV1j6HFrXiQsgiSbeCj4iiXtYy9aDbVjiuv2v31kvoE6kb1s7osVoeK1mn7AxkPozMxTVhwca9BTMuHTYpFP1QTVAwsYSCXa6KuoXEgLKZn1c63ijQXXGENLjd17JqV3FK8x2Vurkunws8pAb",
+           "state":  "STATE_PENDING_EXT_BROADCAST"
+         }
+       }
+     ],
+     "createTime":  "2024-05-08T17:33:40.843044346Z",
+     "updateTime":  "2024-05-08T17:33:40.843044346Z"
+   }
    ```
 
    </details>
@@ -182,22 +255,21 @@ This code sample returns rewards for an Ethereum validator address. View the ful
 package main
 
 import (
-    "bytes"
     "context"
-    "encoding/json"
     "errors"
     "fmt"
     "log"
     "time"
 
+    "google.golang.org/api/iterator"
+    "google.golang.org/protobuf/encoding/protojson"
+
     "github.com/coinbase/staking-client-library-go/auth"
     "github.com/coinbase/staking-client-library-go/client"
     "github.com/coinbase/staking-client-library-go/client/options"
     "github.com/coinbase/staking-client-library-go/client/rewards"
-    filter "github.com/coinbase/staking-client-library-go/client/rewards/rewards_filter"
+    filter "github.com/coinbase/staking-client-library-go/client/rewards/rewardsfilter"
     api "github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/rewards/v1"
-    "google.golang.org/api/iterator"
-    "google.golang.org/protobuf/encoding/protojson"
 )
 
 const (
@@ -240,8 +312,7 @@ func main() {
             log.Fatalf("error listing rewards: %s", err.Error())
         }
 
-        marshaler := protojson.MarshalOptions{Indent: "\t"}
-        marshaled, err := marshaler.Marshal(reward)
+        marshaled, err := protojson.MarshalOptions{Indent: "  ", Multiline: true}.Marshal(reward)
         if err != nil {
             log.Fatalf("error marshaling reward: %s", err.Error())
         }
@@ -315,6 +386,11 @@ func main() {
 
    </details>
 
+## Contributing
+
+Thanks for considering contributing to the project! Please refer to [our contribution guide](./CONTRIBUTING.md).
+
 ## Documentation
 
-There are numerous examples in the [`examples directory`](./examples) to help get you started. For even more, refer to our [documentation website](https://docs.cloud.coinbase.com/) for detailed definitions, API specifications, integration guides, and more!
+There are numerous examples in the [`examples directory`](./examples) to help get you started. For even more, refer to our [documentation website](https://docs.cdp.coinbase.com/staking/docs/welcome) for detailed definitions, API specifications, integration guides, and more!
+
