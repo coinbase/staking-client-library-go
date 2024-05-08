@@ -174,24 +174,24 @@ func main() {
         log.Fatalf("error instantiating staking client: %s", err.Error())
     }
 
-	req := &api.CreateWorkflowRequest{
-		Workflow: &api.Workflow{
-			Action: "protocols/solana/networks/devnet/actions/stake",
-			StakingParameters: &api.Workflow_SolanaStakingParameters{
-				SolanaStakingParameters: &api.SolanaStakingParameters{
-					Parameters: &api.SolanaStakingParameters_StakeParameters{
-						StakeParameters: &api.SolanaStakeParameters{
-							WalletAddress: "8rMGARtkJY5QygP1mgvBFLsE9JrvXByARJiyNfcSE5Z",
-							Amount: &api.Amount{
-								Value:    "100000000",
-								Currency: "SOL",
-							},
-						},
-					},
-				},
-			},
-		},
-	}
+    req := &api.CreateWorkflowRequest{
+        Workflow: &api.Workflow{
+            Action: "protocols/solana/networks/devnet/actions/stake",
+            StakingParameters: &api.Workflow_SolanaStakingParameters{
+                SolanaStakingParameters: &api.SolanaStakingParameters{
+                    Parameters: &api.SolanaStakingParameters_StakeParameters{
+                        StakeParameters: &api.SolanaStakeParameters{
+                            WalletAddress: "8rMGARtkJY5QygP1mgvBFLsE9JrvXByARJiyNfcSE5Z",
+                            Amount: &api.Amount{
+                                Value:    "100000000",
+                                Currency: "SOL",
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
 
     workflow, err := stakingClient.Orchestration.CreateWorkflow(ctx, req)
     if err != nil {
