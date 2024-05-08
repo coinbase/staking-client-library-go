@@ -22,10 +22,9 @@ Prerequisite: [Go 1.21+](https://go.dev/doc/install)
 2. Create and download an API key from the [Cloud Platform](https://portal.cloud.coinbase.com/access/api).
 3. Place the key named `.coinbase_cloud_api_key.json` at the root of your repository.
 4. Setup a Go project and run the example :rocket:
+
    ```shell
-   go mod init example && go mod tidy
-   go run example.go
-   ```
+   go mod init example && go mod tidy && go run example.go
 
 ### Stake Partial ETH :diamond_shape_with_a_dot_inside:
 
