@@ -18,7 +18,7 @@ A traditional infrastructure-heavy staking integration can take months. Coinbase
 
 Prerequisite: [Go 1.21+](https://go.dev/doc/install)
 
-1. In a fresh directory, copy and paste one of the code samples below or any of our [provided examples](./examples/) into an `example.go` file.
+1. In a fresh directory, copy and paste one of the code samples below or any of our [provided examples](./examples) into an `example.go` file.
 2. Create and download an API key from the [Cloud Platform](https://portal.cloud.coinbase.com/access/api).
 3. Place the key named `.coinbase_cloud_api_key.json` at the root of your repository.
 4. Setup a Go project and run the example :rocket:
@@ -28,10 +28,9 @@ Prerequisite: [Go 1.21+](https://go.dev/doc/install)
 
 ### Stake Partial ETH :diamond_shape_with_a_dot_inside:
 
-This code sample creates an ETH staking workflow. View the full code sample [here](examples/ethereum/create-workflow/main.go)
+This code sample helps stake ETH via partial staking. View the full source [here](examples/ethereum/create-workflow/main.go)
 
 <details open>
-  <summary>Code Sample</summary>
 
 ```golang
 // examples/ethereum/create-workflow/main.go
@@ -136,10 +135,9 @@ func main() {
 
 ### Stake SOL :diamond_shape_with_a_dot_inside:
 
-This code sample creates an SOL staking workflow. View the full code sample [here](examples/solana/create-workflow/main.go)
+This code sample helps stake SOL from a given user wallet. View the full source [here](examples/solana/create-workflow/main.go)
 
 <details open>
-  <summary>Code Sample</summary>
 
 ```golang
 // examples/solana/create-workflow/main.go
@@ -245,10 +243,9 @@ func main() {
 
 ### View Ethereum Rewards :moneybag:
 
-This code sample returns rewards for an Ethereum validator address. View the full code sample [here](examples/ethereum/list-rewards/main.go).
+This code sample helps view rewards for an Ethereum validator address. View the full source [here](examples/ethereum/list-rewards/main.go).
 
 <details open>
-  <summary>Code Sample</summary>
 
 ```golang
 // examples/ethereum/list-rewards/main.go
