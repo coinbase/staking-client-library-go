@@ -24,7 +24,10 @@ Prerequisite: [Go 1.21+](https://go.dev/doc/install)
 4. Setup a Go project and run the example :rocket:
 
    ```shell
-   go mod init example && go mod tidy && go run example.go
+   go mod init example
+   go mod tidy
+   go run example.go
+   ```
 
 ### Stake Partial ETH :diamond_shape_with_a_dot_inside:
 
