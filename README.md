@@ -387,7 +387,10 @@ func main() {
 
 There are numerous examples in the [`examples directory`](./examples) to help get you started. For even more, refer to our [documentation website](https://docs.cdp.coinbase.com/staking/docs/welcome) for detailed definitions, API specifications, integration guides, and more!
 
-
 ## Contributing
 
 Thanks for considering contributing to the project! Please refer to [our contribution guide](./CONTRIBUTING.md).
+
+## Contact Us
+
+If you have any questions, please reach out to us in the #staking channel on our [Discord](https://discord.com/invite/cdp) server.
