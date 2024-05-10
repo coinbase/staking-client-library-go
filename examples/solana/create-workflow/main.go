@@ -18,6 +18,9 @@ import (
 )
 
 const (
+	apiKeyName    = "your-api-key-name"
+	apiPrivateKey = "your-api-private-key"
+
 	// TODO: Replace with your wallet addresses and amount.
 	walletAddress = "8rMGARtkJY5QygP1mgvBFLsE9JrvXByARJiyNfcSE5Z"
 	amount        = "100000000"
@@ -28,8 +31,8 @@ const (
 func main() {
 	ctx := context.Background()
 
-	// Loads the API key from the default location.
-	apiKey, err := auth.NewAPIKey(auth.WithLoadAPIKeyFromFile(true))
+	// Loads the API key.
+	apiKey, err := auth.NewAPIKey(auth.WithAPIKeyName(apiKeyName, apiPrivateKey))
 	if err != nil {
 		log.Fatalf("error loading API key: %s", err.Error())
 	}

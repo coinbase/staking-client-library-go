@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"math"
 	"math/big"
+	"strings"
 	"time"
 
 	"gopkg.in/square/go-jose.v2"
@@ -33,7 +34,12 @@ func NewAuthenticator(apiKey *APIKey) *Authenticator {
 
 // BuildJWT constructs and returns the JWT as a string along with an error, if any.
 func (a *Authenticator) BuildJWT(service, uri string) (string, error) {
-	block, _ := pem.Decode([]byte(a.apiKey.PrivateKey))
+	privateKey := a.apiKey.PrivateKey
+
+	// Replace escaped newline sequence
+	privateKey = strings.ReplaceAll(privateKey, "\\n", "\n")
+
+	block, _ := pem.Decode([]byte(privateKey))
 	if block == nil {
 		return "", fmt.Errorf("could not decode private key")
 	}

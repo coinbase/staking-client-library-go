@@ -55,9 +55,9 @@ func WithLoadAPIKeyFromEnv(loadAPIKeyFromEnv bool) APIKeyOption {
 // Key from file directly. If the API Key name and private key are both set,
 // they take precedence over the environment variables. Next if the env vars are
 // set they take precedence or else the file is used if set.
-func WithLoadAPIKeyFromFile(loadAPIKeyFromFile bool) APIKeyOption {
+func WithLoadAPIKeyFromFile() APIKeyOption {
 	return func(t *apiKeyConfig) {
-		t.loadAPIKeyFromFile = loadAPIKeyFromFile
+		t.loadAPIKeyFromFile = true
 	}
 }
 
