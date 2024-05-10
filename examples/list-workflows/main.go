@@ -16,19 +16,23 @@ import (
 	"google.golang.org/api/iterator"
 )
 
+var (
+	apiKeyName    = "your-api-key-name"
+	apiPrivateKey = "your-api-private-key"
+)
+
 // An example function to demonstrate how to use the staking client libraries.
 func main() {
 	ctx := context.Background()
 
-	apiKey, err := auth.NewAPIKey(auth.WithLoadAPIKeyFromFile(true))
+	// Loads the API key.
+	apiKey, err := auth.NewAPIKey(auth.WithAPIKeyName(apiKeyName, apiPrivateKey))
 	if err != nil {
 		log.Fatalf("error loading API key: %s", err.Error())
 	}
 
-	authOpt := options.WithAPIKey(apiKey)
-
 	// Create a staking client.
-	stakingClient, err := client.New(ctx, authOpt)
+	stakingClient, err := client.New(ctx, options.WithAPIKey(apiKey))
 	if err != nil {
 		log.Fatalf("error instantiating staking client: %s", err.Error())
 	}

@@ -22,6 +22,9 @@ import (
  */
 
 const (
+	apiKeyName    = "your-api-key-name"
+	apiPrivateKey = "your-api-private-key"
+
 	// https://atomscan.com/validators/cosmosvaloper1crqm3598z6qmyn2kkcl9dz7uqs4qdqnr6s8jdn
 	address = "cosmos1crqm3598z6qmyn2kkcl9dz7uqs4qdqnrlyn8pq"
 )
@@ -29,15 +32,14 @@ const (
 func main() {
 	ctx := context.Background()
 
-	apiKey, err := auth.NewAPIKey(auth.WithLoadAPIKeyFromFile(true))
+	// Loads the API key.
+	apiKey, err := auth.NewAPIKey(auth.WithAPIKeyName(apiKeyName, apiPrivateKey))
 	if err != nil {
 		log.Fatalf("error loading API key: %s", err.Error())
 	}
 
-	authOpt := options.WithAPIKey(apiKey)
-
 	// Create a staking client.
-	stakingClient, err := client.New(ctx, authOpt)
+	stakingClient, err := client.New(ctx, options.WithAPIKey(apiKey))
 	if err != nil {
 		log.Fatalf("error instantiating staking client: %s", err.Error())
 	}

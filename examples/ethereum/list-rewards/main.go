@@ -27,6 +27,9 @@ import (
  */
 
 const (
+	apiKeyName    = "your-api-key-name"
+	apiPrivateKey = "your-api-private-key"
+
 	// https://beaconcha.in/validator/1
 	address = "0xa1d1ad0714035353258038e964ae9675dc0252ee22cea896825c01458e1807bfad2f9969338798548d9858a571f7425c"
 )
@@ -34,8 +37,8 @@ const (
 func main() {
 	ctx := context.Background()
 
-	// Loads the API key from the default location.
-	apiKey, err := auth.NewAPIKey(auth.WithLoadAPIKeyFromFile(true))
+	// Loads the API key.
+	apiKey, err := auth.NewAPIKey(auth.WithAPIKeyName(apiKeyName, apiPrivateKey))
 	if err != nil {
 		log.Fatalf("error loading API key: %s", err.Error())
 	}

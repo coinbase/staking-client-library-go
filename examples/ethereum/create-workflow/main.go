@@ -8,18 +8,24 @@ import (
 	"context"
 	"log"
 
+	"google.golang.org/protobuf/encoding/protojson"
+
 	"github.com/coinbase/staking-client-library-go/auth"
 	"github.com/coinbase/staking-client-library-go/client"
 	"github.com/coinbase/staking-client-library-go/client/options"
 	api "github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/orchestration/v1"
-	"google.golang.org/protobuf/encoding/protojson"
+)
+
+var (
+	apiKeyName    = "your-api-key-name"
+	apiPrivateKey = "your-api-private-key"
 )
 
 func main() {
 	ctx := context.Background()
 
-	// Loads the API key from the default location.
-	apiKey, err := auth.NewAPIKey(auth.WithLoadAPIKeyFromFile(true))
+	// Loads the API key.
+	apiKey, err := auth.NewAPIKey(auth.WithAPIKeyName(apiKeyName, apiPrivateKey))
 	if err != nil {
 		log.Fatalf("error loading API key: %s", err.Error())
 	}

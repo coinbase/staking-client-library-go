@@ -21,8 +21,11 @@ import (
 )
 
 const (
-	// TODO: Replace with your private key.
-	privateKey = ""
+	apiKeyName    = "your-api-key-name"
+	apiPrivateKey = "your-api-private-key"
+
+	// TODO: Replace with your wallet's private key.
+	walletPrivateKey = ""
 
 	// TODO: Replace with your staker addresses and amount.
 	stakerAddress = ""
@@ -34,21 +37,20 @@ const (
 func main() {
 	ctx := context.Background()
 
-	apiKey, err := auth.NewAPIKey(auth.WithLoadAPIKeyFromFile(true))
+	// Loads the API key.
+	apiKey, err := auth.NewAPIKey(auth.WithAPIKeyName(apiKeyName, apiPrivateKey))
 	if err != nil {
 		log.Fatalf("error loading API key: %s", err.Error())
 	}
 
-	authOpt := options.WithAPIKey(apiKey)
-
 	// Create a staking client.
-	stakingClient, err := client.New(ctx, authOpt)
+	stakingClient, err := client.New(ctx, options.WithAPIKey(apiKey))
 	if err != nil {
 		log.Fatalf("error instantiating staking client: %s", err.Error())
 	}
 
-	if privateKey == "" || stakerAddress == "" {
-		log.Fatalf("privateKey stakerAddress must be set")
+	if walletPrivateKey == "" || stakerAddress == "" {
+		log.Fatalf("walletPrivateKey stakerAddress must be set")
 	}
 
 	req := &api.CreateWorkflowRequest{
@@ -96,7 +98,7 @@ func main() {
 			// Logic to sign the transaction. This can be substituted with any other signing mechanism.
 			log.Printf("Signing unsigned tx %s ...\n", unsignedTx)
 
-			signedTx, err := signer.New("ethereum_kiln").SignTransaction([]string{privateKey}, &signer.UnsignedTx{Data: []byte(unsignedTx)})
+			signedTx, err := signer.New("ethereum_kiln").SignTransaction([]string{walletPrivateKey}, &signer.UnsignedTx{Data: []byte(unsignedTx)})
 			if err != nil {
 				log.Fatalf(fmt.Errorf("error signing transaction: %w", err).Error())
 			}
