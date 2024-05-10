@@ -144,7 +144,7 @@ func (RewardRate_CalculationMethods) EnumDescriptor() ([]byte, []int) {
 	return file_coinbase_staking_rewards_v1_stake_proto_rawDescGZIP(), []int{1, 0}
 }
 
-// The representation of a staking activity at a particular point in time.
+// The representation of a staking balance at a particular point in time.
 // (-- api-linter: core::0123::resource-name-field=disabled
 //
 //	aip.dev/not-precedent: Not including a 'name' field till our data sources support a unique identifier --)
