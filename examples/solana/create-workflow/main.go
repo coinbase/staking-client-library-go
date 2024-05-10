@@ -7,15 +7,14 @@ package main
 import (
 	"context"
 	"log"
-
-	"google.golang.org/protobuf/encoding/protojson"
+	"os"
 
 	"github.com/coinbase/staking-client-library-go/auth"
 	"github.com/coinbase/staking-client-library-go/client"
 	stakingerrors "github.com/coinbase/staking-client-library-go/client/errors"
 	"github.com/coinbase/staking-client-library-go/client/options"
 	api "github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/orchestration/v1"
-	"os"
+	"google.golang.org/protobuf/encoding/protojson"
 )
 
 const (

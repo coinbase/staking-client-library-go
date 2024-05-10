@@ -812,6 +812,36 @@
       },
       "description": "The amount of a token you wish to perform an action\nwith."
     },
+    "v1BulkTxStepOutput": {
+      "type": "object",
+      "properties": {
+        "unsignedTxs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "The unsigned transactions that must be signed and broadcasted.",
+          "readOnly": true
+        },
+        "state": {
+          "$ref": "#/definitions/v1BulkTxStepOutputState",
+          "description": "The state of the bulk tx step.",
+          "readOnly": true
+        }
+      },
+      "description": "The details of multiple transactions being constructed and broadcasted to the network."
+    },
+    "v1BulkTxStepOutputState": {
+      "type": "string",
+      "enum": [
+        "STATE_UNSPECIFIED",
+        "STATE_IN_PROGRESS",
+        "STATE_FAILED",
+        "STATE_COMPLETED"
+      ],
+      "default": "STATE_UNSPECIFIED",
+      "description": "State defines an enumeration of states for a staking transaction.\n\n - STATE_UNSPECIFIED: Unspecified transaction state.\n - STATE_IN_PROGRESS: Txs construction in progress.\n - STATE_FAILED: Tx construction failed.\n - STATE_COMPLETED: Tx construction completed."
+    },
     "v1Contract": {
       "type": "object",
       "properties": {
@@ -1526,6 +1556,11 @@
         "provisionInfraStepOutput": {
           "$ref": "#/definitions/v1ProvisionInfraStepOutput",
           "description": "The details for provisioned infrastructure.",
+          "readOnly": true
+        },
+        "bulkTxStepOutput": {
+          "$ref": "#/definitions/v1BulkTxStepOutput",
+          "description": "The bulk tx step output (e.g. transaction metadata such as unsigned tx, signed tx etc).",
           "readOnly": true
         }
       },

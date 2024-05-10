@@ -12,7 +12,7 @@
     },
     {
       "name": "Stake",
-      "description": "A snapshot of an address's staking-related balance at a particular point in time. Feature coming soon."
+      "description": "A snapshot of an address's staking-related balance at a particular point in time."
     },
     {
       "name": "RewardService"
@@ -30,9 +30,134 @@
     "application/json"
   ],
   "paths": {
+    "/v1/portfolios": {
+      "get": {
+        "summary": "List all portfolios available to you.",
+        "operationId": "RewardService_ListPortfolios",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/v1ListPortfoliosResponse"
+            }
+          },
+          "400": {
+            "description": "The request attempted has invalid parameters",
+            "schema": {
+              "example": {
+                "code": 3,
+                "message": "Couldn't find portfolio. \u003cRemediation assistance here\u003e.",
+                "details": []
+              }
+            }
+          },
+          "401": {
+            "description": "Returned if authentication information is invalid",
+            "schema": {
+              "example": "Unauthorized"
+            }
+          },
+          "500": {
+            "description": "Returned when an internal server error happens.",
+            "schema": {
+              "example": {
+                "code": 3,
+                "message": "Internal server error.",
+                "details": []
+              }
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "pageSize",
+            "description": "The maximum number of items to return.",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "pageToken",
+            "description": "A page token as part of the response of a previous call.\nProvide this to retrieve the next page.\n\nWhen paginating, all other parameters must match the previous\nrequest to list resources.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Portfolio"
+        ]
+      }
+    },
+    "/v1/{name}": {
+      "get": {
+        "summary": "Get a portfolio based on the name.",
+        "operationId": "RewardService_GetPortfolio",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/v1Portfolio"
+            }
+          },
+          "400": {
+            "description": "The request attempted has invalid parameters",
+            "schema": {
+              "example": {
+                "code": 3,
+                "message": "Couldn't get portfolio. \u003cRemediation assistance here\u003e.",
+                "details": []
+              }
+            }
+          },
+          "401": {
+            "description": "Returned if authentication information is invalid",
+            "schema": {
+              "example": "Unauthorized"
+            }
+          },
+          "500": {
+            "description": "Returned when an internal server error happens.",
+            "schema": {
+              "example": {
+                "code": 3,
+                "message": "Internal server error.",
+                "details": []
+              }
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "name",
+            "description": "The resource name of the stake to retrieve.\nFormat: portfolios/{portfolio}",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "pattern": "portfolios/[^/]+"
+          }
+        ],
+        "tags": [
+          "Portfolio"
+        ]
+      }
+    },
     "/v1/{parent}/rewards": {
       "get": {
-        "summary": "List and filter rewards",
+        "summary": "List rewards",
         "description": "Lists onchain rewards of an address for a specific protocol, with optional filters for time range, aggregation period, and more.",
         "operationId": "RewardService_ListRewards",
         "responses": {
@@ -251,6 +376,16 @@
       "default": "CALCULATION_METHODS_UNSPECIFIED",
       "description": "Representing the different methods of calculating yield.\n\n - CALCULATION_METHODS_UNSPECIFIED: Calculation method is unknown or unspecified.\n - SOLO_STAKER: A single Ethereum validator acting in isolation is currently not able to compound earned rewards because\nEthereum only allows validators to stake 32 ETH precisely.\nThis percentage yield is assuming that the rewards never compound, mimicking the behavior of a solo staker.\n - POOLED_STAKER: A pool of Ethereum validators of sufficient size is able to compound rewards almost immediately.\nThis percentage yield is assuming rewards compound immediately, mimicking the behavior of a sufficiently large pool.\n - EPOCH_AUTO_COMPOUNDING: A Solana delegator's staking rewards are staked (and therefore auto-compound) when rewards are paid out between epochs.\nThis percentage yield is assuming the rewards are auto-compounded on that schedule, mimicking a Solana delegator.\n - NO_AUTO_COMPOUNDING: A Solana validator's rewards accumulate in a separate account from the validator's active stake.\nThis percentage yield is assuming the rewards are not auto-compounded at any point, mimicking a Solana validator who never staked their rewards."
     },
+    "RewardState": {
+      "type": "string",
+      "enum": [
+        "STATE_UNSPECIFIED",
+        "PENDING_CLAIMABLE",
+        "MATERIALIZED"
+      ],
+      "default": "STATE_UNSPECIFIED",
+      "description": "The state that a reward can potentially be in.\nNot all rewards are immediately usable and accessible which is\nprotocol dependent.\n\n - STATE_UNSPECIFIED: The reward state is in an unspecified state.\n - PENDING_CLAIMABLE: Indicates a reward that is not liquid and not on a users wallet address.\nTypically the user would need to perform a transaction to claim their reward.\ne.g. For Ethereum Partial Staking, the user must unstake then claim their rewards, each\nbeing it's own transaction on-chain to ultimately receive their rewards.\n - MATERIALIZED: Indicates a reward that is liquid and has been paid out to the users wallet address which\nis usually done by an explicit blockchain transaction.\ne.g. Solana rewards are paid out per epoch directly to the stake account address."
+    },
     "StakeDelegation": {
       "type": "object",
       "properties": {
@@ -306,6 +441,17 @@
         }
       }
     },
+    "v1Address": {
+      "type": "object",
+      "properties": {
+        "address": {
+          "type": "string",
+          "title": "The onchain address",
+          "readOnly": true
+        }
+      },
+      "description": "Represents an address on any protocol."
+    },
     "v1AggregationUnit": {
       "type": "string",
       "enum": [
@@ -342,6 +488,26 @@
         }
       },
       "description": "Amount encapsulation for a given asset."
+    },
+    "v1ListPortfoliosResponse": {
+      "type": "object",
+      "properties": {
+        "portfolios": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1Portfolio"
+          },
+          "description": "The portfolios returned in this response.",
+          "readOnly": true
+        },
+        "nextPageToken": {
+          "type": "string",
+          "description": "The page token the user must use in the next request if the next page is desired.",
+          "readOnly": true
+        }
+      },
+      "description": "The response message for ListPortfolios."
     },
     "v1ListRewardsResponse": {
       "type": "object",
@@ -392,6 +558,26 @@
       ],
       "default": "PARTICIPANT_TYPE_UNSPECIFIED",
       "description": "The participant type of a staking-related address.\n\n - PARTICIPANT_TYPE_UNSPECIFIED: The participant type is unknown.\n - DELEGATOR: Used when the onchain participant type is a delegator\n(i.e. someone who delegates the responsibilities of validating blocks to another address in return for a share of the rewards).\n - VALIDATOR: Used when the onchain participant type is a validator\n(i.e. an address that is directly responsible for performing validation of blocks)."
+    },
+    "v1Portfolio": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "A unique identifier for the portfolio.",
+          "readOnly": true
+        },
+        "addresses": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1Address"
+          },
+          "title": "The addresses that make up the portfolio",
+          "readOnly": true
+        }
+      },
+      "description": "A portfolio represents an arbitrary collection of addresses. A portfolio doesn't necessarily\nimply that the underlying addresses are linked onchain in any manner.\nA portfolio is a convenient way for users to group addresses together for reporting purposes.\nFor now, project and portfolio are synonymous, 1-to-1."
     },
     "v1Reward": {
       "type": "object",
@@ -452,9 +638,14 @@
           "type": "string",
           "description": "The protocol on which this reward was earned.",
           "readOnly": true
+        },
+        "rewardState": {
+          "$ref": "#/definitions/RewardState",
+          "description": "The state that the reward is in when calculated.",
+          "readOnly": true
         }
       },
-      "description": "Rewards earned within a particular period of time."
+      "description": "Rewards earned via onchain staking-related activites.\nA reward may be a particular event or a rollup of multiple events (ex: rewards earned in a day)."
     },
     "v1RewardRate": {
       "type": "object",
@@ -537,7 +728,7 @@
           "readOnly": true
         }
       },
-      "description": "The representation of a staking activity at a particular point in time."
+      "description": "The representation of a staking balance at a particular point in time."
     },
     "v1USDValue": {
       "type": "object",

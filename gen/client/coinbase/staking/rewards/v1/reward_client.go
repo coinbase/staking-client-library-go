@@ -41,14 +41,18 @@ var newRewardClientHook clientHook
 
 // RewardCallOptions contains the retry settings for each method of RewardClient.
 type RewardCallOptions struct {
-	ListRewards []gax.CallOption
-	ListStakes  []gax.CallOption
+	ListRewards    []gax.CallOption
+	ListStakes     []gax.CallOption
+	GetPortfolio   []gax.CallOption
+	ListPortfolios []gax.CallOption
 }
 
 func defaultRewardRESTCallOptions() *RewardCallOptions {
 	return &RewardCallOptions{
-		ListRewards: []gax.CallOption{},
-		ListStakes:  []gax.CallOption{},
+		ListRewards:    []gax.CallOption{},
+		ListStakes:     []gax.CallOption{},
+		GetPortfolio:   []gax.CallOption{},
+		ListPortfolios: []gax.CallOption{},
 	}
 }
 
@@ -59,6 +63,8 @@ type internalRewardClient interface {
 	Connection() *grpc.ClientConn
 	ListRewards(context.Context, *rewardpb.ListRewardsRequest, ...gax.CallOption) *RewardIterator
 	ListStakes(context.Context, *rewardpb.ListStakesRequest, ...gax.CallOption) *StakeIterator
+	GetPortfolio(context.Context, *rewardpb.GetPortfolioRequest, ...gax.CallOption) (*rewardpb.Portfolio, error)
+	ListPortfolios(context.Context, *rewardpb.ListPortfoliosRequest, ...gax.CallOption) *PortfolioIterator
 }
 
 // RewardClient is a client for interacting with .
@@ -96,14 +102,24 @@ func (c *RewardClient) Connection() *grpc.ClientConn {
 	return c.internalClient.Connection()
 }
 
-// ListRewards list rewards for a given protocol.
+// ListRewards list all rewards of an address and augment those requests with helpful filters.
 func (c *RewardClient) ListRewards(ctx context.Context, req *rewardpb.ListRewardsRequest, opts ...gax.CallOption) *RewardIterator {
 	return c.internalClient.ListRewards(ctx, req, opts...)
 }
 
-// ListStakes list staking activities for a given protocol.
+// ListStakes list all staking balances based on protocol and address
 func (c *RewardClient) ListStakes(ctx context.Context, req *rewardpb.ListStakesRequest, opts ...gax.CallOption) *StakeIterator {
 	return c.internalClient.ListStakes(ctx, req, opts...)
+}
+
+// GetPortfolio get a portfolio based on the name.
+func (c *RewardClient) GetPortfolio(ctx context.Context, req *rewardpb.GetPortfolioRequest, opts ...gax.CallOption) (*rewardpb.Portfolio, error) {
+	return c.internalClient.GetPortfolio(ctx, req, opts...)
+}
+
+// ListPortfolios list all portfolios available to you.
+func (c *RewardClient) ListPortfolios(ctx context.Context, req *rewardpb.ListPortfoliosRequest, opts ...gax.CallOption) *PortfolioIterator {
+	return c.internalClient.ListPortfolios(ctx, req, opts...)
 }
 
 // Methods, except Close, may be called concurrently. However, fields must not be modified concurrently with method calls.
@@ -175,7 +191,7 @@ func (c *rewardRESTClient) Connection() *grpc.ClientConn {
 	return nil
 }
 
-// ListRewards list rewards for a given protocol.
+// ListRewards list all rewards of an address and augment those requests with helpful filters.
 func (c *rewardRESTClient) ListRewards(ctx context.Context, req *rewardpb.ListRewardsRequest, opts ...gax.CallOption) *RewardIterator {
 	it := &RewardIterator{}
 	req = proto.Clone(req).(*rewardpb.ListRewardsRequest)
@@ -265,7 +281,7 @@ func (c *rewardRESTClient) ListRewards(ctx context.Context, req *rewardpb.ListRe
 	return it
 }
 
-// ListStakes list staking activities for a given protocol.
+// ListStakes list all staking balances based on protocol and address
 func (c *rewardRESTClient) ListStakes(ctx context.Context, req *rewardpb.ListStakesRequest, opts ...gax.CallOption) *StakeIterator {
 	it := &StakeIterator{}
 	req = proto.Clone(req).(*rewardpb.ListStakesRequest)
@@ -356,6 +372,193 @@ func (c *rewardRESTClient) ListStakes(ctx context.Context, req *rewardpb.ListSta
 	it.pageInfo.Token = req.GetPageToken()
 
 	return it
+}
+
+// GetPortfolio get a portfolio based on the name.
+func (c *rewardRESTClient) GetPortfolio(ctx context.Context, req *rewardpb.GetPortfolioRequest, opts ...gax.CallOption) (*rewardpb.Portfolio, error) {
+	baseUrl, err := url.Parse(c.endpoint)
+	if err != nil {
+		return nil, err
+	}
+	baseUrl.Path += fmt.Sprintf("/v1/%v", req.GetName())
+
+	// Build HTTP headers from client and context metadata.
+	md := metadata.Pairs("x-goog-request-params", fmt.Sprintf("%s=%v", "name", url.QueryEscape(req.GetName())))
+
+	headers := buildHeaders(ctx, c.xGoogMetadata, md, metadata.Pairs("Content-Type", "application/json"))
+	opts = append((*c.CallOptions).GetPortfolio[0:len((*c.CallOptions).GetPortfolio):len((*c.CallOptions).GetPortfolio)], opts...)
+	unm := protojson.UnmarshalOptions{AllowPartial: true, DiscardUnknown: true}
+	resp := &rewardpb.Portfolio{}
+	e := gax.Invoke(ctx, func(ctx context.Context, settings gax.CallSettings) error {
+		if settings.Path != "" {
+			baseUrl.Path = settings.Path
+		}
+		httpReq, err := http.NewRequest("GET", baseUrl.String(), nil)
+		if err != nil {
+			return err
+		}
+		httpReq = httpReq.WithContext(ctx)
+		httpReq.Header = headers
+
+		httpRsp, err := c.httpClient.Do(httpReq)
+		if err != nil {
+			return err
+		}
+		defer httpRsp.Body.Close()
+
+		if err = googleapi.CheckResponse(httpRsp); err != nil {
+			return err
+		}
+
+		buf, err := ioutil.ReadAll(httpRsp.Body)
+		if err != nil {
+			return err
+		}
+
+		if err := unm.Unmarshal(buf, resp); err != nil {
+			return maybeUnknownEnum(err)
+		}
+
+		return nil
+	}, opts...)
+	if e != nil {
+		return nil, e
+	}
+	return resp, nil
+}
+
+// ListPortfolios list all portfolios available to you.
+func (c *rewardRESTClient) ListPortfolios(ctx context.Context, req *rewardpb.ListPortfoliosRequest, opts ...gax.CallOption) *PortfolioIterator {
+	it := &PortfolioIterator{}
+	req = proto.Clone(req).(*rewardpb.ListPortfoliosRequest)
+	unm := protojson.UnmarshalOptions{AllowPartial: true, DiscardUnknown: true}
+	it.InternalFetch = func(pageSize int, pageToken string) ([]*rewardpb.Portfolio, string, error) {
+		resp := &rewardpb.ListPortfoliosResponse{}
+		if pageToken != "" {
+			req.PageToken = pageToken
+		}
+		if pageSize > math.MaxInt32 {
+			req.PageSize = math.MaxInt32
+		} else if pageSize != 0 {
+			req.PageSize = int32(pageSize)
+		}
+		baseUrl, err := url.Parse(c.endpoint)
+		if err != nil {
+			return nil, "", err
+		}
+		baseUrl.Path += fmt.Sprintf("/v1/portfolios")
+
+		params := url.Values{}
+		if req.GetPageSize() != 0 {
+			params.Add("pageSize", fmt.Sprintf("%v", req.GetPageSize()))
+		}
+		if req.GetPageToken() != "" {
+			params.Add("pageToken", fmt.Sprintf("%v", req.GetPageToken()))
+		}
+
+		baseUrl.RawQuery = params.Encode()
+
+		// Build HTTP headers from client and context metadata.
+		headers := buildHeaders(ctx, c.xGoogMetadata, metadata.Pairs("Content-Type", "application/json"))
+		e := gax.Invoke(ctx, func(ctx context.Context, settings gax.CallSettings) error {
+			if settings.Path != "" {
+				baseUrl.Path = settings.Path
+			}
+			httpReq, err := http.NewRequest("GET", baseUrl.String(), nil)
+			if err != nil {
+				return err
+			}
+			httpReq.Header = headers
+
+			httpRsp, err := c.httpClient.Do(httpReq)
+			if err != nil {
+				return err
+			}
+			defer httpRsp.Body.Close()
+
+			if err = googleapi.CheckResponse(httpRsp); err != nil {
+				return err
+			}
+
+			buf, err := ioutil.ReadAll(httpRsp.Body)
+			if err != nil {
+				return err
+			}
+
+			if err := unm.Unmarshal(buf, resp); err != nil {
+				return maybeUnknownEnum(err)
+			}
+
+			return nil
+		}, opts...)
+		if e != nil {
+			return nil, "", e
+		}
+		it.Response = resp
+		return resp.GetPortfolios(), resp.GetNextPageToken(), nil
+	}
+
+	fetch := func(pageSize int, pageToken string) (string, error) {
+		items, nextPageToken, err := it.InternalFetch(pageSize, pageToken)
+		if err != nil {
+			return "", err
+		}
+		it.items = append(it.items, items...)
+		return nextPageToken, nil
+	}
+
+	it.pageInfo, it.nextFunc = iterator.NewPageInfo(fetch, it.bufLen, it.takeBuf)
+	it.pageInfo.MaxSize = int(req.GetPageSize())
+	it.pageInfo.Token = req.GetPageToken()
+
+	return it
+}
+
+// PortfolioIterator manages a stream of *rewardpb.Portfolio.
+type PortfolioIterator struct {
+	items    []*rewardpb.Portfolio
+	pageInfo *iterator.PageInfo
+	nextFunc func() error
+
+	// Response is the raw response for the current page.
+	// It must be cast to the RPC response type.
+	// Calling Next() or InternalFetch() updates this value.
+	Response interface{}
+
+	// InternalFetch is for use by the Google Cloud Libraries only.
+	// It is not part of the stable interface of this package.
+	//
+	// InternalFetch returns results from a single call to the underlying RPC.
+	// The number of results is no greater than pageSize.
+	// If there are no more results, nextPageToken is empty and err is nil.
+	InternalFetch func(pageSize int, pageToken string) (results []*rewardpb.Portfolio, nextPageToken string, err error)
+}
+
+// PageInfo supports pagination. See the google.golang.org/api/iterator package for details.
+func (it *PortfolioIterator) PageInfo() *iterator.PageInfo {
+	return it.pageInfo
+}
+
+// Next returns the next result. Its second return value is iterator.Done if there are no more
+// results. Once Next returns Done, all subsequent calls will return Done.
+func (it *PortfolioIterator) Next() (*rewardpb.Portfolio, error) {
+	var item *rewardpb.Portfolio
+	if err := it.nextFunc(); err != nil {
+		return item, err
+	}
+	item = it.items[0]
+	it.items = it.items[1:]
+	return item, nil
+}
+
+func (it *PortfolioIterator) bufLen() int {
+	return len(it.items)
+}
+
+func (it *PortfolioIterator) takeBuf() interface{} {
+	b := it.items
+	it.items = nil
+	return b
 }
 
 // RewardIterator manages a stream of *rewardpb.Reward.
