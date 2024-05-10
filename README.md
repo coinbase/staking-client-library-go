@@ -19,9 +19,10 @@ A traditional infrastructure-heavy staking integration can take months. Coinbase
 Prerequisite: [Go 1.21+](https://go.dev/doc/install)
 
 1. In a fresh directory, copy and paste one of the code samples below or any of our [provided examples](./examples) into an `example.go` file.
-2. Create and download an API key from the [Cloud Platform](https://portal.cloud.coinbase.com/access/api).
-3. Place the key named `.coinbase_cloud_api_key.json` at the root of your repository.
-4. Setup a Go project and run the example :rocket:
+
+2. Create a new API Key in the [portal](https://portal.cdp.coinbase.com/access/api) and paste the `apiKeyName` and `apiPrivateKey` into the `example.go` file.
+
+3. Setup a Go project and run the example :rocket:
 
    ```shell
    go mod init example
@@ -52,11 +53,16 @@ import (
    api "github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/orchestration/v1"
 )
 
+var (
+   apiKeyName    = "your-api-key-name"
+   apiPrivateKey = "your-api-private-key"
+)
+
 func main() {
    ctx := context.Background()
 
-   // Loads the API key from the default location.
-   apiKey, err := auth.NewAPIKey(auth.WithLoadAPIKeyFromFile(true))
+   // Loads the API key.
+   apiKey, err := auth.NewAPIKey(auth.WithAPIKeyName(apiKeyName, apiPrivateKey))
    if err != nil {
       log.Fatalf("error loading API key: %s", err.Error())
    }
@@ -159,13 +165,18 @@ import (
     api "github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/orchestration/v1"
 )
 
+var (
+   apiKeyName    = "your-api-key-name"
+   apiPrivateKey = "your-api-private-key"
+)
+
 func main() {
     ctx := context.Background()
 
-    // Loads the API key from the default location.
-    apiKey, err := auth.NewAPIKey(auth.WithLoadAPIKeyFromFile(true))
+    // Loads the API key.
+    apiKey, err := auth.NewAPIKey(auth.WithAPIKeyName(apiKeyName, apiPrivateKey))
     if err != nil {
-        log.Fatalf("error loading API key: %s", err.Error())
+       log.Fatalf("error loading API key: %s", err.Error())
     }
 
     // Creates the Coinbase Staking API client.
@@ -273,6 +284,9 @@ import (
 )
 
 const (
+    apiKeyName    = "your-api-key-name"
+    apiPrivateKey = "your-api-private-key"
+
     // https://beaconcha.in/validator/1
     address = "0xa1d1ad0714035353258038e964ae9675dc0252ee22cea896825c01458e1807bfad2f9969338798548d9858a571f7425c"
 )
@@ -280,10 +294,10 @@ const (
 func main() {
     ctx := context.Background()
 
-    // Loads the API key from the default location.
-    apiKey, err := auth.NewAPIKey(auth.WithLoadAPIKeyFromFile(true))
+    // Loads the API key.
+    apiKey, err := auth.NewAPIKey(auth.WithAPIKeyName(apiKeyName, apiPrivateKey))
     if err != nil {
-        log.Fatalf("error loading API key: %s", err.Error())
+       log.Fatalf("error loading API key: %s", err.Error())
     }
 
     // Creates the Coinbase Staking API client
@@ -388,7 +402,7 @@ func main() {
 
 ## Documentation
 
-There are numerous examples in the [`examples directory`](./examples) to help get you started. For even more, refer to our [documentation website](https://docs.cdp.coinbase.com/staking/docs/welcome) for detailed definitions, API specifications, integration guides, and more!
+There are numerous examples in the [`examples directory`](./examples) to help get you started. For even more, refer to our [documentation website](https://docs.cdp.coinbase.com/staking/docs/welcome) for detailed definitions, [API specification](https://docs.cdp.coinbase.com/staking/reference), integration guides, and more!
 
 ## Contributing
 
