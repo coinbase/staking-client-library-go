@@ -255,14 +255,14 @@ func main() {
 
    </details>
 
-### View Ethereum Rewards :moneybag:
+### View Partial ETH Rewards :moneybag:
 
-This code sample helps view rewards for an Ethereum validator address. View the full source [here](examples/ethereum/list-rewards/main.go).
+This code sample helps view rewards for an Ethereum wallet address. View the full source [here](examples/ethereum/list-rewards/partial-eth/main.go).
 
 <details open>
 
 ```golang
-// examples/ethereum/list-rewards/main.go
+// examples/ethereum/list-rewards/partial-eth/main.go
 package main
 
 import (
@@ -287,8 +287,7 @@ const (
     apiKeyName    = "your-api-key-name"
     apiPrivateKey = "your-api-private-key"
 
-    // https://beaconcha.in/validator/1
-    address = "0xa1d1ad0714035353258038e964ae9675dc0252ee22cea896825c01458e1807bfad2f9969338798548d9858a571f7425c"
+    address = "0x60c7e246344ae3856cf9abe3a2e258d495fc39e0"
 )
 
 func main() {
@@ -306,13 +305,13 @@ func main() {
         log.Fatalf("error instantiating staking client: %s", err.Error())
     }
 
-    // Lists the rewards for the given address for the previous last 20 days, aggregated by day.
+     // Lists the rewards for the given address for May 1st, 2024 aggregated by day.
     rewardsIter := stakingClient.Rewards.ListRewards(ctx, &api.ListRewardsRequest{
         Parent:   rewards.Ethereum,
         PageSize: 200,
         Filter: filter.WithAddress().Eq(address).
-            And(filter.WithPeriodEndTime().Gte(time.Now().AddDate(0, 0, -20))).
-            And(filter.WithPeriodEndTime().Lt(time.Now())).String(),
+            And(filter.WithPeriodEndTime().Gte(time.Date(2024, 5, 1, 0, 0, 0, 0, time.Local))).
+            And(filter.WithPeriodEndTime().Lt(time.Date(2024, 5, 2, 0, 0, 0, 0, time.Local))).String(),
     })
 
     // Iterates through the rewards and pretty print them.
@@ -342,60 +341,36 @@ func main() {
      <summary>Output</summary>
 
    ```json
-   {
-        "address": "0xa1d1ad0714035353258038e964ae9675dc0252ee22cea896825c01458e1807bfad2f9969338798548d9858a571f7425c",
-        "date": "2024-04-20",
-        "aggregationUnit": "DAY",
-        "periodStartTime": "2024-04-20T00:00:00Z",
-        "periodEndTime": "2024-04-20T23:59:59Z",
-        "totalEarnedNativeUnit": {
-            "amount": "0.002118354",
-            "exp": "18",
-            "ticker": "ETH",
-            "rawNumeric": "2118354000000000"
+  
+  {
+    "address": "0x60c7e246344ae3856cf9abe3a2e258d495fc39e0",
+    "date": "2024-05-01",
+    "aggregationUnit": "DAY",
+    "periodStartTime": "2024-05-01T00:00:00Z",
+    "periodEndTime": "2024-05-01T23:59:59Z",
+    "totalEarnedNativeUnit": {
+      "amount": "0.001212525541415161",
+      "exp": "18",
+      "ticker": "ETH",
+      "rawNumeric": "1212525541415161"
+    },
+    "totalEarnedUsd": [
+      {
+        "source": "COINBASE_EXCHANGE",
+        "conversionTime": "2024-05-02T00:09:00Z",
+        "amount": {
+          "amount": "3.61",
+          "exp": "2",
+          "ticker": "USD",
+          "rawNumeric": "361"
         },
-        "totalEarnedUsd": [
-            {
-                "source": "COINBASE_EXCHANGE",
-                "conversionTime": "2024-04-21T00:09:00Z",
-                "amount": {
-                    "amount": "6.67",
-                    "exp": "2",
-                    "ticker": "USD",
-                    "rawNumeric": "667"
-                },
-                "conversionPrice": "3145.550049"
-            }
-        ],
-        "protocol": "ethereum"
-    }
-    {
-        "address": "0xa1d1ad0714035353258038e964ae9675dc0252ee22cea896825c01458e1807bfad2f9969338798548d9858a571f7425c",
-        "date": "2024-04-21",
-        "aggregationUnit": "DAY",
-        "periodStartTime": "2024-04-21T00:00:00Z",
-        "periodEndTime": "2024-04-21T23:59:59Z",
-        "totalEarnedNativeUnit": {
-            "amount": "0.00211564",
-            "exp": "18",
-            "ticker": "ETH",
-            "rawNumeric": "2115640000000000"
-        },
-        "totalEarnedUsd": [
-            {
-                "source": "COINBASE_EXCHANGE",
-                "conversionTime": "2024-04-22T00:09:00Z",
-                "amount": {
-                    "amount": "6.68",
-                    "exp": "2",
-                    "ticker": "USD",
-                    "rawNumeric": "668"
-                },
-                "conversionPrice": "3155.449951"
-            }
-        ],
-        "protocol": "ethereum"
-    }
+        "conversionPrice": "2971.419922"
+      }
+    ],
+    "endingBalance": null,
+    "protocol": "ethereum",
+    "rewardState": "PENDING_CLAIMABLE"
+  }
    ```
 
    </details>
