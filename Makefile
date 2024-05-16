@@ -58,7 +58,8 @@ build:
 	@ go build -o bin/cosmos_list_rewards examples/cosmos/list-rewards/main.go
 	@ go build -o bin/ethereum/create_and_process_workflow examples/ethereum/create-and-process-workflow/main.go
 	@ go build -o bin/ethereum/create_workflow examples/ethereum/create-workflow/main.go
-	@ go build -o bin/ethereum/list_rewards examples/ethereum/list-rewards/main.go
+	@ go build -o bin/ethereum/list_rewards examples/ethereum/list-rewards/partial-eth/main.go
+	@ go build -o bin/ethereum/list_rewards examples/ethereum/list-rewards/validator/main.go
 	@ go build -o bin/ethereum/list_stakes examples/ethereum/list-stakes/main.go
 	@ go build -o bin/example examples/hello-world/main.go
 	@ go build -o bin/list_workflows examples/list-workflows/main.go

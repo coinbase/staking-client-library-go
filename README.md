@@ -257,12 +257,12 @@ func main() {
 
 ### View Partial ETH Rewards :moneybag:
 
-This code sample helps view rewards for an Ethereum wallet address. View the full source [here](examples/ethereum/list-rewards/main.go).
+This code sample helps view rewards for an Ethereum wallet address. View the full source [here](examples/ethereum/list-rewards/partial-eth/main.go).
 
 <details open>
 
 ```golang
-// examples/ethereum/list-rewards/main.go
+// examples/ethereum/list-rewards/partial-eth/main.go
 package main
 
 import (
