@@ -305,7 +305,7 @@ func main() {
         log.Fatalf("error instantiating staking client: %s", err.Error())
     }
 
-     // Lists the rewards for the given address for May 1st 2024, aggregated by day.
+     // Lists the rewards for the given address for May 1st, 2024 aggregated by day.
     rewardsIter := stakingClient.Rewards.ListRewards(ctx, &api.ListRewardsRequest{
         Parent:   rewards.Ethereum,
         PageSize: 200,
