@@ -65,7 +65,7 @@ import (
 		And(filter.WithPeriodEndTime().Lt(time.Date(2024, 2, 27, 0, 0, 0, 0, time.Local))).String(),
     })
  
-	 // Iterates through the rewards and pretty print them.
+	 // Iterate through the partial eth rewards and pretty print them.
 	 for {
 		 reward, err := partialETHRewardsIter.Next()
 		 if errors.Is(err, iterator.Done) {
@@ -84,7 +84,7 @@ import (
 		 fmt.Println(string(marshaled))
 	 }
 
-	 // Iterates through the rewards and pretty print them.
+	 // Iterate through the validator rewards and pretty print them.
 	 for {
 		reward, err := validatorRewardsIter.Next()
 		if errors.Is(err, iterator.Done) {
