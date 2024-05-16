@@ -24,9 +24,8 @@ import (
  
  const (
 	apiKeyName    = "your-api-key-name"
-    apiPrivateKey = "your-api-private-key"
+	apiPrivateKey = "your-api-private-key"
 	
-	 partialETHAddress = "0x60c7e246344ae3856cf9abe3a2e258d495fc39e0"
 	 // https://beaconcha.in/validator/1
 	 validatorAddress = "0xa1d1ad0714035353258038e964ae9675dc0252ee22cea896825c01458e1807bfad2f9969338798548d9858a571f7425c"
 	)
@@ -47,16 +46,7 @@ import (
 		 log.Fatalf("error instantiating staking client: %s", err.Error())
 	 }
  
-	  // Lists the rewards for the given partial eth address for May 1st 2024, aggregated by day.
-	 partialETHRewardsIter := stakingClient.Rewards.ListRewards(ctx, &api.ListRewardsRequest{
-		 Parent:   rewards.Ethereum,
-		 PageSize: 200,
-		 Filter: filter.WithAddress().Eq(partialETHAddress).
-			 And(filter.WithPeriodEndTime().Gte(time.Date(2024, 5, 1, 0, 0, 0, 0, time.Local))).
-			 And(filter.WithPeriodEndTime().Lt(time.Date(2024, 5, 2, 0, 0, 0, 0, time.Local))).String(),
-	 })
-
-	  // Lists the rewards for the given validator address between February 25, 2024 and February 27th 2024, aggregated by day.
+	  // Lists the rewards for the given validator address between February 25, 2024 and February 27th, 2024 aggregated by day.
 	  validatorRewardsIter := stakingClient.Rewards.ListRewards(ctx, &api.ListRewardsRequest{
         Parent:   rewards.Ethereum,
         PageSize: 200,
@@ -64,25 +54,6 @@ import (
 		And(filter.WithPeriodEndTime().Gte(time.Date(2024, 2, 25, 0, 0, 0, 0, time.Local))).
 		And(filter.WithPeriodEndTime().Lt(time.Date(2024, 2, 27, 0, 0, 0, 0, time.Local))).String(),
     })
- 
-	 // Iterate through the partial eth rewards and pretty print them.
-	 for {
-		 reward, err := partialETHRewardsIter.Next()
-		 if errors.Is(err, iterator.Done) {
-			 break
-		 }
- 
-		 if err != nil {
-			 log.Fatalf("error listing rewards: %s", err.Error())
-		 }
- 
-		 marshaled, err := protojson.MarshalOptions{Indent: "  ", Multiline: true}.Marshal(reward)
-		 if err != nil {
-			 log.Fatalf("error marshaling reward: %s", err.Error())
-		 }
- 
-		 fmt.Println(string(marshaled))
-	 }
 
 	 // Iterate through the validator rewards and pretty print them.
 	 for {
