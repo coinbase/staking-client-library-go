@@ -17,7 +17,7 @@ import (
 	"github.com/coinbase/staking-client-library-go/client/options"
 	"github.com/coinbase/staking-client-library-go/client/orchestration"
 	api "github.com/coinbase/staking-client-library-go/gen/go/coinbase/staking/orchestration/v1"
-	"github.com/coinbase/staking-client-library-go/internal/signer"
+	"github.com/coinbase/staking-client-library-go/pkg/signer"
 )
 
 const (
