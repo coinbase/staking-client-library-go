@@ -19,10 +19,11 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	RewardService_ListRewards_FullMethodName    = "/coinbase.staking.rewards.v1.RewardService/ListRewards"
-	RewardService_ListStakes_FullMethodName     = "/coinbase.staking.rewards.v1.RewardService/ListStakes"
-	RewardService_GetPortfolio_FullMethodName   = "/coinbase.staking.rewards.v1.RewardService/GetPortfolio"
-	RewardService_ListPortfolios_FullMethodName = "/coinbase.staking.rewards.v1.RewardService/ListPortfolios"
+	RewardService_ListRewards_FullMethodName          = "/coinbase.staking.rewards.v1.RewardService/ListRewards"
+	RewardService_ListStakes_FullMethodName           = "/coinbase.staking.rewards.v1.RewardService/ListStakes"
+	RewardService_GetPortfolio_FullMethodName         = "/coinbase.staking.rewards.v1.RewardService/GetPortfolio"
+	RewardService_ListPortfolios_FullMethodName       = "/coinbase.staking.rewards.v1.RewardService/ListPortfolios"
+	RewardService_ListPortfolioRewards_FullMethodName = "/coinbase.staking.rewards.v1.RewardService/ListPortfolioRewards"
 )
 
 // RewardServiceClient is the client API for RewardService service.
@@ -35,8 +36,10 @@ type RewardServiceClient interface {
 	ListStakes(ctx context.Context, in *ListStakesRequest, opts ...grpc.CallOption) (*ListStakesResponse, error)
 	// Get a portfolio based on the name.
 	GetPortfolio(ctx context.Context, in *GetPortfolioRequest, opts ...grpc.CallOption) (*Portfolio, error)
-	// List all portfolios available to you.
+	// List portfolios in an organization
 	ListPortfolios(ctx context.Context, in *ListPortfoliosRequest, opts ...grpc.CallOption) (*ListPortfoliosResponse, error)
+	// Lists rewards of addresses that have been staked via the Staking API.
+	ListPortfolioRewards(ctx context.Context, in *ListPortfolioRewardsRequest, opts ...grpc.CallOption) (*ListPortfolioRewardsResponse, error)
 }
 
 type rewardServiceClient struct {
@@ -83,6 +86,15 @@ func (c *rewardServiceClient) ListPortfolios(ctx context.Context, in *ListPortfo
 	return out, nil
 }
 
+func (c *rewardServiceClient) ListPortfolioRewards(ctx context.Context, in *ListPortfolioRewardsRequest, opts ...grpc.CallOption) (*ListPortfolioRewardsResponse, error) {
+	out := new(ListPortfolioRewardsResponse)
+	err := c.cc.Invoke(ctx, RewardService_ListPortfolioRewards_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // RewardServiceServer is the server API for RewardService service.
 // All implementations must embed UnimplementedRewardServiceServer
 // for forward compatibility
@@ -93,8 +105,10 @@ type RewardServiceServer interface {
 	ListStakes(context.Context, *ListStakesRequest) (*ListStakesResponse, error)
 	// Get a portfolio based on the name.
 	GetPortfolio(context.Context, *GetPortfolioRequest) (*Portfolio, error)
-	// List all portfolios available to you.
+	// List portfolios in an organization
 	ListPortfolios(context.Context, *ListPortfoliosRequest) (*ListPortfoliosResponse, error)
+	// Lists rewards of addresses that have been staked via the Staking API.
+	ListPortfolioRewards(context.Context, *ListPortfolioRewardsRequest) (*ListPortfolioRewardsResponse, error)
 	mustEmbedUnimplementedRewardServiceServer()
 }
 
@@ -113,6 +127,9 @@ func (UnimplementedRewardServiceServer) GetPortfolio(context.Context, *GetPortfo
 }
 func (UnimplementedRewardServiceServer) ListPortfolios(context.Context, *ListPortfoliosRequest) (*ListPortfoliosResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListPortfolios not implemented")
+}
+func (UnimplementedRewardServiceServer) ListPortfolioRewards(context.Context, *ListPortfolioRewardsRequest) (*ListPortfolioRewardsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListPortfolioRewards not implemented")
 }
 func (UnimplementedRewardServiceServer) mustEmbedUnimplementedRewardServiceServer() {}
 
@@ -199,6 +216,24 @@ func _RewardService_ListPortfolios_Handler(srv interface{}, ctx context.Context,
 	return interceptor(ctx, in, info, handler)
 }
 
+func _RewardService_ListPortfolioRewards_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListPortfolioRewardsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RewardServiceServer).ListPortfolioRewards(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: RewardService_ListPortfolioRewards_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RewardServiceServer).ListPortfolioRewards(ctx, req.(*ListPortfolioRewardsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // RewardService_ServiceDesc is the grpc.ServiceDesc for RewardService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -221,6 +256,10 @@ var RewardService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListPortfolios",
 			Handler:    _RewardService_ListPortfolios_Handler,
+		},
+		{
+			MethodName: "ListPortfolioRewards",
+			Handler:    _RewardService_ListPortfolioRewards_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

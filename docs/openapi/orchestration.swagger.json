@@ -108,7 +108,7 @@
     },
     "/v1/viewStakingContext:view": {
       "get": {
-        "summary": "Returns point-in-time context of staking data for an address",
+        "summary": "View point-in-time staking context",
         "description": "Returns point-in-time context of staking data for an address",
         "operationId": "ViewStakingContext",
         "responses": {
@@ -414,7 +414,7 @@
     },
     "/v1/{name}/step": {
       "post": {
-        "summary": "Perform the next step in a workflow",
+        "summary": "Perform next workflow step",
         "description": "Perform the next step in a workflow",
         "operationId": "updateWorkflow",
         "responses": {
