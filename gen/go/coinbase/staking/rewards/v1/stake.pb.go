@@ -168,7 +168,7 @@ type Stake struct {
 	// Pending active stake is not included.
 	BondedStake *AssetAmount `protobuf:"bytes,4,opt,name=bonded_stake,json=bondedStake,proto3" json:"bonded_stake,omitempty"`
 	// The amount of stake that this address receives from other addresses.
-	// For most delegators, this will be 0.
+	// For most delegators, this will be 0. For validators, this will be the total amount of stake delegated to them.
 	TotalDelegationReceived *AssetAmount `protobuf:"bytes,5,opt,name=total_delegation_received,json=totalDelegationReceived,proto3,oneof" json:"total_delegation_received,omitempty"`
 	// The list of individual delegations this address has received from other addresses
 	DelegationsReceived *Stake_Delegation `protobuf:"bytes,6,opt,name=delegations_received,json=delegationsReceived,proto3,oneof" json:"delegations_received,omitempty"`

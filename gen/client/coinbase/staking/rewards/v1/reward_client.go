@@ -41,18 +41,20 @@ var newRewardClientHook clientHook
 
 // RewardCallOptions contains the retry settings for each method of RewardClient.
 type RewardCallOptions struct {
-	ListRewards    []gax.CallOption
-	ListStakes     []gax.CallOption
-	GetPortfolio   []gax.CallOption
-	ListPortfolios []gax.CallOption
+	ListRewards          []gax.CallOption
+	ListStakes           []gax.CallOption
+	GetPortfolio         []gax.CallOption
+	ListPortfolios       []gax.CallOption
+	ListPortfolioRewards []gax.CallOption
 }
 
 func defaultRewardRESTCallOptions() *RewardCallOptions {
 	return &RewardCallOptions{
-		ListRewards:    []gax.CallOption{},
-		ListStakes:     []gax.CallOption{},
-		GetPortfolio:   []gax.CallOption{},
-		ListPortfolios: []gax.CallOption{},
+		ListRewards:          []gax.CallOption{},
+		ListStakes:           []gax.CallOption{},
+		GetPortfolio:         []gax.CallOption{},
+		ListPortfolios:       []gax.CallOption{},
+		ListPortfolioRewards: []gax.CallOption{},
 	}
 }
 
@@ -65,6 +67,7 @@ type internalRewardClient interface {
 	ListStakes(context.Context, *rewardpb.ListStakesRequest, ...gax.CallOption) *StakeIterator
 	GetPortfolio(context.Context, *rewardpb.GetPortfolioRequest, ...gax.CallOption) (*rewardpb.Portfolio, error)
 	ListPortfolios(context.Context, *rewardpb.ListPortfoliosRequest, ...gax.CallOption) *PortfolioIterator
+	ListPortfolioRewards(context.Context, *rewardpb.ListPortfolioRewardsRequest, ...gax.CallOption) *RewardIterator
 }
 
 // RewardClient is a client for interacting with .
@@ -117,9 +120,14 @@ func (c *RewardClient) GetPortfolio(ctx context.Context, req *rewardpb.GetPortfo
 	return c.internalClient.GetPortfolio(ctx, req, opts...)
 }
 
-// ListPortfolios list all portfolios available to you.
+// ListPortfolios list portfolios in an organization
 func (c *RewardClient) ListPortfolios(ctx context.Context, req *rewardpb.ListPortfoliosRequest, opts ...gax.CallOption) *PortfolioIterator {
 	return c.internalClient.ListPortfolios(ctx, req, opts...)
+}
+
+// ListPortfolioRewards lists rewards of addresses that have been staked via the Staking API.
+func (c *RewardClient) ListPortfolioRewards(ctx context.Context, req *rewardpb.ListPortfolioRewardsRequest, opts ...gax.CallOption) *RewardIterator {
+	return c.internalClient.ListPortfolioRewards(ctx, req, opts...)
 }
 
 // Methods, except Close, may be called concurrently. However, fields must not be modified concurrently with method calls.
@@ -215,6 +223,9 @@ func (c *rewardRESTClient) ListRewards(ctx context.Context, req *rewardpb.ListRe
 		params := url.Values{}
 		if req.GetFilter() != "" {
 			params.Add("filter", fmt.Sprintf("%v", req.GetFilter()))
+		}
+		if req.GetOrderBy() != "" {
+			params.Add("orderBy", fmt.Sprintf("%v", req.GetOrderBy()))
 		}
 		if req.GetPageSize() != 0 {
 			params.Add("pageSize", fmt.Sprintf("%v", req.GetPageSize()))
@@ -427,7 +438,7 @@ func (c *rewardRESTClient) GetPortfolio(ctx context.Context, req *rewardpb.GetPo
 	return resp, nil
 }
 
-// ListPortfolios list all portfolios available to you.
+// ListPortfolios list portfolios in an organization
 func (c *rewardRESTClient) ListPortfolios(ctx context.Context, req *rewardpb.ListPortfoliosRequest, opts ...gax.CallOption) *PortfolioIterator {
 	it := &PortfolioIterator{}
 	req = proto.Clone(req).(*rewardpb.ListPortfoliosRequest)
@@ -496,6 +507,93 @@ func (c *rewardRESTClient) ListPortfolios(ctx context.Context, req *rewardpb.Lis
 		}
 		it.Response = resp
 		return resp.GetPortfolios(), resp.GetNextPageToken(), nil
+	}
+
+	fetch := func(pageSize int, pageToken string) (string, error) {
+		items, nextPageToken, err := it.InternalFetch(pageSize, pageToken)
+		if err != nil {
+			return "", err
+		}
+		it.items = append(it.items, items...)
+		return nextPageToken, nil
+	}
+
+	it.pageInfo, it.nextFunc = iterator.NewPageInfo(fetch, it.bufLen, it.takeBuf)
+	it.pageInfo.MaxSize = int(req.GetPageSize())
+	it.pageInfo.Token = req.GetPageToken()
+
+	return it
+}
+
+// ListPortfolioRewards lists rewards of addresses that have been staked via the Staking API.
+func (c *rewardRESTClient) ListPortfolioRewards(ctx context.Context, req *rewardpb.ListPortfolioRewardsRequest, opts ...gax.CallOption) *RewardIterator {
+	it := &RewardIterator{}
+	req = proto.Clone(req).(*rewardpb.ListPortfolioRewardsRequest)
+	unm := protojson.UnmarshalOptions{AllowPartial: true, DiscardUnknown: true}
+	it.InternalFetch = func(pageSize int, pageToken string) ([]*rewardpb.Reward, string, error) {
+		resp := &rewardpb.ListPortfolioRewardsResponse{}
+		if pageToken != "" {
+			req.PageToken = pageToken
+		}
+		if pageSize > math.MaxInt32 {
+			req.PageSize = math.MaxInt32
+		} else if pageSize != 0 {
+			req.PageSize = int32(pageSize)
+		}
+		baseUrl, err := url.Parse(c.endpoint)
+		if err != nil {
+			return nil, "", err
+		}
+		baseUrl.Path += fmt.Sprintf("/v1/portfolioRewards")
+
+		params := url.Values{}
+		if req.GetPageSize() != 0 {
+			params.Add("pageSize", fmt.Sprintf("%v", req.GetPageSize()))
+		}
+		if req.GetPageToken() != "" {
+			params.Add("pageToken", fmt.Sprintf("%v", req.GetPageToken()))
+		}
+
+		baseUrl.RawQuery = params.Encode()
+
+		// Build HTTP headers from client and context metadata.
+		headers := buildHeaders(ctx, c.xGoogMetadata, metadata.Pairs("Content-Type", "application/json"))
+		e := gax.Invoke(ctx, func(ctx context.Context, settings gax.CallSettings) error {
+			if settings.Path != "" {
+				baseUrl.Path = settings.Path
+			}
+			httpReq, err := http.NewRequest("GET", baseUrl.String(), nil)
+			if err != nil {
+				return err
+			}
+			httpReq.Header = headers
+
+			httpRsp, err := c.httpClient.Do(httpReq)
+			if err != nil {
+				return err
+			}
+			defer httpRsp.Body.Close()
+
+			if err = googleapi.CheckResponse(httpRsp); err != nil {
+				return err
+			}
+
+			buf, err := ioutil.ReadAll(httpRsp.Body)
+			if err != nil {
+				return err
+			}
+
+			if err := unm.Unmarshal(buf, resp); err != nil {
+				return maybeUnknownEnum(err)
+			}
+
+			return nil
+		}, opts...)
+		if e != nil {
+			return nil, "", e
+		}
+		it.Response = resp
+		return resp.GetPortfolioRewards(), resp.GetNextPageToken(), nil
 	}
 
 	fetch := func(pageSize int, pageToken string) (string, error) {

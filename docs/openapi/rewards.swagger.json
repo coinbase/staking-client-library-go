@@ -30,9 +30,113 @@
     "application/json"
   ],
   "paths": {
+    "/v1/portfolioRewards": {
+      "get": {
+        "summary": "List a portfolio's rewards",
+        "description": "Lists rewards of addresses that have been staked via the Staking API.",
+        "operationId": "RewardService_ListPortfolioRewards",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "example": {
+                "rewards": [
+                  {
+                    "address": "beefKGBWeSpHzYBHZXwp5So7wdQGX6mu4ZHCsH3uTar",
+                    "epoch": "533",
+                    "aggregationUnit": "epoch",
+                    "periodStartTime": null,
+                    "periodEndTime": "2023-11-16T00:13:44Z",
+                    "totalEarnedNativeUnit": {
+                      "amount": "224.7098145",
+                      "exp": "9",
+                      "ticker": "SOL",
+                      "rawNumeric": "224709814509"
+                    },
+                    "totalEarnedUsd": null,
+                    "endingBalance": null,
+                    "protocol": "solana"
+                  },
+                  {
+                    "address": "beefKGBWeSpHzYBHZXwp5So7wdQGX6mu4ZHCsH3uTar",
+                    "epoch": "532",
+                    "aggregationUnit": "epoch",
+                    "periodStartTime": null,
+                    "periodEndTime": "2023-11-13T19:38:36Z",
+                    "totalEarnedNativeUnit": {
+                      "amount": "225.0794241",
+                      "exp": "9",
+                      "ticker": "SOL",
+                      "rawNumeric": "225079424094"
+                    },
+                    "totalEarnedUsd": null,
+                    "endingBalance": null,
+                    "protocol": "solana"
+                  }
+                ],
+                "nextPageToken": "VAql-wtdiJWkWII9bJBDnE9oEc-8IlgU0DtKbxSDtBg=:1:1700241277"
+              }
+            }
+          },
+          "400": {
+            "description": "The request attempted has invalid parameters",
+            "schema": {
+              "example": {
+                "code": 3,
+                "message": "Filter validation failed. \u003cRemediation assistance here\u003e.",
+                "details": []
+              }
+            }
+          },
+          "401": {
+            "description": "Returned if authentication information is invalid",
+            "schema": {
+              "example": "Unauthorized"
+            }
+          },
+          "500": {
+            "description": "Returned when an internal server error happens.",
+            "schema": {
+              "example": {
+                "code": 3,
+                "message": "Internal server error.",
+                "details": []
+              }
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "pageSize",
+            "description": "The maximum number of items to return.",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "pageToken",
+            "description": "A page token as part of the response of a previous call.\nProvide this to retrieve the next page.\n\nWhen paginating, all other parameters must match the previous\nrequest to list resources.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Reward"
+        ]
+      }
+    },
     "/v1/portfolios": {
       "get": {
-        "summary": "List all portfolios available to you.",
+        "summary": "List portfolios",
+        "description": "List portfolios in a CDP organization. Portfolios represent a collection of addresses, grouped together for easier management.",
         "operationId": "RewardService_ListPortfolios",
         "responses": {
           "200": {
@@ -98,7 +202,8 @@
     },
     "/v1/{name}": {
       "get": {
-        "summary": "Get a portfolio based on the name.",
+        "summary": "Get portfolio by name",
+        "description": "Get portfolios in a CDP organization. Portfolios represent a collection of addresses, grouped together for easier management.",
         "operationId": "RewardService_GetPortfolio",
         "responses": {
           "200": {
@@ -157,7 +262,7 @@
     },
     "/v1/{parent}/rewards": {
       "get": {
-        "summary": "List rewards",
+        "summary": "List staking rewards",
         "description": "Lists onchain rewards of an address for a specific protocol, with optional filters for time range, aggregation period, and more.",
         "operationId": "RewardService_ListRewards",
         "responses": {
@@ -266,6 +371,13 @@
             "in": "query",
             "required": false,
             "type": "string"
+          },
+          {
+            "name": "orderBy",
+            "description": "The order in which to sort the results.\n[AIP-132](https://google.aip.dev/132) compliant order_by field.\nThe default behavior, if not supplied, is 'period_end_time desc'.\nExample(s):\n* 'period_end_time desc', which returns Rewards starting with the most recent.\n* 'period_end_time asc', which returns Rewards starting with the oldest available.\n* 'period_end_time', which returns Rewards starting with the oldest available.",
+            "in": "query",
+            "required": false,
+            "type": "string"
           }
         ],
         "tags": [
@@ -275,7 +387,7 @@
     },
     "/v1/{parent}/stakes": {
       "get": {
-        "summary": "List and filter staking balances",
+        "summary": "List staking balances",
         "description": "Lists staking balance of a protocol, with optional filters for time range and address.",
         "operationId": "RewardService_ListStakes",
         "responses": {
@@ -448,6 +560,11 @@
           "type": "string",
           "title": "The onchain address",
           "readOnly": true
+        },
+        "protocol": {
+          "$ref": "#/definitions/v1ProtocolName",
+          "title": "The protocol of this particular address",
+          "readOnly": true
         }
       },
       "description": "Represents an address on any protocol."
@@ -488,6 +605,26 @@
         }
       },
       "description": "Amount encapsulation for a given asset."
+    },
+    "v1ListPortfolioRewardsResponse": {
+      "type": "object",
+      "properties": {
+        "portfolioRewards": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1Reward"
+          },
+          "description": "The rewards returned in this response.",
+          "readOnly": true
+        },
+        "nextPageToken": {
+          "type": "string",
+          "description": "The page token the user must use in the next request if the next page is desired.",
+          "readOnly": true
+        }
+      },
+      "description": "The response to a ListPortfolioRewardRequest.\nContains a list of rewards associated with the addresses in a portfolio."
     },
     "v1ListPortfoliosResponse": {
       "type": "object",
@@ -579,6 +716,17 @@
       },
       "description": "A portfolio represents an arbitrary collection of addresses. A portfolio doesn't necessarily\nimply that the underlying addresses are linked onchain in any manner.\nA portfolio is a convenient way for users to group addresses together for reporting purposes.\nFor now, project and portfolio are synonymous, 1-to-1."
     },
+    "v1ProtocolName": {
+      "type": "string",
+      "enum": [
+        "PROTOCOL_NAME_UNSPECIFIED",
+        "SOLANA",
+        "COSMOS",
+        "ETHEREUM"
+      ],
+      "default": "PROTOCOL_NAME_UNSPECIFIED",
+      "description": "The complete list of supported protocols.\n\n - PROTOCOL_NAME_UNSPECIFIED: The protocol isn't defined\n - SOLANA: The Solana protocol\n - COSMOS: The Cosmos protocol\n - ETHEREUM: The Ethereum protocol"
+    },
     "v1Reward": {
       "type": "object",
       "properties": {
@@ -617,7 +765,12 @@
         },
         "totalEarnedNativeUnit": {
           "$ref": "#/definitions/v1AssetAmount",
-          "description": "The amount earned in this time period in the native unit of the protocol.",
+          "description": "The amount earned in this time period in the native unit of the protocol.\nThis is the net amount earned, meaning the amount that was actually paid out to the address.\nIf the rewards had a commission or fee taken out before it landed on this address, that commission amount is not included here.",
+          "readOnly": true
+        },
+        "totalEarnedNativeUnitGross": {
+          "$ref": "#/definitions/v1AssetAmount",
+          "description": "This is the gross amount earned, meaning the total amount of rewards that is attributable to the staking activity of this address.\nThis amount includes any commission or fee taken out before it landed on this address.",
           "readOnly": true
         },
         "totalEarnedUsd": {
@@ -626,7 +779,7 @@
             "type": "object",
             "$ref": "#/definitions/v1USDValue"
           },
-          "description": "The amount earned in this time period in USD. Calculated by getting each individual reward of this\ntime period and summing the USD value of each individual component. USD value is calculate at\nthe time each component was earned.",
+          "description": "The amount earned in this time period in USD.\nIf multiple different price sources are used, then multiple USD values will be returned.\nTotal USD value is calculated by getting each individual reward components in this time period and summing the USD value of each individual component.\nUSD value is calculates at the time each component was earned.",
           "readOnly": true
         },
         "endingBalance": {
@@ -690,7 +843,7 @@
         },
         "totalDelegationReceived": {
           "$ref": "#/definitions/v1AssetAmount",
-          "description": "The amount of stake that this address receives from other addresses.\nFor most delegators, this will be 0.",
+          "description": "The amount of stake that this address receives from other addresses.\nFor most delegators, this will be 0. For validators, this will be the total amount of stake delegated to them.",
           "readOnly": true
         },
         "delegationsReceived": {
