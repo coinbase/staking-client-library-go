@@ -9,6 +9,7 @@ import (
 )
 
 func TestNewAPIKey_WithAPIKeyName(t *testing.T) {
+	//nolint:gosec // Just a test file
 	apiKeyName := "test-api-key-name"
 	apiKeyPrivateKey := "test-api-private-key"
 
@@ -55,18 +56,27 @@ func TestLoadAPIKeyFromFile(t *testing.T) {
 	// Create a temporary directory
 	tempDir, err := os.MkdirTemp("", "api_key_test")
 	assert.NoError(t, err)
-	defer os.RemoveAll(tempDir)
+
+	defer func(path string) {
+		err = os.RemoveAll(path)
+		assert.NoError(t, err)
+	}(tempDir)
 
 	// Create the specific file .coinbase_cloud_api_key.json in the temporary directory
 	keyFilePath := filepath.Join(tempDir, ".coinbase_cloud_api_key.json")
+	//nolint:gosec // Just a test file
 	apiKeyData := `{"name": "file-api-key-name", "privateKey": "file-api-private-key"}`
-	err = os.WriteFile(keyFilePath, []byte(apiKeyData), 0600)
+	err = os.WriteFile(keyFilePath, []byte(apiKeyData), 0o600)
 	assert.NoError(t, err)
 
 	// Change working directory to the temp directory
 	originalWd, err := os.Getwd()
 	assert.NoError(t, err)
-	defer os.Chdir(originalWd)
+
+	defer func(dir string) {
+		err = os.Chdir(dir)
+		assert.NoError(t, err)
+	}(originalWd)
 
 	err = os.Chdir(tempDir)
 	assert.NoError(t, err)
