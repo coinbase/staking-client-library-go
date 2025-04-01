@@ -66,6 +66,12 @@ build:
 	@ go build -o bin/solana/solana_list_rewards examples/solana/list-rewards/main.go
 	@ go build -o bin/solana/solana_create_workflow examples/solana/create-workflow/main.go
 
+.PHONY: test
+test:
+	@echo "Running unit tests..."
+	@go test ./... -v
+	@echo "Unit tests completed"
+
 .PHONY: lint
 lint:
 	@ echo "Linting app..."
